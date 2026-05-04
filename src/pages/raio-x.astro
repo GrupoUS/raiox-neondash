@@ -1,0 +1,76 @@
+---
+import { getEntry } from "astro:content";
+import DiagnosticBenefits from "../components/landing/DiagnosticBenefits.astro";
+import DiagnosticFinalCTA from "../components/landing/DiagnosticFinalCTA.astro";
+import DiagnosticHero from "../components/landing/DiagnosticHero.astro";
+import DiagnosticQualification from "../components/landing/DiagnosticQualification.astro";
+import MobileCTABar from "../components/landing/MobileCTABar.astro";
+import Layout from "../layouts/Layout.astro";
+
+const entry = await getEntry("landings", "raio-x");
+if (!entry) {
+	throw new Error("Landing entry 'raio-x' not found in src/content/landings/");
+}
+
+const data = entry.data;
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const primaryCtaHref = "/raio-x/perguntas";
+
+const serviceJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Service",
+	name: "Raio-X Gratuito — Sessão de Diagnóstico",
+	description: data.seo.description,
+	provider: {
+		"@type": "Organization",
+		name: "Grupo US",
+		url: siteUrl,
+	},
+	areaServed: { "@type": "Country", name: "BR" },
+	serviceType: "Consultoria estratégica para clínicas de estética",
+	audience: {
+		"@type": "BusinessAudience",
+		audienceType: "Donos de clínica de estética",
+	},
+	offers: {
+		"@type": "Offer",
+		price: "0",
+		priceCurrency: "BRL",
+		availability: "https://schema.org/LimitedAvailability",
+		url: `${siteUrl}/raio-x`,
+	},
+};
+
+const breadcrumbs = [
+	{ name: "Início", url: "/" },
+	{ name: "Raio-X Gratuito", url: "/raio-x" },
+];
+---
+
+<Layout
+	title={data.seo.title}
+	description={data.seo.description}
+	ogImage={data.seo.ogImage}
+	canonical={data.seo.canonical}
+	jsonLd={serviceJsonLd}
+	breadcrumbs={breadcrumbs}
+>
+	<div class="pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
+		<DiagnosticHero hero={data.hero} primaryCtaUrl={primaryCtaHref} />
+		<DiagnosticBenefits
+			headline={data.benefits.headline}
+			items={data.benefits.items}
+		/>
+		<DiagnosticQualification
+			headline={data.qualification.headline}
+			intro={data.qualification.intro}
+			items={data.qualification.items}
+		/>
+		<DiagnosticFinalCTA
+			finalCta={data.finalCta}
+			primaryCtaUrl={primaryCtaHref}
+		/>
+	</div>
+
+	<MobileCTABar label={data.hero.cta.label} href={primaryCtaHref} />
+</Layout>

@@ -4,6 +4,7 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
+import { EnumChangefreq } from "sitemap";
 
 // https://astro.build/config
 export default defineConfig({
@@ -24,7 +25,23 @@ export default defineConfig({
 			styles: ["normal"],
 		},
 	],
-	integrations: [react(), sitemap()],
+	integrations: [
+		react(),
+		sitemap({
+			filter: (page) =>
+				!/\/raio-x\/perguntas\/?$/.test(page),
+			serialize(item) {
+				if (/\/raio-x\/?$/.test(item.url)) {
+					item.priority = 0.9;
+					item.changefreq = EnumChangefreq.MONTHLY;
+				} else if (/\/politica-de-privacidade\/?$/.test(item.url)) {
+					item.priority = 0.3;
+					item.changefreq = EnumChangefreq.YEARLY;
+				}
+				return item;
+			},
+		}),
+	],
 	vite: {
 		plugins: [tailwindcss()],
 	},

@@ -1,0 +1,30 @@
+---
+import { ArrowRight } from "lucide-react";
+import Button from "../shared/Button.astro";
+
+interface Props {
+	label: string;
+	href: string;
+}
+
+const { label, href } = Astro.props;
+---
+
+<div
+	class="md:hidden fixed bottom-0 inset-x-0 z-50 px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] glass-card-bright border-t border-[color-mix(in_srgb,var(--color-gold)_28%,transparent)]"
+	role="region"
+	aria-label="Ação principal"
+>
+	<Button
+		variant="primary"
+		size="md"
+		href={href}
+		glow={false}
+		dataCtaLocation="mobileBar"
+		ariaLabel={label}
+		class="w-full"
+	>
+		<span>{label}</span>
+		<ArrowRight aria-hidden="true" width={18} height={18} />
+	</Button>
+</div>

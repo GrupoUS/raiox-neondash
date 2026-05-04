@@ -34,6 +34,8 @@ const PAGES = [
 	"/otb",
 	"/neon-dash",
 	"/contato",
+	"/raio-x",
+	"/politica-de-privacidade",
 	"/404",
 ];
 

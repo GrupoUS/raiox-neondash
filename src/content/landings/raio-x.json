@@ -1,0 +1,79 @@
+{
+	"slug": "raio-x",
+	"seo": {
+		"title": "Raio-X Gratuito — Diagnóstico para sua Clínica | Grupo US",
+		"description": "Sessão de Diagnóstico Gratuita para donos de clínica de estética que querem clareza sobre o próximo passo. Análise estratégica direta com a equipe da Dra. Sacha. Vagas limitadas por semana.",
+		"ogImage": "/og/raio-x.png"
+	},
+	"hero": {
+		"eyebrow": "Para donos de clínica de estética",
+		"headline": "Raio-X Gratuito",
+		"tagline": "Sessão de Diagnóstico Gratuita para a sua clínica",
+		"subhead": "Em uma conversa estruturada com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos da sua operação e o próximo movimento estratégico — sem pitch, sem enrolação.",
+		"cta": {
+			"label": "Quero minha Sessão!",
+			"helperText": "Resposta em até 24 horas"
+		},
+		"trustSignals": {
+			"urgencyMicrocopy": "Vagas limitadas por semana"
+		}
+	},
+	"benefits": {
+		"headline": "O que você leva da sessão",
+		"items": [
+			{
+				"icon": "Stethoscope",
+				"title": "Diagnóstico clínico da operação",
+				"description": "Análise estruturada de tráfego, agenda, conversão e retenção da sua clínica."
+			},
+			{
+				"icon": "Target",
+				"title": "Clareza sobre o gargalo prioritário",
+				"description": "Identificação do bloqueio principal antes de novos investimentos em marketing ou time."
+			},
+			{
+				"icon": "Lightbulb",
+				"title": "Direção prática nos próximos 30 dias",
+				"description": "Recomendações táticas que você consegue implementar mesmo sem contratar nenhum programa."
+			},
+			{
+				"icon": "Map",
+				"title": "Roteiro do próximo movimento",
+				"description": "Mapa estratégico do que vem antes — produto, posicionamento, faturamento ou estrutura de time."
+			},
+			{
+				"icon": "Users",
+				"title": "Conexão com a Comunidade US",
+				"description": "Acesso à rede de donos de clínica que já trilhou o mesmo caminho de crescimento."
+			}
+		]
+	},
+	"qualification": {
+		"headline": "Esta sessão é para você se",
+		"intro": "Você se reconhece em algum desses pontos:",
+		"items": [
+			"Você já tem ou está estruturando uma clínica de estética e quer crescer com método, não com sorte.",
+			"Você sente que falta clareza sobre onde investir tempo, dinheiro e energia para chegar ao próximo nível.",
+			"Você prefere uma análise honesta e gratuita antes de qualquer compromisso financeiro."
+		]
+	},
+	"finalCta": {
+		"headline": "Vagas limitadas — garanta a sua agora",
+		"paragraphs": [
+			"A Sessão de Diagnóstico é gratuita e individual, conduzida pela equipe da Dra. Sacha por agendamento direto.",
+			"Como o formato exige análise personalizada, abrimos apenas algumas vagas por semana. Quem chega primeiro garante."
+		],
+		"cta": {
+			"label": "Quero minha Sessão de Diagnóstico Gratuita",
+			"microcopy": "Preencha as perguntas e garanta sua vaga"
+		},
+		"secondaryCta": {
+			"label": "Prefere conversar direto? Fale com a Laura",
+			"whatsappMessage": "Olá, Laura! Quero saber mais sobre a Sessão de Diagnóstico Gratuita (Raio-X)."
+		}
+	},
+	"primaryCta": {
+		"mode": "typebot-iframe",
+		"url": "https://typebot.io/grupo-us-raio-x"
+	}
+}

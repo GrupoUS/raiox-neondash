@@ -1,0 +1,93 @@
+---
+type Variant = "primary" | "whatsapp" | "outline" | "ghost";
+type Size = "sm" | "md" | "lg";
+
+interface Props {
+	variant?: Variant;
+	size?: Size;
+	href?: string;
+	target?: "_blank" | "_self";
+	rel?: string;
+	type?: "button" | "submit" | "reset";
+	ariaLabel?: string;
+	glow?: boolean;
+	dataCtaLocation?:
+		| "hero"
+		| "benefits"
+		| "qualification"
+		| "finalCta"
+		| "mobileBar";
+	class?: string;
+}
+
+const {
+	variant = "primary",
+	size = "md",
+	href,
+	target,
+	rel,
+	type = "button",
+	ariaLabel,
+	glow = false,
+	dataCtaLocation,
+	class: className,
+} = Astro.props;
+
+const sizeClasses: Record<Size, string> = {
+	sm: "px-4 py-2 text-sm min-h-[36px]",
+	md: "px-6 py-3 text-base min-h-[44px]",
+	lg: "px-8 py-4 text-lg min-h-[52px]",
+};
+
+const variantClasses: Record<Variant, string> = {
+	primary:
+		"bg-[var(--color-gold)] text-[var(--color-navy)] hover:bg-[var(--color-gold-light)] border border-transparent",
+	whatsapp:
+		"bg-[var(--color-gold)] text-[var(--color-navy)] hover:bg-[var(--color-gold-light)] border border-transparent",
+	outline:
+		"bg-transparent text-[var(--color-gold)] border border-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-[var(--color-navy)]",
+	ghost:
+		"bg-transparent text-[var(--color-text-primary)] border border-transparent hover:bg-[color-mix(in_srgb,var(--color-gold)_12%,transparent)]",
+};
+
+const baseClasses =
+	"inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wide transition-[transform,background-color,color,border-color,box-shadow] duration-200 ease-out active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
+
+const glowClass = glow ? "gold-pulse-glow" : "";
+
+const composedClass = [
+	baseClasses,
+	sizeClasses[size],
+	variantClasses[variant],
+	glowClass,
+	className,
+]
+	.filter(Boolean)
+	.join(" ");
+
+const computedRel = target === "_blank" ? (rel ?? "noopener noreferrer") : rel;
+---
+
+{
+	href ? (
+		<a
+			href={href}
+			target={target}
+			rel={computedRel}
+			aria-label={ariaLabel}
+			class={composedClass}
+			data-cta-location={dataCtaLocation}
+		>
+			<slot />
+		</a>
+	) : (
+		<button
+			type={type}
+			aria-label={ariaLabel}
+			class={composedClass}
+			data-cta-location={dataCtaLocation}
+		>
+			<slot />
+		</button>
+	)
+}

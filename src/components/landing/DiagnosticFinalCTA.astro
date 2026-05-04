@@ -1,0 +1,116 @@
+---
+import { ArrowRight, MessageCircle } from "lucide-react";
+import {
+	WHATSAPP_DEFAULT_SITE_MESSAGE,
+	whatsappUrlWithText,
+} from "../../lib/whatsapp";
+import Button from "../shared/Button.astro";
+
+interface FinalCtaData {
+	headline: string;
+	paragraphs: string[];
+	cta: {
+		label: string;
+		microcopy?: string;
+	};
+	secondaryCta?: {
+		label: string;
+		whatsappMessage: string;
+	};
+}
+
+interface Props {
+	finalCta: FinalCtaData;
+	primaryCtaUrl: string;
+}
+
+const { finalCta, primaryCtaUrl } = Astro.props;
+
+const secondaryHref = finalCta.secondaryCta
+	? whatsappUrlWithText(finalCta.secondaryCta.whatsappMessage)
+	: whatsappUrlWithText(WHATSAPP_DEFAULT_SITE_MESSAGE);
+---
+
+<section class="py-20 md:py-24 px-6 lg:px-8">
+	<div class="max-w-3xl mx-auto">
+		<div
+			class="glass-card-bright rounded-3xl p-8 md:p-12 text-center"
+			data-reveal="scale"
+		>
+			<h2
+				class="font-[family-name:var(--font-serif)] text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
+				data-reveal="up"
+				data-reveal-delay="1"
+			>
+				<span class="text-shimmer">{finalCta.headline}</span>
+			</h2>
+
+			<div
+				class="space-y-4 mb-10 max-w-xl mx-auto"
+				data-reveal="up"
+				data-reveal-delay="2"
+			>
+				{
+					finalCta.paragraphs.map((paragraph) => (
+						<p class="text-base md:text-lg text-[var(--color-text-primary)] leading-relaxed">
+							{paragraph}
+						</p>
+					))
+				}
+			</div>
+
+			<div
+				class="flex flex-col items-center gap-4"
+				data-reveal="up"
+				data-reveal-delay="3"
+			>
+				<Button
+					variant="primary"
+					size="lg"
+					href={primaryCtaUrl}
+					glow={true}
+					dataCtaLocation="finalCta"
+					ariaLabel={finalCta.cta.label}
+				>
+					<span>{finalCta.cta.label}</span>
+					<ArrowRight aria-hidden="true" width={20} height={20} />
+				</Button>
+
+				{
+					finalCta.cta.microcopy && (
+						<p class="text-sm text-[var(--color-text-muted)]">
+							{finalCta.cta.microcopy}
+						</p>
+					)
+				}
+
+				{
+					finalCta.secondaryCta && (
+						<Button
+							variant="outline"
+							size="md"
+							href={secondaryHref}
+							target="_blank"
+							dataCtaLocation="finalCta"
+							ariaLabel={finalCta.secondaryCta.label}
+						>
+							<MessageCircle aria-hidden="true" width={18} height={18} />
+							<span>{finalCta.secondaryCta.label}</span>
+						</Button>
+					)
+				}
+
+				<p class="text-xs text-[var(--color-text-muted)] mt-3 max-w-md leading-relaxed">
+					Ao continuar, você aceita nossa{" "}
+					<a
+						href="/politica-de-privacidade"
+						class="underline underline-offset-2 hover:text-[var(--color-gold)] transition-colors"
+					>
+						política de privacidade
+					</a>
+					.
+				</p>
+			</div>
+		</div>
+	</div>
+</section>

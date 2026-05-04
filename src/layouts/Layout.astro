@@ -1,0 +1,186 @@
+---
+import { Font } from "astro:assets";
+import "../styles/global.css";
+
+interface BreadcrumbItem {
+	name: string;
+	url: string;
+}
+
+interface Props {
+	title: string;
+	description: string;
+	ogImage?: string;
+	canonical?: string;
+	jsonLd?: Record<string, unknown>;
+	breadcrumbs?: BreadcrumbItem[];
+	noIndex?: boolean;
+	withAnalytics?: boolean;
+	bodyClass?: string;
+}
+
+const {
+	title,
+	description,
+	ogImage = "/og/raio-x.png",
+	canonical,
+	jsonLd,
+	breadcrumbs,
+	noIndex = false,
+	withAnalytics = true,
+	bodyClass,
+} = Astro.props;
+
+const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
+const absoluteOgImage = ogImage.startsWith("http")
+	? ogImage
+	: `${siteUrl}${ogImage}`;
+
+const orgJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Organization",
+	name: "Grupo US",
+	url: siteUrl,
+	logo: `${siteUrl}/favicon.svg`,
+	contactPoint: {
+		"@type": "ContactPoint",
+		telephone: "+55 62 9470-5081",
+		contactType: "sales",
+		areaServed: "BR",
+		availableLanguage: ["Portuguese"],
+	},
+};
+
+const breadcrumbsJsonLd = breadcrumbs
+	? {
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			itemListElement: breadcrumbs.map((item, index) => ({
+				"@type": "ListItem",
+				position: index + 1,
+				name: item.name,
+				item: item.url.startsWith("http") ? item.url : `${siteUrl}${item.url}`,
+			})),
+		}
+	: null;
+
+const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
+const enableAnalytics =
+	withAnalytics && import.meta.env.PROD && Boolean(plausibleDomain);
+---
+
+<!doctype html>
+<html lang="pt-BR">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="alternate icon" href="/favicon.ico" />
+
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonicalUrl} />
+		{
+			noIndex && (
+				<meta name="robots" content="noindex,nofollow" />
+			)
+		}
+
+		<meta property="og:type" content="website" />
+		<meta property="og:locale" content="pt_BR" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonicalUrl} />
+		<meta property="og:image" content={absoluteOgImage} />
+		<meta property="og:site_name" content="Grupo US" />
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={title} />
+		<meta name="twitter:description" content={description} />
+		<meta name="twitter:image" content={absoluteOgImage} />
+
+		<Font cssVariable="--font-playfair" preload />
+		<Font cssVariable="--font-inter" preload />
+
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify(orgJsonLd)}
+		/>
+		{
+			breadcrumbsJsonLd && (
+				<script
+					is:inline
+					type="application/ld+json"
+					set:html={JSON.stringify(breadcrumbsJsonLd)}
+				/>
+			)
+		}
+		{
+			jsonLd && (
+				<script
+					is:inline
+					type="application/ld+json"
+					set:html={JSON.stringify(jsonLd)}
+				/>
+			)
+		}
+
+		{
+			enableAnalytics && (
+				<script
+					is:inline
+					defer
+					data-domain={plausibleDomain}
+					src="https://plausible.io/js/script.js"
+				/>
+			)
+		}
+
+		<noscript>
+			<style>
+				[data-reveal] {
+					opacity: 1 !important;
+					transform: none !important;
+				}
+			</style>
+		</noscript>
+	</head>
+	<body class={bodyClass}>
+		<a href="#conteudo-principal" class="skip-link">
+			Pular para o conteúdo principal
+		</a>
+		<main id="conteudo-principal" tabindex="-1">
+			<slot />
+		</main>
+
+		<script is:inline>
+			(() => {
+				try {
+					const targets = document.querySelectorAll("[data-reveal]");
+					if (!targets.length || !("IntersectionObserver" in window)) {
+						targets.forEach((el) => el.classList.add("revealed"));
+						return;
+					}
+					const observer = new IntersectionObserver(
+						(entries) => {
+							entries.forEach((entry) => {
+								if (entry.isIntersecting) {
+									entry.target.classList.add("revealed");
+									observer.unobserve(entry.target);
+								}
+							});
+						},
+						{ rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+					);
+					targets.forEach((el) => observer.observe(el));
+				} catch (_err) {
+					document
+						.querySelectorAll("[data-reveal]")
+						.forEach((el) => el.classList.add("revealed"));
+				}
+			})();
+		</script>
+	</body>
+</html>

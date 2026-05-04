@@ -1,0 +1,27 @@
+---
+import { getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+
+const entry = await getEntry("landings", "raio-x");
+if (!entry) {
+	throw new Error("Landing entry 'raio-x' not found in src/content/landings/");
+}
+
+const { primaryCta } = entry.data;
+---
+
+<Layout
+	title="Perguntas — Sessão de Diagnóstico Gratuita | Grupo US"
+	description="Responda às perguntas para garantir sua Sessão de Diagnóstico Gratuita do Raio-X. Atendimento individual conduzido pela equipe da Dra. Sacha."
+	noIndex={true}
+	withAnalytics={false}
+	bodyClass="bg-[var(--color-navy)] m-0 p-0"
+>
+	<iframe
+		src={primaryCta.url}
+		title="Sessão de Diagnóstico Gratuita — Perguntas"
+		allow="clipboard-write; camera; microphone"
+		loading="eager"
+		class="block w-full h-[100dvh] border-0 bg-[var(--color-navy)]"
+	/>
+</Layout>
