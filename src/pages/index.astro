@@ -1,10 +1,15 @@
 ---
 import { getEntry } from "astro:content";
+import CostOfChaos from "../components/landing/CostOfChaos.astro";
 import DiagnosticBenefits from "../components/landing/DiagnosticBenefits.astro";
 import DiagnosticFinalCTA from "../components/landing/DiagnosticFinalCTA.astro";
 import DiagnosticHero from "../components/landing/DiagnosticHero.astro";
 import DiagnosticQualification from "../components/landing/DiagnosticQualification.astro";
+import FAQ from "../components/landing/FAQ.astro";
+import HowItWorks from "../components/landing/HowItWorks.astro";
 import MobileCTABar from "../components/landing/MobileCTABar.astro";
+import NotForSection from "../components/landing/NotForSection.astro";
+import ProblemSection from "../components/landing/ProblemSection.astro";
 import Layout from "../layouts/Layout.astro";
 
 const entry = await getEntry("landings", "raio-x");
@@ -37,14 +42,26 @@ const serviceJsonLd = {
 		price: "0",
 		priceCurrency: "BRL",
 		availability: "https://schema.org/LimitedAvailability",
-		url: `${siteUrl}/raio-x`,
+		url: `${siteUrl}/`,
 	},
 };
 
-const breadcrumbs = [
-	{ name: "Início", url: "/" },
-	{ name: "Raio-X Gratuito", url: "/raio-x" },
-];
+const faqJsonLd = data.faq
+	? {
+			"@context": "https://schema.org",
+			"@type": "FAQPage",
+			mainEntity: data.faq.items.map((item) => ({
+				"@type": "Question",
+				name: item.q,
+				acceptedAnswer: {
+					"@type": "Answer",
+					text: item.a,
+				},
+			})),
+		}
+	: undefined;
+
+const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 ---
 
 <Layout
@@ -52,24 +69,65 @@ const breadcrumbs = [
 	description={data.seo.description}
 	ogImage={data.seo.ogImage}
 	canonical={data.seo.canonical}
-	jsonLd={serviceJsonLd}
-	breadcrumbs={breadcrumbs}
+	jsonLd={combinedJsonLd}
 >
 	<div class="pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
 		<DiagnosticHero hero={data.hero} primaryCtaUrl={primaryCtaHref} />
+
+		{
+			data.problem && (
+				<ProblemSection
+					eyebrow={data.problem.eyebrow}
+					headline={data.problem.headline}
+					paragraphs={data.problem.paragraphs}
+				/>
+			)
+		}
+
+		{data.problem && <CostOfChaos items={data.problem.costs} />}
+
 		<DiagnosticBenefits
 			headline={data.benefits.headline}
 			items={data.benefits.items}
 		/>
+
+		{
+			data.howItWorks && (
+				<HowItWorks
+					headline={data.howItWorks.headline}
+					subhead={data.howItWorks.subhead}
+					steps={data.howItWorks.steps}
+				/>
+			)
+		}
+
 		<DiagnosticQualification
 			headline={data.qualification.headline}
 			intro={data.qualification.intro}
 			items={data.qualification.items}
 		/>
-		<DiagnosticFinalCTA
-			finalCta={data.finalCta}
-			primaryCtaUrl={primaryCtaHref}
-		/>
+
+		{
+			data.notFor && (
+				<NotForSection
+					headline={data.notFor.headline}
+					intro={data.notFor.intro}
+					items={data.notFor.items}
+				/>
+			)
+		}
+
+		{
+			data.faq && (
+				<FAQ
+					headline={data.faq.headline}
+					subhead={data.faq.subhead}
+					items={data.faq.items}
+				/>
+			)
+		}
+
+		<DiagnosticFinalCTA finalCta={data.finalCta} primaryCtaUrl={primaryCtaHref} />
 	</div>
 
 	<MobileCTABar label={data.hero.cta.label} href={primaryCtaHref} />

@@ -1,0 +1,74 @@
+---
+import {
+	AlertTriangle,
+	Briefcase,
+	CalendarX,
+	EyeOff,
+	MessageCircleOff,
+} from "lucide-react";
+
+const ICONS = {
+	CalendarX,
+	MessageCircleOff,
+	EyeOff,
+	Briefcase,
+} as const;
+
+type IconKey = keyof typeof ICONS;
+
+interface CostItem {
+	icon: string;
+	label: string;
+	description: string;
+}
+
+interface Props {
+	headline?: string;
+	items: CostItem[];
+}
+
+const { headline = "4 sintomas de quem está crescendo no escuro", items } =
+	Astro.props;
+
+function resolveIcon(name: string) {
+	return name in ICONS ? ICONS[name as IconKey] : AlertTriangle;
+}
+---
+
+<section class="py-20 md:py-24 px-6 lg:px-8 bg-navy-light/30">
+	<div class="max-w-5xl mx-auto">
+		<h2
+			class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 md:mb-16"
+			data-reveal="up"
+		>
+			<span class="text-gradient-gold">{headline}</span>
+		</h2>
+
+		<ul class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 list-none">
+			{
+				items.map((item, index) => {
+					const Icon = resolveIcon(item.icon);
+					return (
+						<li
+							class="glass-card card-hover-lift rounded-2xl p-6 md:p-7 flex items-start gap-5"
+							data-reveal="up"
+							data-reveal-delay={String(Math.min(index + 1, 6))}
+						>
+							<div class="shrink-0 size-12 rounded-full bg-gold-soft flex items-center justify-center text-gold">
+								<Icon aria-hidden="true" width={22} height={22} />
+							</div>
+							<div class="flex-1 min-w-0">
+								<h3 class="text-lg md:text-xl font-semibold text-foreground mb-1.5">
+									{item.label}
+								</h3>
+								<p class="text-sm md:text-base text-muted leading-relaxed">
+									{item.description}
+								</p>
+							</div>
+						</li>
+					);
+				})
+			}
+		</ul>
+	</div>
+</section>

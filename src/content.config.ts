@@ -3,6 +3,13 @@ import { glob } from "astro/loaders";
 
 const HEX_LITERAL = /#[0-9a-f]{3,6}\b/i;
 
+const internalOrAbsoluteUrl = z
+	.string()
+	.refine(
+		(value) => value.startsWith("/") || /^https?:\/\//i.test(value),
+		"primaryCta.url must be an absolute URL (https://…) or an internal path (/…).",
+	);
+
 const landings = defineCollection({
 	loader: glob({ pattern: "**/*.json", base: "src/content/landings" }),
 	schema: z
@@ -19,6 +26,7 @@ const landings = defineCollection({
 				headline: z.string(),
 				tagline: z.string(),
 				subhead: z.string(),
+				problemPills: z.array(z.string().max(60)).length(3).optional(),
 				cta: z.object({
 					label: z.string(),
 					helperText: z.string().optional(),
@@ -37,6 +45,23 @@ const landings = defineCollection({
 					})
 					.optional(),
 			}),
+			problem: z
+				.object({
+					eyebrow: z.string().optional(),
+					headline: z.string(),
+					paragraphs: z.array(z.string()).min(1),
+					costs: z
+						.array(
+							z.object({
+								icon: z.string(),
+								label: z.string(),
+								description: z.string(),
+							}),
+						)
+						.min(3)
+						.max(4),
+				})
+				.optional(),
 			benefits: z.object({
 				headline: z.string(),
 				items: z
@@ -49,11 +74,49 @@ const landings = defineCollection({
 					)
 					.min(3),
 			}),
+			howItWorks: z
+				.object({
+					headline: z.string(),
+					subhead: z.string().optional(),
+					steps: z
+						.array(
+							z.object({
+								number: z.string(),
+								title: z.string(),
+								description: z.string(),
+								duration: z.string().optional(),
+							}),
+						)
+						.length(4),
+				})
+				.optional(),
 			qualification: z.object({
 				headline: z.string(),
 				intro: z.string().optional(),
 				items: z.array(z.string()).min(3),
 			}),
+			notFor: z
+				.object({
+					headline: z.string(),
+					intro: z.string().optional(),
+					items: z.array(z.string()).min(3).max(5),
+				})
+				.optional(),
+			faq: z
+				.object({
+					headline: z.string(),
+					subhead: z.string().optional(),
+					items: z
+						.array(
+							z.object({
+								q: z.string(),
+								a: z.string(),
+							}),
+						)
+						.min(4)
+						.max(10),
+				})
+				.optional(),
 			finalCta: z.object({
 				headline: z.string(),
 				paragraphs: z.array(z.string()).min(1),
@@ -74,8 +137,9 @@ const landings = defineCollection({
 					"typebot-popup",
 					"external-url",
 					"whatsapp",
+					"native-quiz",
 				]),
-				url: z.string().url(),
+				url: internalOrAbsoluteUrl,
 				whatsappMessage: z.string().startsWith("Olá, Laura!").optional(),
 			}),
 		})
@@ -85,4 +149,108 @@ const landings = defineCollection({
 		}),
 });
 
-export const collections = { landings };
+const quizOptionSchema = z.object({
+	id: z.string(),
+	label: z.string(),
+	weight: z.number().min(0).max(100),
+});
+
+const stepMultipleChoice = z.object({
+	id: z.string(),
+	type: z.literal("multiple-choice"),
+	title: z.string(),
+	helperText: z.string().optional(),
+	scoreField: z.string(),
+	options: z.array(quizOptionSchema).min(2).max(6),
+});
+
+const stepScale = z.object({
+	id: z.string(),
+	type: z.literal("scale"),
+	title: z.string(),
+	helperText: z.string().optional(),
+	scoreField: z.string(),
+	scale: z.object({
+		min: z.number().int(),
+		max: z.number().int(),
+		minLabel: z.string(),
+		maxLabel: z.string(),
+		weights: z.array(z.number().min(0).max(100)),
+	}),
+});
+
+const stepContact = z.object({
+	id: z.string(),
+	type: z.literal("contact"),
+	title: z.string(),
+	helperText: z.string().optional(),
+	fields: z
+		.array(
+			z.object({
+				name: z.enum(["name", "whatsapp", "email", "clinicName", "cityState"]),
+				label: z.string(),
+				placeholder: z.string().optional(),
+				required: z.boolean().default(false),
+			}),
+		)
+		.min(1),
+});
+
+const quizStepSchema = z.discriminatedUnion("type", [
+	stepMultipleChoice,
+	stepScale,
+	stepContact,
+]);
+
+const quizzes = defineCollection({
+	loader: glob({ pattern: "**/*.json", base: "src/content/quizzes" }),
+	schema: z
+		.object({
+			slug: z.string(),
+			version: z.string().regex(/^\d+\.\d+\.\d+$/, "Use semver (x.y.z)."),
+			intro: z.object({
+				eyebrow: z.string().optional(),
+				headline: z.string(),
+				subhead: z.string().optional(),
+				helperText: z.string().optional(),
+			}),
+			steps: z.array(quizStepSchema).min(1),
+			consent: z.object({
+				label: z.string(),
+				linkText: z.string(),
+				privacyPolicyHref: z.string().startsWith("/"),
+			}),
+			thanksScreen: z.object({
+				headline: z.string(),
+				body: z.string(),
+				nextSteps: z.array(z.string()).min(1),
+				cta: z
+					.object({
+						label: z.string(),
+						href: z.string().optional(),
+						whatsappMessage: z.string().startsWith("Olá, Laura!").optional(),
+					})
+					.optional(),
+			}),
+			errorScreen: z.object({
+				headline: z.string(),
+				body: z.string(),
+				retryLabel: z.string(),
+				fallbackLabel: z.string(),
+				fallbackWhatsappTemplate: z.string().startsWith("Olá, Laura!"),
+			}),
+			scoring: z.object({
+				maxScore: z.number().int().min(1).max(1000),
+				thresholds: z.object({
+					warm: z.number().int(),
+					hot: z.number().int(),
+				}),
+			}),
+		})
+		.refine((data) => !HEX_LITERAL.test(JSON.stringify(data)), {
+			message:
+				"Hex color literals are forbidden in quiz copy (cardinal #7). Use semantic tokens or named utilities.",
+		}),
+});
+
+export const collections = { landings, quizzes };

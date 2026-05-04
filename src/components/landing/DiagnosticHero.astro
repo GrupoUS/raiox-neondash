@@ -7,6 +7,7 @@ interface HeroData {
 	headline: string;
 	tagline: string;
 	subhead: string;
+	problemPills?: string[];
 	cta: {
 		label: string;
 		helperText?: string;
@@ -54,12 +55,28 @@ const { hero, primaryCtaUrl } = Astro.props;
 		</p>
 
 		<p
-			class="text-base md:text-lg text-muted leading-relaxed mb-10 max-w-2xl mx-auto"
+			class="text-base md:text-lg text-muted leading-relaxed mb-8 max-w-2xl mx-auto"
 			data-reveal="up"
 			data-reveal-delay="3"
 		>
 			{hero.subhead}
 		</p>
+
+		{
+			hero.problemPills && hero.problemPills.length > 0 && (
+				<ul
+					class="flex flex-wrap items-center justify-center gap-2 mb-10 list-none"
+					data-reveal="up"
+					data-reveal-delay="3"
+				>
+					{hero.problemPills.map((pill) => (
+						<li class="rounded-full border border-gold/30 bg-gold-soft px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-gold-light">
+							{pill}
+						</li>
+					))}
+				</ul>
+			)
+		}
 
 		<div
 			class="flex flex-col items-center gap-3"

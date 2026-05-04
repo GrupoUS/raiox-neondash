@@ -2,21 +2,57 @@
 	"slug": "raio-x",
 	"seo": {
 		"title": "Raio-X Gratuito — Diagnóstico para sua Clínica | Grupo US",
-		"description": "Sessão de Diagnóstico Gratuita para donos de clínica de estética que querem clareza sobre o próximo passo. Análise estratégica direta com a equipe da Dra. Sacha. Vagas limitadas por semana.",
+		"description": "Sessão de Diagnóstico Gratuita para donos de clínica de estética que cresceram mais rápido que a gestão. Conversa estruturada com a equipe da Dra. Sacha. Vagas limitadas por semana.",
 		"ogImage": "/og/raio-x.png"
 	},
 	"hero": {
-		"eyebrow": "Para donos de clínica de estética",
+		"eyebrow": "Para donos de clínica de estética que cresceram no escuro",
 		"headline": "Raio-X Gratuito",
 		"tagline": "Sessão de Diagnóstico Gratuita para a sua clínica",
-		"subhead": "Em uma conversa estruturada com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos da sua operação e o próximo movimento estratégico — sem pitch, sem enrolação.",
+		"subhead": "Em uma conversa estruturada de 45 minutos com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos reais da sua operação e o próximo movimento estratégico — sem pitch, sem enrolação.",
+		"problemPills": [
+			"Cadeira vazia toda semana",
+			"Lead que esfria em horas",
+			"Lucro que ninguém enxerga"
+		],
 		"cta": {
-			"label": "Quero minha Sessão!",
-			"helperText": "Resposta em até 24 horas"
+			"label": "Quero minha Sessão",
+			"helperText": "Resposta em até 24 horas no WhatsApp"
 		},
 		"trustSignals": {
 			"urgencyMicrocopy": "Vagas limitadas por semana"
 		}
+	},
+	"problem": {
+		"eyebrow": "O ponto cego da maioria das clínicas",
+		"headline": "Sua clínica cresce, mas a clareza não acompanha.",
+		"paragraphs": [
+			"Você atende, fatura, vê paciente entrar e sair — e quando o mês fecha, fica a pergunta: quanto disso virou lucro de verdade?",
+			"A operação anda bem o suficiente para não parar. Mas a sensação de estar pilotando no escuro persiste: agenda cheia em alguns dias, cadeira vazia em outros, lead que entra e some no WhatsApp, decisão importante tomada por intuição.",
+			"É exatamente esse ponto cego que o Raio-X resolve antes de qualquer estratégia nova."
+		],
+		"costs": [
+			{
+				"icon": "CalendarX",
+				"label": "Cadeira vazia silenciosa",
+				"description": "Estudos brasileiros apontam 20 a 30% de absenteísmo em clínicas. Cada cadeira vazia é receita que poderia ter ficado."
+			},
+			{
+				"icon": "MessageCircleOff",
+				"label": "Lead que esfria rápido",
+				"description": "Quando a resposta demora horas, o paciente esfria. O CAC sobe, a agenda esvazia, e fica difícil cravar onde foi a falha."
+			},
+			{
+				"icon": "EyeOff",
+				"label": "Lucro que ninguém vê",
+				"description": "Faturamento alto não é lucro alto. Sem visibilidade de custo por procedimento, qualquer expansão vira aposta."
+			},
+			{
+				"icon": "Briefcase",
+				"label": "Dono operando demais",
+				"description": "Atendimento, gestão, financeiro e marketing nas mesmas mãos. O crescimento bate no teto da sua agenda."
+			}
+		]
 	},
 	"benefits": {
 		"headline": "O que você leva da sessão",
@@ -24,7 +60,7 @@
 			{
 				"icon": "Stethoscope",
 				"title": "Diagnóstico clínico da operação",
-				"description": "Análise estruturada de tráfego, agenda, conversão e retenção da sua clínica."
+				"description": "Análise estruturada de captação, agenda, conversão e retenção da sua clínica."
 			},
 			{
 				"icon": "Target",
@@ -40,32 +76,97 @@
 				"icon": "Map",
 				"title": "Roteiro do próximo movimento",
 				"description": "Mapa estratégico do que vem antes — produto, posicionamento, faturamento ou estrutura de time."
+			}
+		]
+	},
+	"howItWorks": {
+		"headline": "Como funciona seu Raio-X",
+		"subhead": "Uma sessão estruturada — não uma demo de software.",
+		"steps": [
+			{
+				"number": "01",
+				"title": "Você responde o Raio-X",
+				"description": "Cinco perguntas rápidas para a Laura preparar uma conversa sob medida com a sua realidade.",
+				"duration": "≤ 2 min"
 			},
 			{
-				"icon": "Users",
-				"title": "Conexão com a Comunidade US",
-				"description": "Acesso à rede de donos de clínica que já trilhou o mesmo caminho de crescimento."
+				"number": "02",
+				"title": "Laura confirma sua agenda",
+				"description": "Em até 24 horas úteis, a Laura entra em contato pelo WhatsApp para escolher um horário que cabe na sua semana.",
+				"duration": "24h úteis"
+			},
+			{
+				"number": "03",
+				"title": "Sessão de Diagnóstico ao vivo",
+				"description": "45 minutos de conversa direta com a equipe. Você fala da sua operação, a gente mapeia os gargalos com você.",
+				"duration": "45 min"
+			},
+			{
+				"number": "04",
+				"title": "Você sai com um caminho",
+				"description": "Resumo prático e o próximo movimento estratégico, independente de fechar qualquer programa com a gente."
 			}
 		]
 	},
 	"qualification": {
 		"headline": "Esta sessão é para você se",
-		"intro": "Você se reconhece em algum desses pontos:",
+		"intro": "Pelo menos um destes pontos descreve seu momento atual:",
 		"items": [
-			"Você já tem ou está estruturando uma clínica de estética e quer crescer com método, não com sorte.",
-			"Você sente que falta clareza sobre onde investir tempo, dinheiro e energia para chegar ao próximo nível.",
-			"Você prefere uma análise honesta e gratuita antes de qualquer compromisso financeiro."
+			"Você é dono(a) de clínica ou consultório de estética e sente que a operação cresceu mais rápido que a gestão.",
+			"Você fatura todo mês, mas não consegue dizer com precisão qual procedimento dá mais lucro nem qual horário rende mais.",
+			"Você sente que perde lead, paciente ou tempo — mas não consegue cravar onde exatamente.",
+			"Você prefere uma análise honesta e gratuita antes de investir em mais marketing, mais profissional ou mais sistema."
+		]
+	},
+	"notFor": {
+		"headline": "Esta sessão não é para você se",
+		"intro": "Para ser justo com o seu tempo e o nosso:",
+		"items": [
+			"Você ainda não abriu uma clínica e procura mentoria de empreendedorismo zero a um.",
+			"Você quer apenas uma demonstração de software — o Raio-X é diagnóstico de operação, não tour de produto.",
+			"Você espera resposta em 5 minutos. A sessão é honesta porque é estruturada — leva 45.",
+			"Você não está disposto a olhar números reais da sua clínica. Sem dado, qualquer conversa vira achismo."
+		]
+	},
+	"faq": {
+		"headline": "Perguntas frequentes",
+		"subhead": "Resolvendo as dúvidas comuns antes do agendamento.",
+		"items": [
+			{
+				"q": "É realmente gratuito?",
+				"a": "Sim. A Sessão de Diagnóstico é gratuita e individual. Você só investe os 45 minutos da conversa."
+			},
+			{
+				"q": "Quanto tempo dura?",
+				"a": "45 minutos por videochamada, agendados pela Laura no horário que melhor cabe na sua semana."
+			},
+			{
+				"q": "Vou ouvir um pitch comercial?",
+				"a": "Não é o foco. Se fizer sentido apresentar uma solução do Grupo US no fim, fazemos com transparência. Mas você sai com um caminho mesmo se nunca mais conversarmos."
+			},
+			{
+				"q": "Quem conduz a sessão?",
+				"a": "A equipe da Dra. Sacha — profissionais que vivem a rotina de clínicas de estética e já passaram pelos mesmos gargalos que você."
+			},
+			{
+				"q": "E se eu ainda não estiver pronto para investir?",
+				"a": "Tudo bem. A sessão é pensada para você sair com clareza, mesmo que o próximo passo seja apenas reorganizar o que já existe."
+			},
+			{
+				"q": "Como vocês usam meus dados?",
+				"a": "Apenas para preparar a sessão e fazer o contato. Sem listas, sem disparos. Detalhes completos na nossa Política de Privacidade."
+			}
 		]
 	},
 	"finalCta": {
 		"headline": "Vagas limitadas — garanta a sua agora",
 		"paragraphs": [
-			"A Sessão de Diagnóstico é gratuita e individual, conduzida pela equipe da Dra. Sacha por agendamento direto.",
-			"Como o formato exige análise personalizada, abrimos apenas algumas vagas por semana. Quem chega primeiro garante."
+			"A Sessão de Diagnóstico é gratuita, individual e conduzida pela equipe da Dra. Sacha por agendamento direto.",
+			"Como o formato exige análise personalizada, abrimos apenas algumas vagas por semana. Quem chega primeiro, garante."
 		],
 		"cta": {
-			"label": "Quero minha Sessão de Diagnóstico Gratuita",
-			"microcopy": "Preencha as perguntas e garanta sua vaga"
+			"label": "Quero meu Raio-X agora",
+			"microcopy": "Cinco perguntas rápidas — menos de 2 minutos"
 		},
 		"secondaryCta": {
 			"label": "Prefere conversar direto? Fale com a Laura",
@@ -73,7 +174,7 @@
 		}
 	},
 	"primaryCta": {
-		"mode": "typebot-iframe",
-		"url": "https://typebot.io/grupo-us-raio-x"
+		"mode": "native-quiz",
+		"url": "/raio-x/perguntas"
 	}
 }

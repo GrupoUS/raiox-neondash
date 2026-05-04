@@ -1,40 +1,203 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
+const lastUpdated = "04 de maio de 2026";
 ---
 
 <Layout
 	title="Política de Privacidade | Grupo US"
-	description="Política de privacidade do Grupo US referente à coleta e tratamento de dados pessoais em conformidade com a LGPD. Em desenvolvimento — entre em contato pelo e-mail oficial para esclarecimentos."
+	description="Política de privacidade do Grupo US sobre a coleta e tratamento de dados no Raio-X Gratuito, em conformidade com a LGPD. Saiba quais dados coletamos, como usamos e seus direitos como titular."
 >
-	<article class="max-w-3xl mx-auto px-6 lg:px-8 py-20 md:py-28">
-		<h1
-			class="font-serif text-4xl md:text-5xl font-bold mb-8"
-		>
-			<span class="text-gradient-gold">Política de Privacidade</span>
-		</h1>
+	<article
+		class="max-w-3xl mx-auto px-6 lg:px-8 py-20 md:py-28 space-y-10"
+	>
+		<header>
+			<h1 class="font-serif text-4xl md:text-5xl font-bold mb-3">
+				<span class="text-gradient-gold">Política de Privacidade</span>
+			</h1>
+			<p class="text-sm text-muted">Última atualização: {lastUpdated}</p>
+		</header>
 
-		<div class="space-y-5 text-base md:text-lg text-foreground leading-relaxed">
+		<section class="space-y-4 text-base md:text-lg text-foreground leading-relaxed">
 			<p>
-				Esta página está em desenvolvimento. O Grupo US está finalizando a
-				redação da política de privacidade completa em conformidade com a Lei
-				Geral de Proteção de Dados (LGPD).
+				Esta política descreve como o <strong>Grupo US</strong> coleta, usa,
+				armazena e protege os dados pessoais dos titulares que interagem com o
+				site <strong>raiox.gpus.com.br</strong>, em especial pelo formulário de
+				diagnóstico do <strong>Raio-X Gratuito</strong>. Tudo em conformidade
+				com a Lei Geral de Proteção de Dados (Lei nº 13.709/2018 — LGPD).
 			</p>
+		</section>
 
-			<p>
-				Para qualquer dúvida sobre o tratamento dos seus dados pessoais,
-				solicitação de acesso, correção ou exclusão, entre em contato pelo
-				e-mail{" "}
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				1. Quais dados coletamos
+			</h2>
+			<ul class="list-disc pl-5 space-y-2 text-base text-muted leading-relaxed">
+				<li>
+					<strong class="text-foreground">Dados de contato</strong>: nome,
+					número de WhatsApp e e-mail informados no Raio-X.
+				</li>
+				<li>
+					<strong class="text-foreground">Dados de negócio (opcionais)</strong>:
+					nome da clínica e cidade/UF.
+				</li>
+				<li>
+					<strong class="text-foreground">Respostas do diagnóstico</strong>:
+					estágio, faixa de faturamento, gargalos percebidos, urgência e
+					histórico de consultoria.
+				</li>
+				<li>
+					<strong class="text-foreground">Dados técnicos agregados</strong>:
+					origem da visita (UTM), referrer, agente do navegador (truncado) e
+					página de origem.
+				</li>
+				<li>
+					<strong class="text-foreground">Métricas anônimas de navegação</strong>:
+					métricas agregadas via Plausible (cookieless) e Vercel Web Analytics
+					(cookieless), sem identificação pessoal.
+				</li>
+			</ul>
+			<p class="text-sm text-muted">
+				Não coletamos CPF, dados sensíveis de saúde de pacientes, dados
+				bancários ou qualquer informação não estritamente necessária ao
+				agendamento da Sessão de Diagnóstico.
+			</p>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				2. Para que usamos seus dados
+			</h2>
+			<ul class="list-disc pl-5 space-y-2 text-base text-muted leading-relaxed">
+				<li>
+					Qualificar seu momento e preparar uma Sessão de Diagnóstico sob
+					medida.
+				</li>
+				<li>
+					Realizar contato comercial direto (WhatsApp ou e-mail) para
+					agendamento da sessão.
+				</li>
+				<li>
+					Enviar comunicação posterior estritamente relacionada à Sessão de
+					Diagnóstico solicitada.
+				</li>
+				<li>
+					Melhorar continuamente a experiência do site por meio de métricas
+					agregadas e anônimas.
+				</li>
+			</ul>
+			<p class="text-base text-muted">
+				Não enviamos disparos em massa, não vendemos seus dados e não
+				utilizamos suas informações para perfis publicitários terceirizados.
+			</p>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				3. Base legal
+			</h2>
+			<ul class="list-disc pl-5 space-y-2 text-base text-muted leading-relaxed">
+				<li>
+					<strong class="text-foreground">Consentimento</strong> (art. 7º, I,
+					LGPD) — para o tratamento dos dados informados no Raio-X. O
+					consentimento é registrado com data e hora no momento do envio.
+				</li>
+				<li>
+					<strong class="text-foreground">Legítimo interesse</strong> (art. 7º,
+					IX, LGPD) — para métricas agregadas e anônimas de navegação que
+					ajudam a manter o site funcionando.
+				</li>
+			</ul>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				4. Compartilhamento com operadores
+			</h2>
+			<p class="text-base text-muted leading-relaxed">
+				Suas respostas e contato são enviados ao nosso sistema de gestão de
+				relacionamento (CRM) por meio de webhook seguro, a fim de organizar o
+				agendamento e o histórico do atendimento. Não compartilhamos seus
+				dados com terceiros para qualquer finalidade não declarada nesta
+				política.
+			</p>
+			<p class="text-base text-muted leading-relaxed">
+				Plausible e Vercel Web Analytics atuam como operadores de métricas
+				anonimizadas e cookieless, sem identificar visitantes individualmente.
+			</p>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				5. Retenção
+			</h2>
+			<p class="text-base text-muted leading-relaxed">
+				Mantemos seus dados por até <strong class="text-foreground">24 meses</strong> após
+				o último contato comercial, ou até que você solicite a exclusão — o que
+				ocorrer primeiro.
+			</p>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				6. Direitos do titular
+			</h2>
+			<p class="text-base text-muted leading-relaxed">
+				Conforme a LGPD, você pode, a qualquer momento, solicitar:
+			</p>
+			<ul class="list-disc pl-5 space-y-2 text-base text-muted leading-relaxed">
+				<li>Confirmação da existência de tratamento dos seus dados.</li>
+				<li>Acesso e cópia dos seus dados.</li>
+				<li>Correção de dados incompletos, inexatos ou desatualizados.</li>
+				<li>
+					Anonimização, bloqueio ou eliminação de dados desnecessários ou
+					excessivos.
+				</li>
+				<li>Revogação do consentimento.</li>
+				<li>Portabilidade dos dados.</li>
+				<li>Informação sobre operadores com os quais compartilhamos dados.</li>
+			</ul>
+			<p class="text-base text-muted leading-relaxed">
+				Para exercer qualquer um destes direitos, escreva para{" "}
 				<a
 					href="mailto:suporte@drasacha.com.br"
 					class="text-gold underline underline-offset-2 hover:text-gold-light transition-colors"
-				>
-					suporte@drasacha.com.br
-				</a>.
+					>suporte@drasacha.com.br</a
+				>. Respondemos em até 15 dias úteis.
 			</p>
+		</section>
 
-			<p class="text-sm text-muted">
-				Última atualização: maio de 2026.
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				7. Cookies
+			</h2>
+			<p class="text-base text-muted leading-relaxed">
+				O site utiliza apenas armazenamento local de sessão (sessionStorage)
+				para preservar suas respostas durante o preenchimento do Raio-X — esses
+				dados ficam no seu navegador e são apagados ao final da sessão. As
+				ferramentas de métricas usadas são cookieless por padrão.
 			</p>
-		</div>
+		</section>
+
+		<section class="space-y-3">
+			<h2 class="font-serif text-2xl md:text-3xl font-semibold text-foreground">
+				8. Contato e encarregado
+			</h2>
+			<p class="text-base text-muted leading-relaxed">
+				Para qualquer dúvida sobre esta política ou sobre o tratamento dos seus
+				dados, entre em contato pelo e-mail{" "}
+				<a
+					href="mailto:suporte@drasacha.com.br"
+					class="text-gold underline underline-offset-2 hover:text-gold-light transition-colors"
+					>suporte@drasacha.com.br</a
+				>.
+			</p>
+		</section>
+
+		<p class="text-sm text-muted">
+			Esta política pode ser atualizada periodicamente. Quando isso acontecer,
+			atualizaremos a data acima e, quando relevante, comunicaremos os
+			titulares por e-mail.
+		</p>
 	</article>
 </Layout>

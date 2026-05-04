@@ -13,7 +13,7 @@ interface Props {
 	description: string;
 	ogImage?: string;
 	canonical?: string;
-	jsonLd?: Record<string, unknown>;
+	jsonLd?: Record<string, unknown> | Record<string, unknown>[];
 	breadcrumbs?: BreadcrumbItem[];
 	noIndex?: boolean;
 	withAnalytics?: boolean;
@@ -97,13 +97,14 @@ const enableVercelAnalytics = withAnalytics && import.meta.env.PROD;
 			)
 		}
 		{
-			jsonLd && (
-				<script
-					is:inline
-					type="application/ld+json"
-					set:html={JSON.stringify(jsonLd)}
-				/>
-			)
+			jsonLd &&
+				(Array.isArray(jsonLd) ? jsonLd : [jsonLd]).map((schema) => (
+					<script
+						is:inline
+						type="application/ld+json"
+						set:html={JSON.stringify(schema)}
+					/>
+				))
 		}
 
 		{

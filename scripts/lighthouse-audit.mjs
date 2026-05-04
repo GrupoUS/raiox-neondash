@@ -26,7 +26,7 @@ import * as chromeLauncher from "chrome-launcher";
 // ---------------------------------------------------------------------------
 
 const PAGES = [
-	"/raio-x",
+	"/",
 	"/politica-de-privacidade",
 ];
 

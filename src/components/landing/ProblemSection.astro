@@ -1,0 +1,46 @@
+---
+interface Props {
+	eyebrow?: string;
+	headline: string;
+	paragraphs: string[];
+}
+
+const { eyebrow, headline, paragraphs } = Astro.props;
+---
+
+<section class="py-20 md:py-24 px-6 lg:px-8">
+	<div class="max-w-3xl mx-auto text-center">
+		{
+			eyebrow && (
+				<p
+					class="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-gold mb-5"
+					data-reveal="up"
+				>
+					{eyebrow}
+				</p>
+			)
+		}
+
+		<h2
+			class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-8"
+			data-reveal="up"
+			data-reveal-delay="1"
+		>
+			<span class="text-gradient-gold">{headline}</span>
+		</h2>
+
+		<div class="space-y-5 text-left md:text-center">
+			{
+				paragraphs.map((paragraph, index) => (
+					<p
+						class="text-base md:text-lg text-muted leading-relaxed"
+						data-reveal="up"
+						data-reveal-delay={String(Math.min(index + 2, 6))}
+					>
+						{paragraph}
+					</p>
+				))
+			}
+		</div>
+	</div>
+</section>

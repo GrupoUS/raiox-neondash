@@ -1,0 +1,69 @@
+---
+interface Step {
+	number: string;
+	title: string;
+	description: string;
+	duration?: string;
+}
+
+interface Props {
+	headline: string;
+	subhead?: string;
+	steps: Step[];
+}
+
+const { headline, subhead, steps } = Astro.props;
+---
+
+<section class="py-20 md:py-24 px-6 lg:px-8">
+	<div class="max-w-5xl mx-auto">
+		<header class="text-center mb-12 md:mb-16">
+			<h2
+				class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4"
+				data-reveal="up"
+			>
+				<span class="text-gradient-gold">{headline}</span>
+			</h2>
+			{
+				subhead && (
+					<p
+						class="text-base md:text-lg text-muted max-w-2xl mx-auto"
+						data-reveal="up"
+						data-reveal-delay="1"
+					>
+						{subhead}
+					</p>
+				)
+			}
+		</header>
+
+		<ol class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6 list-none">
+			{
+				steps.map((step, index) => (
+					<li
+						class="glass-card rounded-2xl p-6 md:p-7 flex flex-col gap-4 h-full"
+						data-reveal="up"
+						data-reveal-delay={String(Math.min(index + 1, 6))}
+					>
+						<div class="flex items-center justify-between">
+							<span class="font-serif text-3xl md:text-4xl font-bold text-gold">
+								{step.number}
+							</span>
+							{step.duration && (
+								<span class="text-xs uppercase tracking-[0.14em] text-gold-light">
+									{step.duration}
+								</span>
+							)}
+						</div>
+						<h3 class="text-lg md:text-xl font-semibold text-foreground">
+							{step.title}
+						</h3>
+						<p class="text-sm md:text-base text-muted leading-relaxed">
+							{step.description}
+						</p>
+					</li>
+				))
+			}
+		</ol>
+	</div>
+</section>

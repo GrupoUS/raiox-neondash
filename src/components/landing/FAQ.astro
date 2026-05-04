@@ -1,0 +1,93 @@
+---
+import { ChevronDown } from "lucide-react";
+
+interface FaqItem {
+	q: string;
+	a: string;
+}
+
+interface Props {
+	headline: string;
+	subhead?: string;
+	items: FaqItem[];
+}
+
+const { headline, subhead, items } = Astro.props;
+---
+
+<section class="py-20 md:py-24 px-6 lg:px-8">
+	<div class="max-w-3xl mx-auto">
+		<header class="text-center mb-10 md:mb-14">
+			<h2
+				class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4"
+				data-reveal="up"
+			>
+				<span class="text-gradient-gold">{headline}</span>
+			</h2>
+			{
+				subhead && (
+					<p
+						class="text-base md:text-lg text-muted max-w-2xl mx-auto"
+						data-reveal="up"
+						data-reveal-delay="1"
+					>
+						{subhead}
+					</p>
+				)
+			}
+		</header>
+
+		<ul class="space-y-3 list-none">
+			{
+				items.map((item, index) => (
+					<li
+						data-reveal="up"
+						data-reveal-delay={String(Math.min(index + 1, 6))}
+					>
+						<details class="faq-item glass-card rounded-2xl px-5 md:px-6 py-2 group">
+							<summary class="faq-summary flex items-center justify-between gap-4 py-3 md:py-4 cursor-pointer list-none text-left text-base md:text-lg font-semibold text-foreground">
+								<span class="flex-1">{item.q}</span>
+								<span
+									class="shrink-0 size-8 rounded-full border border-gold/40 flex items-center justify-center text-gold transition-transform duration-300 group-open:rotate-180"
+									aria-hidden="true"
+								>
+									<ChevronDown width={16} height={16} />
+								</span>
+							</summary>
+							<div class="faq-content">
+								<div class="overflow-hidden">
+									<p class="pb-4 md:pb-5 text-sm md:text-base text-muted leading-relaxed">
+										{item.a}
+									</p>
+								</div>
+							</div>
+						</details>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+</section>
+
+<style>
+	/* Cardinal #8 — animate grid-template-rows, never height */
+	.faq-item .faq-content {
+		display: grid;
+		grid-template-rows: 0fr;
+		transition: grid-template-rows 0.3s ease-out;
+	}
+	.faq-item[open] .faq-content {
+		grid-template-rows: 1fr;
+	}
+	.faq-summary::-webkit-details-marker {
+		display: none;
+	}
+	.faq-summary::marker {
+		display: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.faq-item .faq-content {
+			transition: none;
+		}
+	}
+</style>

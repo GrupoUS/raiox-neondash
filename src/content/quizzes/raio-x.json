@@ -1,0 +1,179 @@
+{
+	"slug": "raio-x",
+	"version": "1.0.0",
+	"intro": {
+		"eyebrow": "Sessão de Diagnóstico Gratuita",
+		"headline": "Vamos entender o momento da sua clínica",
+		"subhead": "5 perguntas rápidas para a Laura preparar uma conversa sob medida com você. Leva menos de 2 minutos.",
+		"helperText": "Suas respostas ficam apenas com nossa equipe. Sem listas, sem disparos."
+	},
+	"steps": [
+		{
+			"id": "stage",
+			"type": "multiple-choice",
+			"title": "Como você descreveria o momento atual da sua clínica?",
+			"helperText": "Escolha a frase que mais combina com hoje.",
+			"scoreField": "stage",
+			"options": [
+				{
+					"id": "inicial",
+					"label": "Acabei de abrir ou ainda estou validando (até 6 meses)",
+					"weight": 5
+				},
+				{
+					"id": "crescimento",
+					"label": "Em crescimento, mas com gargalos operacionais",
+					"weight": 15
+				},
+				{
+					"id": "estabelecida",
+					"label": "Estabelecida e faturando bem, mas com problemas de escala",
+					"weight": 25
+				},
+				{
+					"id": "pronta",
+					"label": "Quero fazer um diagnóstico estratégico agora",
+					"weight": 20
+				}
+			]
+		},
+		{
+			"id": "revenue",
+			"type": "multiple-choice",
+			"title": "Qual a faixa aproximada de faturamento mensal da clínica?",
+			"helperText": "Estimativa serve. Ninguém vai pedir nota fiscal.",
+			"scoreField": "revenue",
+			"options": [
+				{ "id": "ate-10k", "label": "Até R$ 10 mil", "weight": 5 },
+				{ "id": "10-30k", "label": "R$ 10 mil a R$ 30 mil", "weight": 15 },
+				{ "id": "30-80k", "label": "R$ 30 mil a R$ 80 mil", "weight": 25 },
+				{ "id": "80k-mais", "label": "Acima de R$ 80 mil", "weight": 30 }
+			]
+		},
+		{
+			"id": "bottleneck",
+			"type": "multiple-choice",
+			"title": "Onde você sente que mais perde tempo, dinheiro ou energia hoje?",
+			"helperText": "A primeira que vier à cabeça.",
+			"scoreField": "bottleneck",
+			"options": [
+				{
+					"id": "marketing",
+					"label": "Captação de leads e marketing",
+					"weight": 10
+				},
+				{
+					"id": "operacional",
+					"label": "Agenda, no-show e organização do dia a dia",
+					"weight": 15
+				},
+				{
+					"id": "financeiro",
+					"label": "Visibilidade de lucro, custos e precificação",
+					"weight": 15
+				},
+				{ "id": "time", "label": "Equipe e processos internos", "weight": 12 },
+				{
+					"id": "indeciso",
+					"label": "Honestamente, ainda não sei dizer",
+					"weight": 5
+				}
+			]
+		},
+		{
+			"id": "urgency",
+			"type": "scale",
+			"title": "Quão urgente é resolver isso para você?",
+			"helperText": "1 = posso esperar, 5 = preciso resolver agora.",
+			"scoreField": "urgency",
+			"scale": {
+				"min": 1,
+				"max": 5,
+				"minLabel": "Posso esperar",
+				"maxLabel": "Preciso resolver agora",
+				"weights": [4, 8, 12, 16, 20]
+			}
+		},
+		{
+			"id": "consultancyHistory",
+			"type": "multiple-choice",
+			"title": "Você já trabalhou com consultoria ou mentoria de gestão antes?",
+			"scoreField": "consultancyHistory",
+			"options": [
+				{ "id": "nunca", "label": "Nunca", "weight": 5 },
+				{ "id": "ja-tive", "label": "Já tive, hoje não tenho", "weight": 10 },
+				{ "id": "atualmente", "label": "Tenho atualmente", "weight": 3 }
+			]
+		},
+		{
+			"id": "contact",
+			"type": "contact",
+			"title": "Para fechar — como a Laura entra em contato?",
+			"helperText": "Resposta em até 24 horas em horário comercial.",
+			"fields": [
+				{
+					"name": "name",
+					"label": "Seu nome",
+					"placeholder": "Como prefere ser chamado(a)",
+					"required": true
+				},
+				{
+					"name": "whatsapp",
+					"label": "WhatsApp",
+					"placeholder": "(00) 00000-0000",
+					"required": true
+				},
+				{
+					"name": "email",
+					"label": "E-mail",
+					"placeholder": "voce@suaclinica.com.br",
+					"required": true
+				},
+				{
+					"name": "clinicName",
+					"label": "Nome da clínica",
+					"placeholder": "Opcional",
+					"required": false
+				},
+				{
+					"name": "cityState",
+					"label": "Cidade / UF",
+					"placeholder": "Opcional",
+					"required": false
+				}
+			]
+		}
+	],
+	"consent": {
+		"label": "Concordo com o tratamento dos meus dados pelo Grupo US para fins de agendamento e contato sobre a Sessão de Diagnóstico, conforme a",
+		"linkText": "Política de Privacidade",
+		"privacyPolicyHref": "/politica-de-privacidade"
+	},
+	"thanksScreen": {
+		"headline": "Diagnóstico recebido. Estamos com você.",
+		"body": "A Laura, da nossa equipe, entra em contato pelo WhatsApp em até 24 horas para agendar sua Sessão de Diagnóstico de 45 minutos. Sem pitch, sem enrolação — só a conversa que você precisa.",
+		"nextSteps": [
+			"Você recebe uma mensagem da Laura no WhatsApp confirmando o melhor horário.",
+			"Na sessão, mapeamos juntos os gargalos da sua operação.",
+			"Você sai com clareza sobre o próximo movimento estratégico — independente de fechar com a gente."
+		],
+		"cta": {
+			"label": "Conversar agora no WhatsApp",
+			"whatsappMessage": "Olá, Laura! Acabei de fazer o Raio-X e quero adiantar a conversa."
+		}
+	},
+	"errorScreen": {
+		"headline": "Quase lá — vamos finalizar pelo WhatsApp",
+		"body": "Tivemos um problema técnico ao registrar suas respostas. Clique abaixo para enviar direto para a Laura — suas respostas vão junto na mensagem.",
+		"retryLabel": "Tentar novamente",
+		"fallbackLabel": "Falar com a Laura agora",
+		"fallbackWhatsappTemplate": "Olá, Laura! Acabei de responder o Raio-X e gostaria de agendar a Sessão de Diagnóstico."
+	},
+	"scoring": {
+		"maxScore": 105,
+		"thresholds": {
+			"warm": 40,
+			"hot": 70
+		}
+	}
+}

@@ -1,27 +1,54 @@
 ---
 import { getEntry } from "astro:content";
+import Quiz from "../../components/quiz/Quiz";
 import Layout from "../../layouts/Layout.astro";
+import {
+	WHATSAPP_DEFAULT_SITE_MESSAGE,
+	whatsappUrlWithText,
+} from "../../lib/whatsapp";
 
-const entry = await getEntry("landings", "raio-x");
+const entry = await getEntry("quizzes", "raio-x");
 if (!entry) {
-	throw new Error("Landing entry 'raio-x' not found in src/content/landings/");
+	throw new Error("Quiz entry 'raio-x' not found in src/content/quizzes/");
 }
 
-const { primaryCta } = entry.data;
+const webhookUrl = import.meta.env.PUBLIC_QUIZ_WEBHOOK_URL as
+	| string
+	| undefined;
+
+const fallbackWhatsappHref = whatsappUrlWithText(WHATSAPP_DEFAULT_SITE_MESSAGE);
 ---
 
 <Layout
-	title="Perguntas — Sessão de Diagnóstico Gratuita | Grupo US"
-	description="Responda às perguntas para garantir sua Sessão de Diagnóstico Gratuita do Raio-X. Atendimento individual conduzido pela equipe da Dra. Sacha."
+	title="Raio-X Gratuito — Perguntas | Grupo US"
+	description="Responda às perguntas do Raio-X em menos de 2 minutos para a Laura preparar sua Sessão de Diagnóstico Gratuita sob medida para sua clínica de estética."
 	noIndex={true}
-	withAnalytics={false}
-	bodyClass="bg-navy m-0 p-0"
+	withAnalytics={true}
 >
-	<iframe
-		src={primaryCta.url}
-		title="Sessão de Diagnóstico Gratuita — Perguntas"
-		allow="clipboard-write; camera; microphone"
-		loading="eager"
-		class="block w-full h-[100dvh] border-0 bg-navy"
-	/>
+	<div class="min-h-screen bg-navy landing-mesh-bg">
+		<Quiz
+			client:load
+			quiz={entry.data}
+			webhookUrl={webhookUrl}
+			landingPath="/raio-x/perguntas"
+		/>
+		<noscript>
+			<section class="mx-auto w-full max-w-2xl px-4 py-16 text-center">
+				<h1 class="font-serif text-3xl text-foreground">
+					Habilite o JavaScript para responder o Raio-X
+				</h1>
+				<p class="mt-4 text-base text-muted">
+					Ou fale direto com a Laura, nossa SDR, pelo WhatsApp.
+				</p>
+				<a
+					href={fallbackWhatsappHref}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="mt-8 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-lg bg-gold px-6 py-3 text-base font-semibold text-navy"
+				>
+					Falar com a Laura no WhatsApp
+				</a>
+			</section>
+		</noscript>
+	</div>
 </Layout>
