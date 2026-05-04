@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.anthropic.com)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "WebSearch",
+      "mcp__claude_ai_Context7__resolve-library-id",
+      "mcp__claude_ai_Context7__query-docs",
+      "mcp__tavily__search",
+      "mcp__sequential-thinking__sequentialthinking",
+      "Skill(codex:rescue)",
+      "WebFetch(domain:docs.claude.com)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "python \"$CLAUDE_PROJECT_DIR\"/.claude/scripts/context-monitor.py"
+  },
+  "$comment": "Per-machine settings (typically gitignored). Add allowlists for the user's local environment, never project-specific staging URLs hardcoded here in committed form.",
+  "outputStyle": "default"
+}
