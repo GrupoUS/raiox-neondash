@@ -6,6 +6,10 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 import { EnumChangefreq } from "sitemap";
 
+const SITEMAP_EXCLUDE_RE = /\/raio-x\/perguntas\/?$/;
+const SITEMAP_RAIO_X_RE = /\/raio-x\/?$/;
+const SITEMAP_PRIVACY_RE = /\/politica-de-privacidade\/?$/;
+
 // https://astro.build/config
 export default defineConfig({
 	site: "https://harmonic-pascal.grupous.com.br",
@@ -28,13 +32,12 @@ export default defineConfig({
 	integrations: [
 		react(),
 		sitemap({
-			filter: (page) =>
-				!/\/raio-x\/perguntas\/?$/.test(page),
+			filter: (page) => !SITEMAP_EXCLUDE_RE.test(page),
 			serialize(item) {
-				if (/\/raio-x\/?$/.test(item.url)) {
+				if (SITEMAP_RAIO_X_RE.test(item.url)) {
 					item.priority = 0.9;
 					item.changefreq = EnumChangefreq.MONTHLY;
-				} else if (/\/politica-de-privacidade\/?$/.test(item.url)) {
+				} else if (SITEMAP_PRIVACY_RE.test(item.url)) {
 					item.priority = 0.3;
 					item.changefreq = EnumChangefreq.YEARLY;
 				}

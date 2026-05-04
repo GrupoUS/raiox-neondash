@@ -13,7 +13,7 @@ if (!entry) {
 }
 
 const data = entry.data;
-const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const siteUrl = Astro.site?.href.replace(/\/$/, "") ?? "";
 const primaryCtaHref = "/raio-x/perguntas";
 
 const serviceJsonLd = {

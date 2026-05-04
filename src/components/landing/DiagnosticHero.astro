@@ -29,7 +29,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 		{
 			hero.eyebrow && (
 				<p
-					class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-[var(--color-gold)] mb-6"
+					class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-gold mb-6"
 					data-reveal="up"
 				>
 					{hero.eyebrow}
@@ -38,7 +38,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 		}
 
 		<h1
-			class="font-[family-name:var(--font-serif)] text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6"
+			class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6"
 			data-reveal="up"
 			data-reveal-delay="1"
 		>
@@ -46,7 +46,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 		</h1>
 
 		<p
-			class="text-xl md:text-2xl font-medium text-[var(--color-text-primary)] mb-5 max-w-3xl mx-auto"
+			class="text-xl md:text-2xl font-medium text-foreground mb-5 max-w-3xl mx-auto"
 			data-reveal="up"
 			data-reveal-delay="2"
 		>
@@ -54,7 +54,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 		</p>
 
 		<p
-			class="text-base md:text-lg text-[var(--color-text-muted)] leading-relaxed mb-10 max-w-2xl mx-auto"
+			class="text-base md:text-lg text-muted leading-relaxed mb-10 max-w-2xl mx-auto"
 			data-reveal="up"
 			data-reveal-delay="3"
 		>
@@ -80,7 +80,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 
 			{
 				hero.cta.helperText && (
-					<p class="text-sm text-[var(--color-text-muted)]">
+					<p class="text-sm text-muted">
 						{hero.cta.helperText}
 					</p>
 				)
@@ -88,7 +88,7 @@ const { hero, primaryCtaUrl } = Astro.props;
 
 			{
 				hero.trustSignals?.urgencyMicrocopy && (
-					<p class="text-xs uppercase tracking-[0.18em] text-[var(--color-gold-light)] mt-2">
+					<p class="text-xs uppercase tracking-[0.18em] text-gold-light mt-2">
 						{hero.trustSignals.urgencyMicrocopy}
 					</p>
 				)

@@ -14,7 +14,7 @@ const { headline, intro, items } = Astro.props;
 	<div class="max-w-3xl mx-auto">
 		<div class="glass-card rounded-2xl p-8 md:p-10">
 			<h2
-				class="font-[family-name:var(--font-serif)] text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
+				class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4"
 				data-reveal="up"
 			>
 				<span class="text-gradient-gold">{headline}</span>
@@ -23,7 +23,7 @@ const { headline, intro, items } = Astro.props;
 			{
 				intro && (
 					<p
-						class="text-base md:text-lg text-[var(--color-text-muted)] mb-8"
+						class="text-base md:text-lg text-muted mb-8"
 						data-reveal="up"
 						data-reveal-delay="1"
 					>
@@ -40,10 +40,10 @@ const { headline, intro, items } = Astro.props;
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 2, 6))}
 						>
-							<span class="shrink-0 mt-1 size-6 rounded-full bg-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] flex items-center justify-center text-[var(--color-gold)]">
+							<span class="shrink-0 mt-1 size-6 rounded-full bg-[color-mix(in_srgb,var(--color-gold)_22%,transparent)] flex items-center justify-center text-gold">
 								<Check aria-hidden="true" width={14} height={14} strokeWidth={3} />
 							</span>
-							<p class="text-base md:text-lg text-[var(--color-text-primary)] leading-relaxed">
+							<p class="text-base md:text-lg text-foreground leading-relaxed">
 								{item}
 							</p>
 						</li>

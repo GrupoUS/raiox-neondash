@@ -40,18 +40,16 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const variantClasses: Record<Variant, string> = {
-	primary:
-		"bg-[var(--color-gold)] text-[var(--color-navy)] hover:bg-[var(--color-gold-light)] border border-transparent",
-	whatsapp:
-		"bg-[var(--color-gold)] text-[var(--color-navy)] hover:bg-[var(--color-gold-light)] border border-transparent",
+	primary: "bg-gold text-navy hover:bg-gold-light border border-transparent",
+	whatsapp: "bg-gold text-navy hover:bg-gold-light border border-transparent",
 	outline:
-		"bg-transparent text-[var(--color-gold)] border border-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-[var(--color-navy)]",
+		"bg-transparent text-gold border border-gold hover:bg-gold hover:text-navy",
 	ghost:
-		"bg-transparent text-[var(--color-text-primary)] border border-transparent hover:bg-[color-mix(in_srgb,var(--color-gold)_12%,transparent)]",
+		"bg-transparent text-foreground border border-transparent hover:bg-gold-soft",
 };
 
 const baseClasses =
-	"inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wide transition-[transform,background-color,color,border-color,box-shadow] duration-200 ease-out active:scale-[0.98] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-gold)]";
+	"inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wide transition-[transform,background-color,color,border-color,box-shadow] duration-200 ease-out active:scale-[0.98]";
 
 const glowClass = glow ? "gold-pulse-glow" : "";
 

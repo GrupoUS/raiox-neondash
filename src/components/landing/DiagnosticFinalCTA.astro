@@ -38,7 +38,7 @@ const secondaryHref = finalCta.secondaryCta
 			data-reveal="scale"
 		>
 			<h2
-				class="font-[family-name:var(--font-serif)] text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
+				class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold mb-6"
 				data-reveal="up"
 				data-reveal-delay="1"
 			>
@@ -52,7 +52,7 @@ const secondaryHref = finalCta.secondaryCta
 			>
 				{
 					finalCta.paragraphs.map((paragraph) => (
-						<p class="text-base md:text-lg text-[var(--color-text-primary)] leading-relaxed">
+						<p class="text-base md:text-lg text-foreground leading-relaxed">
 							{paragraph}
 						</p>
 					))
@@ -78,7 +78,7 @@ const secondaryHref = finalCta.secondaryCta
 
 				{
 					finalCta.cta.microcopy && (
-						<p class="text-sm text-[var(--color-text-muted)]">
+						<p class="text-sm text-muted">
 							{finalCta.cta.microcopy}
 						</p>
 					)
@@ -100,11 +100,11 @@ const secondaryHref = finalCta.secondaryCta
 					)
 				}
 
-				<p class="text-xs text-[var(--color-text-muted)] mt-3 max-w-md leading-relaxed">
+				<p class="text-xs text-muted mt-3 max-w-md leading-relaxed">
 					Ao continuar, você aceita nossa{" "}
 					<a
 						href="/politica-de-privacidade"
-						class="underline underline-offset-2 hover:text-[var(--color-gold)] transition-colors"
+						class="underline underline-offset-2 hover:text-gold transition-colors"
 					>
 						política de privacidade
 					</a>

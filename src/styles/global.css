@@ -36,6 +36,39 @@ body {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+/* ===== Named Token Utilities (encapsulate CSS vars) ===== */
+
+@utility bg-gold {
+	background-color: var(--color-gold);
+}
+@utility bg-gold-light {
+	background-color: var(--color-gold-light);
+}
+@utility bg-gold-soft {
+	background-color: color-mix(in srgb, var(--color-gold) 12%, transparent);
+}
+@utility bg-navy {
+	background-color: var(--color-navy);
+}
+@utility text-gold {
+	color: var(--color-gold);
+}
+@utility text-gold-light {
+	color: var(--color-gold-light);
+}
+@utility text-navy {
+	color: var(--color-navy);
+}
+@utility text-foreground {
+	color: var(--color-text-primary);
+}
+@utility text-muted {
+	color: var(--color-text-muted);
+}
+@utility border-gold {
+	border-color: var(--color-gold);
+}
+
 /* ===== Custom Utilities ===== */
 
 @utility gold-glow {

@@ -1,11 +1,11 @@
 ---
 import { Font } from "astro:assets";
+import {
+	type BreadcrumbItem,
+	buildBreadcrumbSchema,
+	buildOrganizationSchema,
+} from "../lib/json-ld";
 import "../styles/global.css";
-
-interface BreadcrumbItem {
-	name: string;
-	url: string;
-}
 
 interface Props {
 	title: string;
@@ -31,38 +31,15 @@ const {
 	bodyClass,
 } = Astro.props;
 
-const siteUrl = Astro.site?.toString().replace(/\/$/, "") ?? "";
+const siteUrl = Astro.site?.href.replace(/\/$/, "") ?? "";
 const canonicalUrl = canonical ?? `${siteUrl}${Astro.url.pathname}`;
 const absoluteOgImage = ogImage.startsWith("http")
 	? ogImage
 	: `${siteUrl}${ogImage}`;
 
-const orgJsonLd = {
-	"@context": "https://schema.org",
-	"@type": "Organization",
-	name: "Grupo US",
-	url: siteUrl,
-	logo: `${siteUrl}/favicon.svg`,
-	contactPoint: {
-		"@type": "ContactPoint",
-		telephone: "+55 62 9470-5081",
-		contactType: "sales",
-		areaServed: "BR",
-		availableLanguage: ["Portuguese"],
-	},
-};
-
+const orgJsonLd = buildOrganizationSchema(siteUrl);
 const breadcrumbsJsonLd = breadcrumbs
-	? {
-			"@context": "https://schema.org",
-			"@type": "BreadcrumbList",
-			itemListElement: breadcrumbs.map((item, index) => ({
-				"@type": "ListItem",
-				position: index + 1,
-				name: item.name,
-				item: item.url.startsWith("http") ? item.url : `${siteUrl}${item.url}`,
-			})),
-		}
+	? buildBreadcrumbSchema(breadcrumbs, siteUrl)
 	: null;
 
 const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
