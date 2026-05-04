@@ -203,8 +203,8 @@ If a topic is missing from the table above, add it to the matching rule file or 
 
 ## Recent learnings (last 3)
 
+- **2026-05-04** — `/raio-x` landing shipped on Vercel (raiox.gpus.com.br, Lighthouse 100×4); `astro:fonts` self-hosting overrides stale Google-Fonts-preconnect rule in `astro/references/gpus-overlay.md`.
 - **2026-05-02** — AGENTS.md → behavioral + orchestrator (drop rule duplication, relocate learnings log).
 - **2026-05-02** — `.claude/rules/` generified; project SSOT migrated to `astro` + `grupo-us` skills.
-- **2026-05-01** — `senior-prompt-engineer` rewired as agent-orchestration SSOT (handoff schema, parallel-batch contract, coordinator max-iteration).
 
 Full chronological log → `docs/learnings-log.md`.
