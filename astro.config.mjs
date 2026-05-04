@@ -12,7 +12,10 @@ const SITEMAP_PRIVACY_RE = /\/politica-de-privacidade\/?$/;
 
 // https://astro.build/config
 export default defineConfig({
-	site: "https://harmonic-pascal.grupous.com.br",
+	site: "https://raiox.gpus.com.br",
+	redirects: {
+		"/": "/raio-x",
+	},
 	fonts: [
 		{
 			name: "Playfair Display",

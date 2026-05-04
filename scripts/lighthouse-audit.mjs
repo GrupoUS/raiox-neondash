@@ -26,17 +26,8 @@ import * as chromeLauncher from "chrome-launcher";
 // ---------------------------------------------------------------------------
 
 const PAGES = [
-	"/",
-	"/sobre",
-	"/curso-auriculo",
-	"/mentoria-black-neon",
-	"/comunidade-us",
-	"/otb",
-	"/neon-dash",
-	"/contato",
 	"/raio-x",
 	"/politica-de-privacidade",
-	"/404",
 ];
 
 const THRESHOLD = 95;
