@@ -8,6 +8,10 @@
 	"hero": {
 		"eyebrow": "Para donos de clínica de estética que cresceram no escuro",
 		"headline": "Raio-X Gratuito",
+		"headlineParts": {
+			"lead": "Raio-X",
+			"highlight": "Gratuito"
+		},
 		"tagline": "Sessão de Diagnóstico Gratuita para a sua clínica",
 		"subhead": "Em uma conversa estruturada de 45 minutos com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos reais da sua operação e o próximo movimento estratégico — sem pitch, sem enrolação.",
 		"problemPills": [
@@ -18,6 +22,12 @@
 		"cta": {
 			"label": "Quero minha Sessão",
 			"helperText": "Resposta em até 24 horas no WhatsApp"
+		},
+		"image": {
+			"src": "../../assets/sacha/sacha-hero.jpg",
+			"alt": "Dra. Sacha, fundadora do Grupo US, retrato profissional",
+			"priority": true,
+			"objectPosition": "center top"
 		},
 		"trustSignals": {
 			"urgencyMicrocopy": "Vagas limitadas por semana"
@@ -82,6 +92,11 @@
 	"howItWorks": {
 		"headline": "Como funciona seu Raio-X",
 		"subhead": "Uma sessão estruturada — não uma demo de software.",
+		"image": {
+			"src": "../../assets/sacha/sacha-equipe.jpg",
+			"alt": "Dra. Sacha no ambiente de trabalho, conduzindo uma sessão",
+			"objectPosition": "center top"
+		},
 		"steps": [
 			{
 				"number": "01",
@@ -171,6 +186,15 @@
 		"secondaryCta": {
 			"label": "Prefere conversar direto? Fale com a Laura",
 			"whatsappMessage": "Olá, Laura! Quero saber mais sobre a Sessão de Diagnóstico Gratuita (Raio-X)."
+		},
+		"image": {
+			"src": "../../assets/sacha/sacha-cta.jpg",
+			"alt": "Dra. Sacha sorrindo, retrato de proximidade",
+			"objectPosition": "center 20%"
+		},
+		"socialProof": {
+			"stars": 5,
+			"text": "Avaliação dos donos de clínica atendidos"
 		}
 	},
 	"primaryCta": {

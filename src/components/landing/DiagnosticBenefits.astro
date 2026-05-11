@@ -50,15 +50,15 @@ function resolveIcon(name: string) {
 					const Icon = resolveIcon(item.icon);
 					return (
 						<li
-							class="glass-card card-hover-lift rounded-2xl p-6 md:p-7 flex items-start gap-5"
+							class="relative bg-navy-light/40 border-l-4 border-gold rounded-r-2xl rounded-l-sm p-6 md:p-7 flex items-start gap-5 transition-colors duration-200 hover:bg-navy-light/60"
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 1, 6))}
 						>
-							<div class="shrink-0 size-12 rounded-full bg-[color-mix(in_srgb,var(--color-gold)_15%,transparent)] flex items-center justify-center text-gold">
-								<Icon aria-hidden="true" width={24} height={24} />
+							<div class="shrink-0 size-12 rounded-full bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30">
+								<Icon aria-hidden="true" width={28} height={28} />
 							</div>
 							<div class="flex-1 min-w-0">
-								<h3 class="text-lg md:text-xl font-semibold text-foreground mb-1.5">
+								<h3 class="font-serif text-xl md:text-2xl font-bold text-foreground mb-1.5">
 									{item.title}
 								</h3>
 								{item.description && (

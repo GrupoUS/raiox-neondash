@@ -13,6 +13,14 @@
 	--color-gold-light: #e8c96a;
 	--color-gold-dark: #b8960c;
 
+	/* Success Palette (qualification "fit" column) */
+	--color-success: #2f9e6b;
+	--color-success-light: #4cb583;
+	--color-success-soft: #e8f5ee;
+
+	/* Neutral Soft (qualification "not-fit" column) */
+	--color-neutral-soft: #f1f1ef;
+
 	/* Text */
 	--color-text-primary: #fafaf9;
 	--color-text-muted: #94a3b8;
@@ -67,6 +75,18 @@ body {
 }
 @utility border-gold {
 	border-color: var(--color-gold);
+}
+@utility text-success {
+	color: var(--color-success);
+}
+@utility border-success {
+	border-color: var(--color-success);
+}
+@utility bg-fit-column {
+	background-color: var(--color-success-soft);
+}
+@utility bg-not-fit-column {
+	background-color: var(--color-neutral-soft);
 }
 
 /* ===== Custom Utilities ===== */
@@ -412,6 +432,29 @@ body {
 			50% 0%,
 			0% 50%;
 	}
+}
+
+@utility scanner-grid-bg {
+	background-image:
+		repeating-linear-gradient(
+			0deg,
+			color-mix(in srgb, var(--color-gold) 6%, transparent) 0px,
+			color-mix(in srgb, var(--color-gold) 6%, transparent) 1px,
+			transparent 1px,
+			transparent 4px
+		),
+		repeating-linear-gradient(
+			90deg,
+			color-mix(in srgb, var(--color-gold) 4%, transparent) 0px,
+			color-mix(in srgb, var(--color-gold) 4%, transparent) 1px,
+			transparent 1px,
+			transparent 80px
+		),
+		radial-gradient(
+			ellipse at center,
+			transparent 40%,
+			color-mix(in srgb, var(--color-navy) 30%, transparent) 100%
+		);
 }
 
 @utility landing-mesh-bg {

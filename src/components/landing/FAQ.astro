@@ -1,5 +1,5 @@
 ---
-import { ChevronDown } from "lucide-react";
+import { Minus, Plus } from "lucide-react";
 
 interface FaqItem {
 	q: string;
@@ -48,10 +48,11 @@ const { headline, subhead, items } = Astro.props;
 							<summary class="faq-summary flex items-center justify-between gap-4 py-3 md:py-4 cursor-pointer list-none text-left text-base md:text-lg font-semibold text-foreground">
 								<span class="flex-1">{item.q}</span>
 								<span
-									class="shrink-0 size-8 rounded-full border border-gold/40 flex items-center justify-center text-gold transition-transform duration-300 group-open:rotate-180"
+									class="faq-icon shrink-0 size-8 rounded-full border border-gold/40 flex items-center justify-center text-gold transition-colors duration-200"
 									aria-hidden="true"
 								>
-									<ChevronDown width={16} height={16} />
+									<Plus className="faq-icon-closed" width={16} height={16} />
+									<Minus className="faq-icon-open" width={16} height={16} />
 								</span>
 							</summary>
 							<div class="faq-content">
@@ -74,7 +75,7 @@ const { headline, subhead, items } = Astro.props;
 	.faq-item .faq-content {
 		display: grid;
 		grid-template-rows: 0fr;
-		transition: grid-template-rows 0.3s ease-out;
+		transition: grid-template-rows 200ms ease-in-out;
 	}
 	.faq-item[open] .faq-content {
 		grid-template-rows: 1fr;
@@ -84,6 +85,16 @@ const { headline, subhead, items } = Astro.props;
 	}
 	.faq-summary::marker {
 		display: none;
+	}
+	/* +/- icon swap on [open] — pure CSS */
+	.faq-item .faq-icon-open {
+		display: none;
+	}
+	.faq-item[open] .faq-icon-closed {
+		display: none;
+	}
+	.faq-item[open] .faq-icon-open {
+		display: block;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		.faq-item .faq-content {

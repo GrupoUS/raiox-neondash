@@ -1,14 +1,13 @@
 ---
 import { getEntry } from "astro:content";
 import CostOfChaos from "../components/landing/CostOfChaos.astro";
+import CriteriaColumn from "../components/landing/CriteriaColumn.astro";
 import DiagnosticBenefits from "../components/landing/DiagnosticBenefits.astro";
 import DiagnosticFinalCTA from "../components/landing/DiagnosticFinalCTA.astro";
 import DiagnosticHero from "../components/landing/DiagnosticHero.astro";
-import DiagnosticQualification from "../components/landing/DiagnosticQualification.astro";
 import FAQ from "../components/landing/FAQ.astro";
 import HowItWorks from "../components/landing/HowItWorks.astro";
 import MobileCTABar from "../components/landing/MobileCTABar.astro";
-import NotForSection from "../components/landing/NotForSection.astro";
 import ProblemSection from "../components/landing/ProblemSection.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -96,26 +95,33 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 				<HowItWorks
 					headline={data.howItWorks.headline}
 					subhead={data.howItWorks.subhead}
+					image={data.howItWorks.image}
 					steps={data.howItWorks.steps}
 				/>
 			)
 		}
 
-		<DiagnosticQualification
-			headline={data.qualification.headline}
-			intro={data.qualification.intro}
-			items={data.qualification.items}
-		/>
-
-		{
-			data.notFor && (
-				<NotForSection
-					headline={data.notFor.headline}
-					intro={data.notFor.intro}
-					items={data.notFor.items}
+		<section class="py-20 md:py-24 px-6 lg:px-8">
+			<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+				<CriteriaColumn
+					headline={data.qualification.headline}
+					intro={data.qualification.intro}
+					items={data.qualification.items}
+					variant="fit"
 				/>
-			)
-		}
+
+				{
+					data.notFor && (
+						<CriteriaColumn
+							headline={data.notFor.headline}
+							intro={data.notFor.intro}
+							items={data.notFor.items}
+							variant="not-fit"
+						/>
+					)
+				}
+			</div>
+		</section>
 
 		{
 			data.faq && (

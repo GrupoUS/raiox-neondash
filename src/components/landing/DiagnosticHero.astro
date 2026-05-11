@@ -1,16 +1,29 @@
 ---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
 import { ArrowRight } from "lucide-react";
 import Button from "../shared/Button.astro";
 
 interface HeroData {
 	eyebrow?: string;
 	headline: string;
+	headlineParts?: {
+		lead: string;
+		highlight: string;
+		tail?: string;
+	};
 	tagline: string;
 	subhead: string;
 	problemPills?: string[];
 	cta: {
 		label: string;
 		helperText?: string;
+	};
+	image?: {
+		src: ImageMetadata;
+		alt: string;
+		priority?: boolean;
+		objectPosition?: string;
 	};
 	trustSignals?: {
 		urgencyMicrocopy?: string;
@@ -23,91 +36,137 @@ interface Props {
 }
 
 const { hero, primaryCtaUrl } = Astro.props;
+const heroImage = hero.image;
 ---
 
 <section class="landing-mesh-bg relative overflow-hidden">
-	<div class="max-w-5xl mx-auto px-6 lg:px-8 py-20 md:py-28 lg:py-32 text-center">
-		{
-			hero.eyebrow && (
-				<p
-					class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-gold mb-6"
+	<div class="scanner-grid-bg absolute inset-0 pointer-events-none opacity-60" aria-hidden="true"></div>
+
+	<div class="relative max-w-7xl mx-auto px-6 lg:px-8 py-16 md:py-24 lg:py-28">
+		<div class="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-14 items-center">
+			<div class="lg:col-span-3 text-center lg:text-left">
+				{
+					hero.eyebrow && (
+						<p
+							class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-gold mb-6"
+							data-reveal="up"
+						>
+							{hero.eyebrow}
+						</p>
+					)
+				}
+
+				<h1
+					class="font-serif font-bold leading-[1.02] tracking-tight mb-6 text-5xl md:text-6xl lg:text-[72px] xl:text-[88px]"
 					data-reveal="up"
+					data-reveal-delay="1"
 				>
-					{hero.eyebrow}
+					{
+						hero.headlineParts ? (
+							<>
+								<span class="text-foreground">{hero.headlineParts.lead}</span>
+								<span class="text-gradient-gold"> {hero.headlineParts.highlight}</span>
+								{hero.headlineParts.tail && (
+									<span class="text-foreground"> {hero.headlineParts.tail}</span>
+								)}
+							</>
+						) : (
+							<span class="text-shimmer">{hero.headline}</span>
+						)
+					}
+				</h1>
+
+				<p
+					class="text-xl md:text-2xl font-medium text-foreground mb-5 max-w-2xl lg:mx-0 mx-auto"
+					data-reveal="up"
+					data-reveal-delay="2"
+				>
+					{hero.tagline}
 				</p>
-			)
-		}
 
-		<h1
-			class="font-serif text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight mb-6"
-			data-reveal="up"
-			data-reveal-delay="1"
-		>
-			<span class="text-shimmer">{hero.headline}</span>
-		</h1>
-
-		<p
-			class="text-xl md:text-2xl font-medium text-foreground mb-5 max-w-3xl mx-auto"
-			data-reveal="up"
-			data-reveal-delay="2"
-		>
-			{hero.tagline}
-		</p>
-
-		<p
-			class="text-base md:text-lg text-muted leading-relaxed mb-8 max-w-2xl mx-auto"
-			data-reveal="up"
-			data-reveal-delay="3"
-		>
-			{hero.subhead}
-		</p>
-
-		{
-			hero.problemPills && hero.problemPills.length > 0 && (
-				<ul
-					class="flex flex-wrap items-center justify-center gap-2 mb-10 list-none"
+				<p
+					class="text-base md:text-lg text-muted leading-relaxed mb-8 max-w-xl lg:mx-0 mx-auto"
 					data-reveal="up"
 					data-reveal-delay="3"
 				>
-					{hero.problemPills.map((pill) => (
-						<li class="rounded-full border border-gold/30 bg-gold-soft px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-gold-light">
-							{pill}
-						</li>
-					))}
-				</ul>
-			)
-		}
+					{hero.subhead}
+				</p>
 
-		<div
-			class="flex flex-col items-center gap-3"
-			data-reveal="up"
-			data-reveal-delay="4"
-		>
-			<Button
-				variant="primary"
-				size="lg"
-				href={primaryCtaUrl}
-				glow={true}
-				dataCtaLocation="hero"
-				ariaLabel={hero.cta.label}
-			>
-				<span>{hero.cta.label}</span>
-				<ArrowRight aria-hidden="true" width={20} height={20} />
-			</Button>
+				{
+					hero.problemPills && hero.problemPills.length > 0 && (
+						<ul
+							class="flex flex-wrap items-center justify-center lg:justify-start gap-2 mb-10 list-none"
+							data-reveal="up"
+							data-reveal-delay="3"
+						>
+							{hero.problemPills.map((pill) => (
+								<li class="rounded-full border border-gold/30 bg-gold-soft px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-gold-light">
+									{pill}
+								</li>
+							))}
+						</ul>
+					)
+				}
+
+				<div
+					class="flex flex-col items-center lg:items-start gap-3"
+					data-reveal="up"
+					data-reveal-delay="4"
+				>
+					<Button
+						variant="primary"
+						size="lg"
+						href={primaryCtaUrl}
+						glow={true}
+						dataCtaLocation="hero"
+						ariaLabel={hero.cta.label}
+					>
+						<span>{hero.cta.label}</span>
+						<ArrowRight aria-hidden="true" width={20} height={20} />
+					</Button>
+
+					{
+						hero.cta.helperText && (
+							<p class="text-sm text-muted">
+								{hero.cta.helperText}
+							</p>
+						)
+					}
+
+					{
+						hero.trustSignals?.urgencyMicrocopy && (
+							<p class="text-xs uppercase tracking-[0.18em] text-gold-light mt-2">
+								{hero.trustSignals.urgencyMicrocopy}
+							</p>
+						)
+					}
+				</div>
+			</div>
 
 			{
-				hero.cta.helperText && (
-					<p class="text-sm text-muted">
-						{hero.cta.helperText}
-					</p>
-				)
-			}
-
-			{
-				hero.trustSignals?.urgencyMicrocopy && (
-					<p class="text-xs uppercase tracking-[0.18em] text-gold-light mt-2">
-						{hero.trustSignals.urgencyMicrocopy}
-					</p>
+				heroImage && (
+					<div
+						class="lg:col-span-2 order-first lg:order-last"
+						data-reveal="up"
+						data-reveal-delay="2"
+					>
+						<div class="relative mx-auto max-w-xs md:max-w-sm lg:max-w-none aspect-[3/4] rounded-2xl overflow-hidden ring-1 ring-gold/30 shadow-2xl">
+							<Image
+								src={heroImage.src}
+								alt={heroImage.alt}
+								widths={[360, 480, 720, 960]}
+								sizes="(max-width: 1024px) 80vw, 40vw"
+								loading="eager"
+								fetchpriority="high"
+								class="w-full h-full object-cover"
+								style={`object-position: ${heroImage.objectPosition ?? "center top"};`}
+							/>
+							<div
+								class="absolute inset-0 bg-gradient-to-t from-navy/40 via-transparent to-transparent pointer-events-none"
+								aria-hidden="true"
+							></div>
+						</div>
+					</div>
 				)
 			}
 		</div>

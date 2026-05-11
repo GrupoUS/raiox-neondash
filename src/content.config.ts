@@ -12,141 +12,170 @@ const internalOrAbsoluteUrl = z
 
 const landings = defineCollection({
 	loader: glob({ pattern: "**/*.json", base: "src/content/landings" }),
-	schema: z
-		.object({
-			slug: z.string(),
-			seo: z.object({
-				title: z.string().max(70),
-				description: z.string().min(120).max(200),
-				ogImage: z.string().optional(),
-				canonical: z.string().url().optional(),
-			}),
-			hero: z.object({
-				eyebrow: z.string().optional(),
-				headline: z.string(),
-				tagline: z.string(),
-				subhead: z.string(),
-				problemPills: z.array(z.string().max(60)).length(3).optional(),
-				cta: z.object({
-					label: z.string(),
-					helperText: z.string().optional(),
+	schema: ({ image }) =>
+		z
+			.object({
+				slug: z.string(),
+				seo: z.object({
+					title: z.string().max(70),
+					description: z.string().min(120).max(200),
+					ogImage: z.string().optional(),
+					canonical: z.string().url().optional(),
 				}),
-				image: z
-					.object({
-						src: z.string(),
-						alt: z.string().min(10),
-						priority: z.boolean().default(true),
-					})
-					.optional(),
-				trustSignals: z
-					.object({
-						doctorBio: z.string().optional(),
-						urgencyMicrocopy: z.string().optional(),
-					})
-					.optional(),
-			}),
-			problem: z
-				.object({
+				hero: z.object({
 					eyebrow: z.string().optional(),
 					headline: z.string(),
-					paragraphs: z.array(z.string()).min(1),
-					costs: z
-						.array(
-							z.object({
-								icon: z.string(),
-								label: z.string(),
-								description: z.string(),
-							}),
-						)
-						.min(3)
-						.max(4),
-				})
-				.optional(),
-			benefits: z.object({
-				headline: z.string(),
-				items: z
-					.array(
-						z.object({
-							icon: z.string(),
-							title: z.string(),
-							description: z.string().optional(),
-						}),
-					)
-					.min(3),
-			}),
-			howItWorks: z
-				.object({
+					headlineParts: z
+						.object({
+							lead: z.string(),
+							highlight: z.string(),
+							tail: z.string().optional(),
+						})
+						.optional(),
+					tagline: z.string(),
+					subhead: z.string(),
+					problemPills: z.array(z.string().max(60)).length(3).optional(),
+					cta: z.object({
+						label: z.string(),
+						helperText: z.string().optional(),
+					}),
+					image: z
+						.object({
+							src: image(),
+							alt: z.string().min(10),
+							priority: z.boolean().default(true),
+							objectPosition: z.string().optional(),
+						})
+						.optional(),
+					trustSignals: z
+						.object({
+							doctorBio: z.string().optional(),
+							urgencyMicrocopy: z.string().optional(),
+						})
+						.optional(),
+				}),
+				problem: z
+					.object({
+						eyebrow: z.string().optional(),
+						headline: z.string(),
+						paragraphs: z.array(z.string()).min(1),
+						costs: z
+							.array(
+								z.object({
+									icon: z.string(),
+									label: z.string(),
+									description: z.string(),
+								}),
+							)
+							.min(3)
+							.max(4),
+					})
+					.optional(),
+				benefits: z.object({
 					headline: z.string(),
-					subhead: z.string().optional(),
-					steps: z
-						.array(
-							z.object({
-								number: z.string(),
-								title: z.string(),
-								description: z.string(),
-								duration: z.string().optional(),
-							}),
-						)
-						.length(4),
-				})
-				.optional(),
-			qualification: z.object({
-				headline: z.string(),
-				intro: z.string().optional(),
-				items: z.array(z.string()).min(3),
-			}),
-			notFor: z
-				.object({
-					headline: z.string(),
-					intro: z.string().optional(),
-					items: z.array(z.string()).min(3).max(5),
-				})
-				.optional(),
-			faq: z
-				.object({
-					headline: z.string(),
-					subhead: z.string().optional(),
 					items: z
 						.array(
 							z.object({
-								q: z.string(),
-								a: z.string(),
+								icon: z.string(),
+								title: z.string(),
+								description: z.string().optional(),
 							}),
 						)
-						.min(4)
-						.max(10),
-				})
-				.optional(),
-			finalCta: z.object({
-				headline: z.string(),
-				paragraphs: z.array(z.string()).min(1),
-				cta: z.object({
-					label: z.string(),
-					microcopy: z.string().optional(),
+						.min(3),
 				}),
-				secondaryCta: z
+				howItWorks: z
 					.object({
-						label: z.string(),
-						whatsappMessage: z.string().startsWith("Olá, Laura!"),
+						headline: z.string(),
+						subhead: z.string().optional(),
+						image: z
+							.object({
+								src: image(),
+								alt: z.string().min(10),
+								objectPosition: z.string().optional(),
+							})
+							.optional(),
+						steps: z
+							.array(
+								z.object({
+									number: z.string(),
+									title: z.string(),
+									description: z.string(),
+									duration: z.string().optional(),
+								}),
+							)
+							.length(4),
 					})
 					.optional(),
+				qualification: z.object({
+					headline: z.string(),
+					intro: z.string().optional(),
+					items: z.array(z.string()).min(3),
+				}),
+				notFor: z
+					.object({
+						headline: z.string(),
+						intro: z.string().optional(),
+						items: z.array(z.string()).min(3).max(5),
+					})
+					.optional(),
+				faq: z
+					.object({
+						headline: z.string(),
+						subhead: z.string().optional(),
+						items: z
+							.array(
+								z.object({
+									q: z.string(),
+									a: z.string(),
+								}),
+							)
+							.min(4)
+							.max(10),
+					})
+					.optional(),
+				finalCta: z.object({
+					headline: z.string(),
+					paragraphs: z.array(z.string()).min(1),
+					cta: z.object({
+						label: z.string(),
+						microcopy: z.string().optional(),
+					}),
+					secondaryCta: z
+						.object({
+							label: z.string(),
+							whatsappMessage: z.string().startsWith("Olá, Laura!"),
+						})
+						.optional(),
+					image: z
+						.object({
+							src: image(),
+							alt: z.string().min(10),
+							objectPosition: z.string().optional(),
+						})
+						.optional(),
+					socialProof: z
+						.object({
+							stars: z.number().int().min(1).max(5).optional(),
+							text: z.string().min(8),
+						})
+						.optional(),
+				}),
+				primaryCta: z.object({
+					mode: z.enum([
+						"typebot-iframe",
+						"typebot-popup",
+						"external-url",
+						"whatsapp",
+						"native-quiz",
+					]),
+					url: internalOrAbsoluteUrl,
+					whatsappMessage: z.string().startsWith("Olá, Laura!").optional(),
+				}),
+			})
+			.refine((data) => !HEX_LITERAL.test(JSON.stringify(data)), {
+				message:
+					"Hex color literals are forbidden in landing copy (cardinal #7). Use semantic tokens or named utilities.",
 			}),
-			primaryCta: z.object({
-				mode: z.enum([
-					"typebot-iframe",
-					"typebot-popup",
-					"external-url",
-					"whatsapp",
-					"native-quiz",
-				]),
-				url: internalOrAbsoluteUrl,
-				whatsappMessage: z.string().startsWith("Olá, Laura!").optional(),
-			}),
-		})
-		.refine((data) => !HEX_LITERAL.test(JSON.stringify(data)), {
-			message:
-				"Hex color literals are forbidden in landing copy (cardinal #7). Use semantic tokens or named utilities.",
-		}),
 });
 
 const quizOptionSchema = z.object({
