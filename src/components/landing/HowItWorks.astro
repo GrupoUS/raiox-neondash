@@ -83,22 +83,23 @@ const STEP_ICONS = [FileText, MessageCircle, Video, MapPin] as const;
 					const Icon = STEP_ICONS[index] ?? FileText;
 					return (
 						<li
-							class="relative pl-8 lg:pl-0 lg:pt-0 group"
+							class="relative group"
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 1, 6))}
 						>
-							<span
-								class="lg:hidden absolute left-3 top-2 bottom-[-2rem] w-px bg-gold/30 last:hidden"
-								aria-hidden="true"
-							></span>
-
 							<div class="flex lg:flex-col lg:items-center gap-4 lg:gap-0 lg:text-center">
 								<div class="relative shrink-0 lg:mx-auto lg:mb-5">
+									{index < steps.length - 1 && (
+										<span
+											class="lg:hidden absolute left-1/2 -translate-x-1/2 top-full mt-1 w-px h-[calc(2rem+1.5rem)] bg-gradient-to-b from-gold/40 to-gold/0 pointer-events-none"
+											aria-hidden="true"
+										/>
+									)}
 									<div class="relative z-10 size-14 lg:size-16 rounded-full bg-navy ring-2 ring-gold flex items-center justify-center text-gold shadow-lg shadow-gold/20">
 										<Icon aria-hidden="true" width={24} height={24} />
 									</div>
 									<span
-										class="absolute -left-2 lg:left-1/2 lg:-translate-x-1/2 -top-1 lg:-top-3 z-0 font-serif text-3xl lg:text-2xl font-bold text-gold/30 leading-none"
+										class="absolute -top-2 -right-2 lg:left-1/2 lg:-translate-x-1/2 lg:-top-3 lg:right-auto z-20 font-serif text-base lg:text-2xl font-bold text-gold/60 leading-none px-1.5 py-0.5 lg:p-0 rounded-full lg:rounded-none bg-navy lg:bg-transparent"
 										aria-hidden="true"
 									>
 										{step.number}
