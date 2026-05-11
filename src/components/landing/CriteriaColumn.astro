@@ -12,27 +12,35 @@ const { headline, intro, items, variant } = Astro.props;
 
 const isFit = variant === "fit";
 const Icon = isFit ? CheckCircle2 : XCircle;
-const containerClass = isFit
-	? "bg-fit-column ring-1 ring-success/30"
-	: "bg-not-fit-column ring-1 ring-navy/10";
-const introTextClass = isFit ? "text-navy/70" : "text-navy/60";
-const iconClass = isFit ? "text-success" : "text-navy/45";
-const itemTextClass = isFit ? "text-navy" : "text-navy/75";
+const ringClass = isFit ? "ring-1 ring-success/40" : "ring-1 ring-gold/15";
+const accentBarStyle = isFit
+	? "bg-gradient-to-b from-success via-success/60 to-transparent"
+	: "bg-gradient-to-b from-gold/60 via-gold/20 to-transparent";
+const iconClass = isFit ? "text-success" : "text-muted";
+const itemTextClass = isFit ? "text-foreground" : "text-foreground/75";
+const introClass = isFit ? "text-foreground/80" : "text-muted";
 const revealDelay = isFit ? undefined : "1";
 ---
 
 <div
-	class={`text-navy rounded-2xl p-8 lg:p-10 h-full shadow-xl ${containerClass}`}
+	class={`relative glass-card rounded-2xl p-8 lg:p-10 h-full overflow-hidden ${ringClass}`}
 	data-reveal="up"
 	data-reveal-delay={revealDelay}
 >
-	<h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4 text-navy">
-		{headline}
+	<span
+		class={`absolute left-0 top-6 bottom-6 w-1 rounded-r-full ${accentBarStyle}`}
+		aria-hidden="true"
+	></span>
+
+	<h2 class="font-serif text-2xl md:text-3xl lg:text-4xl font-bold mb-4">
+		<span class={isFit ? "text-foreground" : "text-gradient-gold"}>
+			{headline}
+		</span>
 	</h2>
 
 	{
 		intro && (
-			<p class={`text-base md:text-lg mb-8 ${introTextClass}`}>
+			<p class={`text-base md:text-lg mb-8 ${introClass}`}>
 				{intro}
 			</p>
 		)

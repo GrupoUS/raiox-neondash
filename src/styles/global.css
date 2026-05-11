@@ -13,13 +13,9 @@
 	--color-gold-light: #e8c96a;
 	--color-gold-dark: #b8960c;
 
-	/* Success Palette (qualification "fit" column) */
+	/* Success Palette (fit column accent) */
 	--color-success: #2f9e6b;
 	--color-success-light: #4cb583;
-	--color-success-soft: #e8f5ee;
-
-	/* Neutral Soft (qualification "not-fit" column) */
-	--color-neutral-soft: #f1f1ef;
 
 	/* Text */
 	--color-text-primary: #fafaf9;
@@ -81,12 +77,6 @@ body {
 }
 @utility border-success {
 	border-color: var(--color-success);
-}
-@utility bg-fit-column {
-	background-color: var(--color-success-soft);
-}
-@utility bg-not-fit-column {
-	background-color: var(--color-neutral-soft);
 }
 
 /* ===== Custom Utilities ===== */
