@@ -53,6 +53,16 @@ const landings = defineCollection({
 							urgencyMicrocopy: z.string().optional(),
 						})
 						.optional(),
+					trustStrip: z
+						.array(
+							z.object({
+								icon: z.string(),
+								label: z.string(),
+								value: z.string(),
+							}),
+						)
+						.length(3)
+						.optional(),
 				}),
 				problem: z
 					.object({

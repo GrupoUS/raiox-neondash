@@ -203,8 +203,8 @@ If a topic is missing from the table above, add it to the matching rule file or 
 
 ## Recent learnings (last 3)
 
+- **2026-05-11** — First `astro:assets` adoption; Dra. Sacha photos + mobile/desktop premium polish; WhatsApp SSOT fix (`5562994705081`); new shared components `CriteriaColumn` / `MidCTA` / `SectionDivider`; zero client JS delta.
 - **2026-05-04** — `/raio-x` landing shipped on Vercel (raiox.gpus.com.br, Lighthouse 100×4); `astro:fonts` self-hosting overrides stale Google-Fonts-preconnect rule in `astro/references/gpus-overlay.md`.
 - **2026-05-02** — AGENTS.md → behavioral + orchestrator (drop rule duplication, relocate learnings log).
-- **2026-05-02** — `.claude/rules/` generified; project SSOT migrated to `astro` + `grupo-us` skills.
 
 Full chronological log → `docs/learnings-log.md`.

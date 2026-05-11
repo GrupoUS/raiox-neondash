@@ -6,6 +6,33 @@
 
 ---
 
+### [2026-05-11] First `astro:assets` adoption + Dra. Sacha photos + mobile/desktop premium polish
+
+> Added after Raio-X landing redesign per `docs/e-design-analise-toda-quiet-frost.md` (mobile + desktop polish iterations).
+
+**Problem:** Landing needed Dra. Sacha photos (3 of 6 sourced JPGs, 8-23MB each), comprehensive 7-section redesign per brief, and conversion-focused mobile+desktop polish.
+
+**Solution:**
+- Introduced first `astro:assets` usage in repo: 3 photos at `src/assets/sacha/{hero,equipe,cta}.jpg` → Astro `<Image>` pipeline emits 12-13 webp variants per build (38KB–1.5MB depending on width).
+- Schema extended via `image()` helper in `src/content.config.ts` (callback form `schema: ({ image }) => z.object({...})`). New fields: `hero.image`, `hero.headlineParts`, `hero.trustStrip[]`, `howItWorks.image`, `finalCta.image`, `finalCta.socialProof`.
+- New shared components: `CriteriaColumn.astro` (variant fit|not-fit replacing twin Qualification/NotFor), `MidCTA.astro` (mid-page conversion booster between HowItWorks and Criteria), `SectionDivider.astro` (gold gradient hairline).
+- Mobile: trust strip 3-cell grid below hero CTA, h1 36px (text-[2.25rem]), photo `loading="lazy"` + DOM order text-first, FAQ icon size-10 (WCAG 44px tap target), scroll-padding-bottom 6rem for sticky MobileCTABar.
+- Desktop: Benefits `lg:grid-cols-2` (was vertical), FAQ `lg:grid-cols-2`, MidCTA `lg:flex-row` side-by-side, Final CTA photo `lg:w-72 lg:h-72`, Hero photo `lg:rotate-[1.5deg]` editorial micro-interaction.
+- WhatsApp SSOT corrected: `WHATSAPP_SDR_E164 = "5562994705081"` in `src/lib/whatsapp.ts` (was missing 9 after area code 62).
+- Theme: `--color-success` palette added for Criteria fit-column; `bg-fit-column`/`bg-not-fit-column` light bgs removed after dark-theme alignment; `.scanner-grid-bg` utility for hero X-ray texture.
+
+**Constraints honored:** static-only Astro (cardinal #4), copy in SSOT (cardinal #5), WhatsApp via `whatsappUrlWithText` (cardinal #6), zero inline hex (cardinal #7), transform+opacity+grid-rows animations only (cardinal #8). Zero client JS islands added.
+
+**Open items:**
+- Source photo retention strategy: 8-23MB JPGs in `src/assets/sacha/` may bloat repo if pattern replicates across landings. No `.gitattributes`/LFS plan yet.
+- Codex `/codex:review` + `/codex:adversarial-review` skipped during /verify due to `refresh_token_invalidated` (re-auth required: `codex login`).
+- Phase 7 evaluator Mode 3 verdict: APPROVED (conditional, confidence 8/10).
+- Production Lighthouse 100×4 baseline (2026-05-04) expected to hold (zero client JS delta, lazy images, no layout-property animations) — verify post-deploy.
+
+**Files touched:** 15 (frontend-only), +168/-60 lines. Build: 3 pages, 13 webp variants, 2.7s.
+
+---
+
 ### [2026-05-04] Raio-X landing built on existing scaffold; Vercel deploy needed `site` URL + root redirect
 
 > Added after shipping `/raio-x` landing per `docs/e-plan-aprimore-floating-badger.md`.

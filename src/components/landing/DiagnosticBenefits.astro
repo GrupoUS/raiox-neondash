@@ -35,8 +35,8 @@ function resolveIcon(name: string) {
 }
 ---
 
-<section class="py-20 md:py-24 px-6 lg:px-8">
-	<div class="max-w-4xl mx-auto">
+<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8">
+	<div class="max-w-6xl mx-auto">
 		<h2
 			class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 md:mb-16"
 			data-reveal="up"
@@ -44,21 +44,21 @@ function resolveIcon(name: string) {
 			<span class="text-gradient-gold">{headline}</span>
 		</h2>
 
-		<ul class="space-y-5 md:space-y-6 list-none">
+		<ul class="grid grid-cols-1 lg:grid-cols-2 gap-5 md:gap-6 lg:gap-7 list-none">
 			{
 				items.map((item, index) => {
 					const Icon = resolveIcon(item.icon);
 					return (
 						<li
-							class="relative bg-navy-light/40 border-l-4 border-gold rounded-r-2xl rounded-l-sm p-6 md:p-7 flex items-start gap-5 transition-colors duration-200 hover:bg-navy-light/60"
+							class="group relative bg-navy-light/40 border-l-4 border-gold rounded-r-2xl rounded-l-sm p-6 md:p-7 lg:p-8 flex items-start gap-5 transition-[transform,background-color,box-shadow] duration-300 ease-out hover:bg-navy-light/60 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-gold/5 h-full"
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 1, 6))}
 						>
-							<div class="shrink-0 size-12 rounded-full bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30">
+							<div class="shrink-0 size-12 lg:size-14 rounded-full bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30 transition-colors duration-300 group-hover:ring-gold/60">
 								<Icon aria-hidden="true" width={28} height={28} />
 							</div>
 							<div class="flex-1 min-w-0">
-								<h3 class="font-serif text-xl md:text-2xl font-bold text-foreground mb-1.5">
+								<h3 class="font-serif text-xl md:text-2xl font-bold text-foreground mb-2">
 									{item.title}
 								</h3>
 								{item.description && (

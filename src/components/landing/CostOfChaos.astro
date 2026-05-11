@@ -35,8 +35,8 @@ function resolveIcon(name: string) {
 }
 ---
 
-<section class="py-20 md:py-24 px-6 lg:px-8 bg-navy-light/30">
-	<div class="max-w-5xl mx-auto">
+<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8 bg-navy-light/30">
+	<div class="max-w-5xl lg:max-w-6xl mx-auto">
 		<h2
 			class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-12 md:mb-16"
 			data-reveal="up"
@@ -50,7 +50,7 @@ function resolveIcon(name: string) {
 					const Icon = resolveIcon(item.icon);
 					return (
 						<li
-							class="glass-card card-hover-lift rounded-2xl p-7 md:p-8 flex flex-col items-start gap-4"
+							class="group glass-card card-hover-lift rounded-2xl p-7 md:p-8 lg:p-9 flex flex-col items-start gap-4 hover:ring-1 hover:ring-gold/40"
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 1, 6))}
 						>

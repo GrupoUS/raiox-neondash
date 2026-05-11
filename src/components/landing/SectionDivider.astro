@@ -1,0 +1,13 @@
+---
+interface Props {
+	variant?: "default" | "fade";
+}
+
+const { variant = "default" } = Astro.props;
+---
+
+<div class="relative max-w-5xl mx-auto px-6" aria-hidden="true">
+	<div
+		class={`h-px ${variant === "fade" ? "bg-gradient-to-r from-transparent via-gold/25 to-transparent" : "bg-gradient-to-r from-transparent via-gold/40 to-transparent"}`}
+	></div>
+</div>

@@ -1,0 +1,60 @@
+---
+import { ArrowRight } from "lucide-react";
+import Button from "../shared/Button.astro";
+
+interface Props {
+	headline: string;
+	ctaLabel: string;
+	ctaHref: string;
+	microcopy?: string;
+}
+
+const { headline, ctaLabel, ctaHref, microcopy } = Astro.props;
+---
+
+<section
+	class="relative py-12 sm:py-14 md:py-16 lg:py-20 px-5 sm:px-6 lg:px-8"
+	aria-labelledby="mid-cta-headline"
+>
+	<div
+		class="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent pointer-events-none"
+		aria-hidden="true"
+	>
+	</div>
+
+	<div
+		class="relative max-w-3xl lg:max-w-5xl mx-auto rounded-2xl bg-navy-light/60 ring-1 ring-gold/25 px-6 py-7 sm:px-8 sm:py-9 md:px-10 md:py-10 lg:px-14 lg:py-12 backdrop-blur-sm flex flex-col lg:flex-row lg:items-center lg:text-left items-center text-center gap-5 lg:gap-10 shadow-xl"
+		data-reveal="scale"
+	>
+		<div class="flex-1 flex flex-col items-center lg:items-start gap-2 lg:gap-3">
+			<h2
+				id="mid-cta-headline"
+				class="font-serif text-2xl sm:text-3xl md:text-[2rem] lg:text-4xl font-bold leading-tight"
+			>
+				<span class="text-foreground">{headline}</span>
+			</h2>
+
+			{
+				microcopy && (
+					<p class="text-sm lg:text-base text-muted max-w-md">
+						{microcopy}
+					</p>
+				)
+			}
+		</div>
+
+		<div class="shrink-0">
+			<Button
+				variant="primary"
+				size="lg"
+				href={ctaHref}
+				glow={true}
+				dataCtaLocation="midCta"
+				ariaLabel={ctaLabel}
+			>
+				<span>{ctaLabel}</span>
+				<ArrowRight aria-hidden="true" width={20} height={20} />
+			</Button>
+		</div>
+	</div>
+</section>

@@ -31,7 +31,16 @@
 		},
 		"trustSignals": {
 			"urgencyMicrocopy": "Vagas limitadas por semana"
-		}
+		},
+		"trustStrip": [
+			{ "icon": "Clock", "label": "Duração", "value": "45 minutos" },
+			{ "icon": "MessageCircle", "label": "Resposta", "value": "Em 24 horas" },
+			{
+				"icon": "Stethoscope",
+				"label": "Conduzida por",
+				"value": "Equipe Dra. Sacha"
+			}
+		]
 	},
 	"problem": {
 		"eyebrow": "O ponto cego da maioria das clínicas",

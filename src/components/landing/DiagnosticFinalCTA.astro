@@ -46,22 +46,22 @@ const starsArray = Array.from({ length: starCount });
 ---
 
 <section
-	class="relative overflow-hidden py-24 md:py-28 lg:py-32 px-6 lg:px-8 bg-gradient-to-b from-navy via-navy-light to-navy"
+	class="relative overflow-hidden py-20 sm:py-24 md:py-28 lg:py-32 px-5 sm:px-6 lg:px-8 bg-gradient-to-b from-navy via-navy-light to-navy"
 >
-	<div
-		class="absolute inset-0 pointer-events-none"
-		aria-hidden="true"
-	>
-		<div class="absolute top-0 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full bg-gold-soft blur-3xl opacity-40"></div>
+	<div class="absolute inset-0 pointer-events-none" aria-hidden="true">
+		<div
+			class="absolute top-0 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full bg-gold-soft blur-3xl opacity-40"
+		>
+		</div>
 	</div>
 
-	<div class="relative max-w-5xl mx-auto">
+	<div class="relative max-w-5xl lg:max-w-6xl mx-auto">
 		<div
-			class="glass-card-bright rounded-3xl p-8 md:p-12 lg:p-14"
+			class="glass-card-bright rounded-3xl p-8 md:p-12 lg:p-16"
 			data-reveal="scale"
 		>
 			<div
-				class="grid grid-cols-1 lg:grid-cols-[auto_1fr] gap-8 lg:gap-12 items-center"
+				class="grid grid-cols-1 lg:grid-cols-[auto_1.4fr] gap-8 lg:gap-14 items-center"
 			>
 				{
 					finalCta.image && (
@@ -70,12 +70,12 @@ const starsArray = Array.from({ length: starCount });
 							data-reveal="up"
 							data-reveal-delay="1"
 						>
-							<div class="relative w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 rounded-full overflow-hidden ring-2 ring-gold/50 shadow-2xl shadow-gold/10">
+							<div class="relative w-40 h-40 md:w-48 md:h-48 lg:w-72 lg:h-72 rounded-full overflow-hidden ring-2 ring-gold/50 shadow-2xl shadow-gold/10">
 								<Image
 									src={finalCta.image.src}
 									alt={finalCta.image.alt}
-									widths={[224, 320]}
-									sizes="(max-width: 768px) 160px, 224px"
+									widths={[224, 320, 448, 576]}
+									sizes="(max-width: 768px) 160px, (max-width: 1024px) 192px, 288px"
 									loading="lazy"
 									class="w-full h-full object-cover"
 									style={`object-position: ${finalCta.image.objectPosition ?? "center top"};`}
@@ -166,7 +166,7 @@ const starsArray = Array.from({ length: starCount });
 							)
 						}
 
-						<p class="text-xs text-muted mt-3 max-w-md leading-relaxed">
+						<p class="text-sm text-muted mt-3 max-w-md leading-relaxed">
 							Ao continuar, você aceita nossa{" "}
 							<a
 								href="/politica-de-privacidade"

@@ -7,8 +7,10 @@ import DiagnosticFinalCTA from "../components/landing/DiagnosticFinalCTA.astro";
 import DiagnosticHero from "../components/landing/DiagnosticHero.astro";
 import FAQ from "../components/landing/FAQ.astro";
 import HowItWorks from "../components/landing/HowItWorks.astro";
+import MidCTA from "../components/landing/MidCTA.astro";
 import MobileCTABar from "../components/landing/MobileCTABar.astro";
 import ProblemSection from "../components/landing/ProblemSection.astro";
+import SectionDivider from "../components/landing/SectionDivider.astro";
 import Layout from "../layouts/Layout.astro";
 
 const entry = await getEntry("landings", "raio-x");
@@ -101,7 +103,14 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 			)
 		}
 
-		<section class="py-20 md:py-24 px-6 lg:px-8">
+		<MidCTA
+			headline="Pronto para enxergar sua clínica como ela realmente é?"
+			ctaLabel="Quero meu Raio-X agora"
+			ctaHref={primaryCtaHref}
+			microcopy="Cinco perguntas rápidas — menos de 2 minutos"
+		/>
+
+		<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8">
 			<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
 				<CriteriaColumn
 					headline={data.qualification.headline}
@@ -122,6 +131,8 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 				}
 			</div>
 		</section>
+
+		<SectionDivider variant="fade" />
 
 		{
 			data.faq && (

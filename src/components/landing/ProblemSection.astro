@@ -8,12 +8,12 @@ interface Props {
 const { eyebrow, headline, paragraphs } = Astro.props;
 ---
 
-<section class="py-20 md:py-24 px-6 lg:px-8">
-	<div class="max-w-3xl mx-auto text-center">
+<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8">
+	<div class="max-w-3xl lg:max-w-4xl mx-auto text-center">
 		{
 			eyebrow && (
 				<p
-					class="text-xs md:text-sm font-medium uppercase tracking-[0.2em] text-gold mb-5"
+					class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-gold mb-5"
 					data-reveal="up"
 				>
 					{eyebrow}
