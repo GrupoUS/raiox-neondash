@@ -19,7 +19,7 @@ const inputType: Record<ContactFieldName, string> = {
 	name: "text",
 	whatsapp: "tel",
 	email: "email",
-	clinicName: "text",
+	instagram: "text",
 	cityState: "text",
 };
 
@@ -27,7 +27,7 @@ const autocomplete: Record<ContactFieldName, string> = {
 	name: "name",
 	whatsapp: "tel",
 	email: "email",
-	clinicName: "organization",
+	instagram: "off",
 	cityState: "address-level2",
 };
 

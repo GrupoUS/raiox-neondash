@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 import { EnumChangefreq } from "sitemap";
 
-const SITEMAP_EXCLUDE_RE = /\/raio-x(\/perguntas)?\/?$/;
+const SITEMAP_EXCLUDE_RE = /\/raio-x(\/(agendar|perguntas))?\/?$/;
 const SITEMAP_HOME_RE = /^https?:\/\/[^/]+\/?$/;
 const SITEMAP_PRIVACY_RE = /\/politica-de-privacidade\/?$/;
 

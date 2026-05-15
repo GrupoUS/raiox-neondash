@@ -1,0 +1,44 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { raioXWhatsappUrls } from "../../lib/whatsapp";
+
+const whatsappHrefs = raioXWhatsappUrls();
+const fallbackHref = whatsappHrefs[0] ?? "/";
+const redirectScript = `
+(() => {
+	const whatsappHrefs = ${JSON.stringify(whatsappHrefs)};
+	const fallbackHref = ${JSON.stringify(fallbackHref)};
+	const href = whatsappHrefs.length
+		? whatsappHrefs[Math.floor(Math.random() * whatsappHrefs.length)]
+		: fallbackHref;
+	const link = document.querySelector("[data-raiox-whatsapp-link]");
+	if (link) link.setAttribute("href", href);
+	window.location.replace(href);
+})();
+`;
+---
+
+<Layout
+	title="Agendar Sessão Raio-X | Grupo US"
+	description="Redirecionamento para agendar sua Sessão Raio-X pelo WhatsApp com a equipe do Grupo US."
+	noIndex={true}
+	withAnalytics={false}
+	bodyClass="bg-navy"
+>
+	<section class="mx-auto flex min-h-screen w-full max-w-2xl flex-col items-center justify-center px-4 py-16 text-center">
+		<h1 class="font-serif text-3xl leading-tight text-foreground sm:text-4xl">
+			Abrindo WhatsApp
+		</h1>
+		<p class="mt-4 text-base leading-relaxed text-muted sm:text-lg">
+			Se o redirecionamento não acontecer automaticamente, toque no botão abaixo.
+		</p>
+		<a
+			href={fallbackHref}
+			data-raiox-whatsapp-link
+			class="mt-8 inline-flex min-h-[48px] items-center justify-center rounded-lg bg-gold px-6 py-3 text-base font-semibold text-navy transition-colors hover:bg-gold-light"
+		>
+			Agendar pelo WhatsApp
+		</a>
+	</section>
+	<script is:inline set:html={redirectScript} />
+</Layout>

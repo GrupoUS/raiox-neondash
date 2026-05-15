@@ -7,7 +7,7 @@
  *   - dataLayer push (GTM-style fallback)
  *
  * IMPORTANT — privacy contract: NEVER pass PII (name, whatsapp, email,
- * clinicName, cityState) in event props. Only opaque IDs (sessionId, stepId,
+ * instagram, cityState) in event props. Only opaque IDs (sessionId, stepId,
  * answerId), enums (intent, segment), and numeric scores. This is enforced by
  * code review — there is no runtime scrubber.
  */

@@ -2,10 +2,10 @@ import type { AnswersMap, QuizContent } from "./schema";
 
 export type Intent = "cold" | "warm" | "hot";
 export type Segment =
-	| "clinica-inicial"
-	| "em-crescimento"
-	| "estabelecida"
-	| "pronta-para-diagnostico";
+	| "gargalo-gestao"
+	| "gargalo-marketing"
+	| "gargalo-vendas"
+	| "gargalos-distribuidos";
 
 export type ScoreResult = {
 	total: number; // 0..100 normalized
@@ -14,10 +14,67 @@ export type ScoreResult = {
 	segment: Segment;
 };
 
-function getOptionId(answers: AnswersMap, key: string): string | undefined {
-	const a = answers[key];
-	if (a?.type === "multiple-choice") return a.optionId;
-	return undefined;
+const SEGMENT_BY_SCORE_FIELD: Record<string, Segment> = {
+	gestao: "gargalo-gestao",
+	marketing: "gargalo-marketing",
+	vendas: "gargalo-vendas",
+};
+
+type PillarScore = {
+	raw: number;
+	max: number;
+	ratio: number;
+};
+
+function getStepMaxWeight(step: QuizContent["steps"][number]): number {
+	if (step.type === "multiple-choice") {
+		return Math.max(...step.options.map((option) => option.weight), 0);
+	}
+	if (step.type === "scale") {
+		return Math.max(...step.scale.weights, 0);
+	}
+	return 0;
+}
+
+function calculatePillarScores(
+	answers: AnswersMap,
+	quiz: QuizContent,
+): Record<string, PillarScore> {
+	const scores: Record<string, PillarScore> = {};
+
+	for (const step of quiz.steps) {
+		if (step.type === "contact") continue;
+
+		const field = step.scoreField;
+		const existing = scores[field] ?? { raw: 0, max: 0, ratio: 0 };
+		const answer = answers[step.id];
+		const raw = existing.raw + (answer?.weight ?? 0);
+		const max = existing.max + getStepMaxWeight(step);
+		scores[field] = {
+			raw,
+			max,
+			ratio: max > 0 ? raw / max : 0,
+		};
+	}
+
+	return scores;
+}
+
+function getDominantSegment(scores: Record<string, PillarScore>): Segment {
+	const ranked = Object.entries(scores)
+		.filter(([field]) => field in SEGMENT_BY_SCORE_FIELD)
+		.sort((a, b) => b[1].ratio - a[1].ratio);
+
+	if (ranked.length === 0) return "gargalos-distribuidos";
+
+	const [topField, topScore] = ranked[0];
+	const secondScore = ranked[1]?.[1];
+
+	if (!secondScore || topScore.ratio > secondScore.ratio) {
+		return SEGMENT_BY_SCORE_FIELD[topField] ?? "gargalos-distribuidos";
+	}
+
+	return "gargalos-distribuidos";
 }
 
 export function calculateScore(
@@ -30,31 +87,11 @@ export function calculateScore(
 
 	const { warm, hot } = quiz.scoring.thresholds;
 	const intent: Intent = total >= hot ? "hot" : total >= warm ? "warm" : "cold";
-
-	const stage = getOptionId(answers, "stage");
-	const revenue = getOptionId(answers, "revenue");
-	const consultancy = getOptionId(answers, "consultancyHistory");
-
-	let segment: Segment = "clinica-inicial";
-	if (
-		stage === "estabelecida" &&
-		(revenue === "30-80k" || revenue === "80k-mais")
-	) {
-		segment = "estabelecida";
-	} else if (
-		stage === "crescimento" &&
-		(revenue === "10-30k" || revenue === "30-80k")
-	) {
-		segment = "em-crescimento";
-	}
-	if (stage === "pronta") segment = "pronta-para-diagnostico";
-	if (intent === "hot" && consultancy !== "atualmente") {
-		segment = "pronta-para-diagnostico";
-	}
+	const segment = getDominantSegment(calculatePillarScores(answers, quiz));
 
 	return { total, rawTotal, intent, segment };
 }
 
 export function isHighIntent(score: ScoreResult): boolean {
-	return score.intent === "hot" || score.segment === "pronta-para-diagnostico";
+	return score.intent === "hot";
 }

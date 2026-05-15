@@ -13,7 +13,7 @@
 			"highlight": "Gratuito"
 		},
 		"tagline": "Sessão de Diagnóstico Gratuita para a sua clínica",
-		"subhead": "Em uma conversa estruturada de 45 minutos com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos reais da sua operação e o próximo movimento estratégico — sem pitch, sem enrolação.",
+		"subhead": "Em uma conversa estruturada de 45 minutos com a equipe da Dra. Sacha, você sai com clareza sobre os gargalos reais da sua operação e o próximo movimento estratégico — com direção prática e sem enrolação.",
 		"problemPills": [
 			"Cadeira vazia toda semana",
 			"Lead que esfria em horas",
@@ -110,8 +110,8 @@
 			{
 				"number": "01",
 				"title": "Você responde o Raio-X",
-				"description": "Cinco perguntas rápidas para a Laura preparar uma conversa sob medida com a sua realidade.",
-				"duration": "≤ 2 min"
+				"description": "Sete perguntas rápidas para a Laura preparar uma conversa sob medida com a sua realidade.",
+				"duration": "≈ 3 min"
 			},
 			{
 				"number": "02",
@@ -165,7 +165,7 @@
 				"a": "45 minutos por videochamada, agendados pela Laura no horário que melhor cabe na sua semana."
 			},
 			{
-				"q": "Vou ouvir um pitch comercial?",
+				"q": "Vou ouvir uma apresentação comercial?",
 				"a": "Não é o foco. Se fizer sentido apresentar uma solução do Grupo US no fim, fazemos com transparência. Mas você sai com um caminho mesmo se nunca mais conversarmos."
 			},
 			{
@@ -190,7 +190,7 @@
 		],
 		"cta": {
 			"label": "Quero meu Raio-X agora",
-			"microcopy": "Cinco perguntas rápidas — menos de 2 minutos"
+			"microcopy": "Sete perguntas rápidas — cerca de 3 minutos"
 		},
 		"secondaryCta": {
 			"label": "Prefere conversar direto? Fale com a Laura",

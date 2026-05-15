@@ -226,7 +226,7 @@ const stepContact = z.object({
 	fields: z
 		.array(
 			z.object({
-				name: z.enum(["name", "whatsapp", "email", "clinicName", "cityState"]),
+				name: z.enum(["name", "whatsapp", "email", "instagram", "cityState"]),
 				label: z.string(),
 				placeholder: z.string().optional(),
 				required: z.boolean().default(false),
@@ -276,7 +276,7 @@ const quizzes = defineCollection({
 				body: z.string(),
 				retryLabel: z.string(),
 				fallbackLabel: z.string(),
-				fallbackWhatsappTemplate: z.string().startsWith("Olá, Laura!"),
+				fallbackWhatsappTemplate: z.string().startsWith("Olá,"),
 			}),
 			scoring: z.object({
 				maxScore: z.number().int().min(1).max(1000),

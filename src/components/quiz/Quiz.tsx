@@ -20,6 +20,7 @@ type Props = {
 	quiz: QuizContent;
 	webhookUrl?: string;
 	landingPath?: string;
+	successRedirectPath?: string;
 };
 
 type ContactErrors = Partial<Record<keyof ContactInput, string>>;
@@ -61,6 +62,7 @@ export default function Quiz({
 	quiz,
 	webhookUrl,
 	landingPath = "/raio-x/perguntas",
+	successRedirectPath = "/raio-x/agendar",
 }: Props) {
 	const [state, dispatch] = useQuizState(quiz);
 	const [contactErrors, setContactErrors] = useState<ContactErrors>({});
@@ -197,7 +199,7 @@ export default function Quiz({
 				name: parse.data.name,
 				whatsapp: normalizeWhatsapp(parse.data.whatsapp),
 				email: parse.data.email,
-				clinicName: parse.data.clinicName ?? undefined,
+				instagram: parse.data.instagram ?? undefined,
 				cityState: parse.data.cityState ?? undefined,
 				consentGiven: true,
 				consentTimestamp: submittedAt,
@@ -235,6 +237,9 @@ export default function Quiz({
 				score: score.total,
 				intent: score.intent,
 			});
+			if (typeof window !== "undefined") {
+				window.location.assign(successRedirectPath);
+			}
 		} catch (err) {
 			clearTimeout(timeout);
 			const code = err instanceof Error ? err.message.slice(0, 60) : "unknown";
@@ -266,8 +271,6 @@ export default function Quiz({
 				mode="fallback"
 				quiz={quiz}
 				sessionId={state.sessionId}
-				contact={state.contact}
-				score={calculateScore(state.answers, quiz)}
 				reason={state.errorMsg}
 			/>
 		);
@@ -280,7 +283,6 @@ export default function Quiz({
 				quiz={quiz}
 				sessionId={state.sessionId}
 				reason={state.errorMsg}
-				score={calculateScore(state.answers, quiz)}
 				onRetry={() => dispatch({ type: "RESET_STATUS" })}
 			/>
 		);

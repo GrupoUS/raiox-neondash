@@ -1,115 +1,221 @@
 {
 	"slug": "raio-x",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"intro": {
 		"eyebrow": "Sessão de Diagnóstico Gratuita",
 		"headline": "Vamos entender o momento da sua clínica",
-		"subhead": "5 perguntas rápidas para a Laura preparar uma conversa sob medida com você. Leva menos de 2 minutos.",
+		"subhead": "7 perguntas rápidas para a Laura preparar uma conversa sob medida com você. Leva cerca de 3 minutos.",
 		"helperText": "Suas respostas ficam apenas com nossa equipe. Sem listas, sem disparos."
 	},
 	"steps": [
 		{
-			"id": "stage",
+			"id": "gestao_precificacao",
 			"type": "multiple-choice",
-			"title": "Como você descreveria o momento atual da sua clínica?",
-			"helperText": "Escolha a frase que mais combina com hoje.",
-			"scoreField": "stage",
+			"title": "Como você precifica seus procedimentos?",
+			"helperText": "Pilar 1 — Gestão",
+			"scoreField": "gestao",
 			"options": [
 				{
-					"id": "inicial",
-					"label": "Acabei de abrir ou ainda estou validando (até 6 meses)",
-					"weight": 5
+					"id": "custos_margem_posicionamento",
+					"label": "Com base em custos reais + margem definida + posicionamento de mercado",
+					"weight": 0
 				},
 				{
-					"id": "crescimento",
-					"label": "Em crescimento, mas com gargalos operacionais",
-					"weight": 15
+					"id": "media_concorrencia",
+					"label": "Olho o que a concorrência cobra e fico na média",
+					"weight": 8
 				},
 				{
-					"id": "estabelecida",
-					"label": "Estabelecida e faturando bem, mas com problemas de escala",
-					"weight": 25
+					"id": "acho_justo_sem_calculo",
+					"label": "Cobro o que acho justo, sem cálculo formal",
+					"weight": 14
 				},
 				{
-					"id": "pronta",
-					"label": "Quero fazer um diagnóstico estratégico agora",
+					"id": "preco_baixo_por_medo",
+					"label": "Tenho medo de cobrar caro e perder cliente, então pratico preço baixo",
 					"weight": 20
 				}
 			]
 		},
 		{
-			"id": "revenue",
+			"id": "gestao_ferias",
 			"type": "multiple-choice",
-			"title": "Qual a faixa aproximada de faturamento mensal da clínica?",
-			"helperText": "Estimativa serve. Ninguém vai pedir nota fiscal.",
-			"scoreField": "revenue",
-			"options": [
-				{ "id": "ate-10k", "label": "Até R$ 10 mil", "weight": 5 },
-				{ "id": "10-30k", "label": "R$ 10 mil a R$ 30 mil", "weight": 15 },
-				{ "id": "30-80k", "label": "R$ 30 mil a R$ 80 mil", "weight": 25 },
-				{ "id": "80k-mais", "label": "Acima de R$ 80 mil", "weight": 30 }
-			]
-		},
-		{
-			"id": "bottleneck",
-			"type": "multiple-choice",
-			"title": "Onde você sente que mais perde tempo, dinheiro ou energia hoje?",
-			"helperText": "A primeira que vier à cabeça.",
-			"scoreField": "bottleneck",
+			"title": "O que acontece com a clínica quando você tira uma semana de férias?",
+			"helperText": "Pilar 1 — Gestão",
+			"scoreField": "gestao",
 			"options": [
 				{
-					"id": "marketing",
-					"label": "Captação de leads e marketing",
-					"weight": 10
+					"id": "funciona_normalmente",
+					"label": "Funciona normalmente, tenho equipe e processos que rodam sem mim",
+					"weight": 0
 				},
 				{
-					"id": "operacional",
-					"label": "Agenda, no-show e organização do dia a dia",
-					"weight": 15
+					"id": "funciona_parcialmente",
+					"label": "Funciona parcialmente, mas alguma coisa sempre me chama",
+					"weight": 8
 				},
 				{
-					"id": "financeiro",
-					"label": "Visibilidade de lucro, custos e precificação",
-					"weight": 15
+					"id": "fica_no_limite",
+					"label": "Fica no limite, depende muito de mim para não travar",
+					"weight": 14
 				},
-				{ "id": "time", "label": "Equipe e processos internos", "weight": 12 },
 				{
-					"id": "indeciso",
-					"label": "Honestamente, ainda não sei dizer",
-					"weight": 5
+					"id": "operacao_sofre",
+					"label": "Não consigo tirar férias sem que a operação sofra",
+					"weight": 20
 				}
 			]
 		},
 		{
-			"id": "urgency",
-			"type": "scale",
-			"title": "Quão urgente é resolver isso para você?",
-			"helperText": "1 = posso esperar, 5 = preciso resolver agora.",
-			"scoreField": "urgency",
-			"scale": {
-				"min": 1,
-				"max": 5,
-				"minLabel": "Posso esperar",
-				"maxLabel": "Preciso resolver agora",
-				"weights": [4, 8, 12, 16, 20]
-			}
+			"id": "marketing_origem_clientes",
+			"type": "multiple-choice",
+			"title": "Como a maioria dos seus novos clientes chega até a clínica hoje?",
+			"helperText": "Pilar 2 — Marketing",
+			"scoreField": "marketing",
+			"options": [
+				{
+					"id": "estrategia_ativa",
+					"label": "Tenho estratégia ativa: tráfego pago, conteúdo e indicação de forma estruturada",
+					"weight": 0
+				},
+				{
+					"id": "instagram_sem_consistencia",
+					"label": "Principalmente pelo Instagram, mas sem consistência ou estratégia definida",
+					"weight": 8
+				},
+				{
+					"id": "quase_tudo_indicacao",
+					"label": "Quase tudo por indicação",
+					"weight": 14
+				},
+				{
+					"id": "nao_sei_origem",
+					"label": "Não sei exatamente de onde vêm os clientes novos",
+					"weight": 20
+				}
+			]
 		},
 		{
-			"id": "consultancyHistory",
+			"id": "marketing_cliente_ideal",
 			"type": "multiple-choice",
-			"title": "Você já trabalhou com consultoria ou mentoria de gestão antes?",
-			"scoreField": "consultancyHistory",
+			"title": "Você tem clareza sobre quem é o seu cliente ideal e comunica isso no seu conteúdo?",
+			"helperText": "Pilar 2 — Marketing",
+			"scoreField": "marketing",
 			"options": [
-				{ "id": "nunca", "label": "Nunca", "weight": 5 },
-				{ "id": "ja-tive", "label": "Já tive, hoje não tenho", "weight": 10 },
-				{ "id": "atualmente", "label": "Tenho atualmente", "weight": 3 }
+				{
+					"id": "posicionamento_claro",
+					"label": "Sim, tenho posicionamento claro e meu conteúdo fala diretamente para quem quero atrair",
+					"weight": 0
+				},
+				{
+					"id": "conteudo_generico",
+					"label": "Sei mais ou menos, mas o conteúdo ainda é genérico",
+					"weight": 8
+				},
+				{
+					"id": "atendo_todo_mundo",
+					"label": "Atendo todo mundo, não quis restringir por medo de perder cliente",
+					"weight": 14
+				},
+				{
+					"id": "nunca_pensei",
+					"label": "Nunca parei para pensar nisso",
+					"weight": 20
+				}
+			]
+		},
+		{
+			"id": "marketing_previsibilidade",
+			"type": "multiple-choice",
+			"title": "Você consegue prever quantos clientes novos vai ter no próximo mês?",
+			"helperText": "Pilar 2 — Marketing",
+			"scoreField": "marketing",
+			"options": [
+				{
+					"id": "estima_por_acoes",
+					"label": "Sim, consigo estimar com base nas minhas ações de marketing",
+					"weight": 0
+				},
+				{
+					"id": "ideia_vaga",
+					"label": "Tenho uma ideia vaga, mas não há previsibilidade real",
+					"weight": 8
+				},
+				{
+					"id": "depende_movimento",
+					"label": "Não, depende do movimento espontâneo de cada mês",
+					"weight": 14
+				},
+				{
+					"id": "trabalho_com_o_que_vem",
+					"label": "Nem me faço essa pergunta, trabalho com o que vem",
+					"weight": 20
+				}
+			]
+		},
+		{
+			"id": "vendas_followup",
+			"type": "multiple-choice",
+			"title": "Como você lida com clientes que somem após o orçamento ou a primeira consulta?",
+			"helperText": "Pilar 3 — Vendas",
+			"scoreField": "vendas",
+			"options": [
+				{
+					"id": "regua_ativa",
+					"label": "Temos régua de follow-up ativa, retomamos o contato de forma sistemática",
+					"weight": 0
+				},
+				{
+					"id": "uma_ou_duas_mensagens",
+					"label": "Mandamos uma mensagem ou duas e desistimos",
+					"weight": 8
+				},
+				{
+					"id": "esperamos_voltar",
+					"label": "Esperamos o cliente voltar quando quiser",
+					"weight": 14
+				},
+				{
+					"id": "sem_followup",
+					"label": "Não fazemos follow-up",
+					"weight": 20
+				}
+			]
+		},
+		{
+			"id": "vendas_base",
+			"type": "multiple-choice",
+			"title": "Você tem estratégia para aumentar o ticket ou a frequência dos clientes que já estão na sua base?",
+			"helperText": "Pilar 3 — Vendas",
+			"scoreField": "vendas",
+			"options": [
+				{
+					"id": "protocolos_pacotes_reativacao",
+					"label": "Sim, ofereço protocolos, pacotes e faço reativação ativa da base",
+					"weight": 0
+				},
+				{
+					"id": "as_vezes_sem_sistema",
+					"label": "Às vezes ofereço algo a mais, mas sem sistematizar",
+					"weight": 8
+				},
+				{
+					"id": "espero_cliente_perguntar",
+					"label": "Espero o cliente perguntar ou voltar por conta própria",
+					"weight": 14
+				},
+				{
+					"id": "so_clientes_novos",
+					"label": "Foco só em atrair clientes novos, nunca pensei na base existente",
+					"weight": 20
+				}
 			]
 		},
 		{
 			"id": "contact",
 			"type": "contact",
-			"title": "Para fechar — como a Laura entra em contato?",
-			"helperText": "Resposta em até 24 horas em horário comercial.",
+			"title": "Para fechar — para onde enviamos seu agendamento?",
+			"helperText": "Depois do envio, você será direcionado ao WhatsApp com uma mensagem pronta para pedir sua Sessão Raio-X.",
 			"fields": [
 				{
 					"name": "name",
@@ -130,9 +236,9 @@
 					"required": true
 				},
 				{
-					"name": "clinicName",
-					"label": "Nome da clínica",
-					"placeholder": "Opcional",
+					"name": "instagram",
+					"label": "Perfil do Instagram",
+					"placeholder": "@sua_clinica",
 					"required": false
 				},
 				{
@@ -150,27 +256,27 @@
 		"privacyPolicyHref": "/politica-de-privacidade"
 	},
 	"thanksScreen": {
-		"headline": "Diagnóstico recebido. Estamos com você.",
-		"body": "A Laura, da nossa equipe, entra em contato pelo WhatsApp em até 24 horas para agendar sua Sessão de Diagnóstico de 45 minutos. Sem pitch, sem enrolação — só a conversa que você precisa.",
+		"headline": "Diagnóstico recebido. Agora vamos agendar.",
+		"body": "Recebemos suas respostas. Agora você será direcionado ao WhatsApp com uma mensagem pronta para pedir sua Sessão Raio-X com clareza e sem enrolação.",
 		"nextSteps": [
-			"Você recebe uma mensagem da Laura no WhatsApp confirmando o melhor horário.",
-			"Na sessão, mapeamos juntos os gargalos da sua operação.",
-			"Você sai com clareza sobre o próximo movimento estratégico — independente de fechar com a gente."
+			"Você abre o WhatsApp com a mensagem de agendamento pronta.",
+			"Nossa equipe confirma o melhor horário para a Sessão Raio-X.",
+			"Na sessão, mapeamos juntos os gargalos prioritários da sua operação."
 		],
 		"cta": {
-			"label": "Conversar agora no WhatsApp",
-			"whatsappMessage": "Olá, Laura! Acabei de fazer o Raio-X e quero adiantar a conversa."
+			"label": "Agendar pelo WhatsApp",
+			"href": "/raio-x/agendar"
 		}
 	},
 	"errorScreen": {
 		"headline": "Quase lá — vamos finalizar pelo WhatsApp",
-		"body": "Tivemos um problema técnico ao registrar suas respostas. Clique abaixo para enviar direto para a Laura — suas respostas vão junto na mensagem.",
+		"body": "Tivemos um problema técnico ao registrar suas respostas. Clique abaixo para pedir seu agendamento pelo WhatsApp.",
 		"retryLabel": "Tentar novamente",
-		"fallbackLabel": "Falar com a Laura agora",
-		"fallbackWhatsappTemplate": "Olá, Laura! Acabei de responder o Raio-X e gostaria de agendar a Sessão de Diagnóstico."
+		"fallbackLabel": "Agendar pelo WhatsApp",
+		"fallbackWhatsappTemplate": "Olá, quero agendar minha Sessão Raio-X!"
 	},
 	"scoring": {
-		"maxScore": 105,
+		"maxScore": 140,
 		"thresholds": {
 			"warm": 40,
 			"hot": 70

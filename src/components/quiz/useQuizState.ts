@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import type {
 	AnswersMap,
 	AnswerValue,
@@ -6,7 +6,7 @@ import type {
 	QuizContent,
 } from "./schema";
 
-const STORAGE_KEY = "raiox:quiz:v1";
+const LEGACY_STORAGE_KEY = "raiox:quiz:v1";
 const TTL_MS = 24 * 60 * 60 * 1000;
 
 type Status = "idle" | "submitting" | "success" | "fallback" | "error";
@@ -56,6 +56,10 @@ function initialState(): QuizState {
 	};
 }
 
+function getStorageKey(quiz: QuizContent): string {
+	return `raiox:quiz:${quiz.slug}:${quiz.version}`;
+}
+
 function reducer(state: QuizState, action: QuizAction): QuizState {
 	switch (action.type) {
 		case "SET_ANSWER":
@@ -92,15 +96,15 @@ function reducer(state: QuizState, action: QuizAction): QuizState {
 	}
 }
 
-function loadPersisted(): QuizState | null {
+function loadPersisted(storageKey: string): QuizState | null {
 	if (typeof sessionStorage === "undefined") return null;
 	try {
-		const raw = sessionStorage.getItem(STORAGE_KEY);
+		const raw = sessionStorage.getItem(storageKey);
 		if (!raw) return null;
 		const parsed = JSON.parse(raw) as { state: QuizState; savedAt: number };
 		if (!parsed?.state || !parsed.savedAt) return null;
 		if (Date.now() - parsed.savedAt > TTL_MS) {
-			sessionStorage.removeItem(STORAGE_KEY);
+			sessionStorage.removeItem(storageKey);
 			return null;
 		}
 		// Reset terminal status on hydrate so user can resume editing.
@@ -114,13 +118,13 @@ function loadPersisted(): QuizState | null {
 }
 
 let persistTimer: ReturnType<typeof setTimeout> | null = null;
-function schedulePersist(state: QuizState): void {
+function schedulePersist(state: QuizState, storageKey: string): void {
 	if (typeof sessionStorage === "undefined") return;
 	if (persistTimer) clearTimeout(persistTimer);
 	persistTimer = setTimeout(() => {
 		try {
 			sessionStorage.setItem(
-				STORAGE_KEY,
+				storageKey,
 				JSON.stringify({ state, savedAt: Date.now() }),
 			);
 		} catch {
@@ -129,35 +133,35 @@ function schedulePersist(state: QuizState): void {
 	}, 300);
 }
 
-export function clearPersistedQuiz(): void {
+export function clearPersistedQuiz(storageKey = LEGACY_STORAGE_KEY): void {
 	if (typeof sessionStorage === "undefined") return;
 	try {
-		sessionStorage.removeItem(STORAGE_KEY);
+		sessionStorage.removeItem(storageKey);
 	} catch {
 		/* noop */
 	}
 }
 
-export function useQuizState(_quiz: QuizContent) {
+export function useQuizState(quiz: QuizContent) {
+	const storageKey = useMemo(() => getStorageKey(quiz), [quiz]);
 	const [state, dispatch] = useReducer(reducer, undefined, initialState);
 
 	// Hydrate from sessionStorage once on mount.
 	useEffect(() => {
-		const persisted = loadPersisted();
+		const persisted = loadPersisted(storageKey);
 		if (persisted) {
 			dispatch({ type: "HYDRATE", state: persisted });
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+	}, [storageKey]);
 
 	// Persist on change (debounced).
 	useEffect(() => {
 		if (state.status === "success") {
-			clearPersistedQuiz();
+			clearPersistedQuiz(storageKey);
 			return;
 		}
-		schedulePersist(state);
-	}, [state]);
+		schedulePersist(state, storageKey);
+	}, [state, storageKey]);
 
 	return [state, dispatch] as const;
 }

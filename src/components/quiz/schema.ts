@@ -37,7 +37,7 @@ export const contactFieldName = z.enum([
 	"name",
 	"whatsapp",
 	"email",
-	"clinicName",
+	"instagram",
 	"cityState",
 ]);
 export type ContactFieldName = z.infer<typeof contactFieldName>;
@@ -118,7 +118,7 @@ export const contactSchema = z.object({
 			message: "Informe um WhatsApp válido com DDD.",
 		}),
 	email: z.string().trim().email("Informe um e-mail válido."),
-	clinicName: z.string().trim().optional(),
+	instagram: z.string().trim().optional(),
 	cityState: z.string().trim().optional(),
 	consentGiven: z.literal(true, {
 		message: "É necessário aceitar a Política de Privacidade.",

@@ -6,9 +6,7 @@ import {
 } from "lucide-react";
 import { useEffect } from "react";
 import { track } from "../../lib/analytics";
-import { whatsappUrlWithText } from "../../lib/whatsapp";
-import type { ContactInput, QuizContent } from "./schema";
-import type { ScoreResult } from "./scoring";
+import type { QuizContent } from "./schema";
 
 type CommonProps = {
 	quiz: QuizContent;
@@ -20,32 +18,17 @@ type Props = CommonProps &
 		| { mode: "success" }
 		| {
 				mode: "fallback";
-				contact: Partial<ContactInput>;
-				score: ScoreResult;
 				reason?: string;
 		  }
 		| {
 				mode: "error";
 				reason?: string;
 				onRetry: () => void;
-				score?: ScoreResult;
 		  }
 	);
 
-const SEGMENT_LABELS: Record<ScoreResult["segment"], string> = {
-	"clinica-inicial": "Clínica em validação",
-	"em-crescimento": "Clínica em crescimento",
-	estabelecida: "Clínica estabelecida",
-	"pronta-para-diagnostico": "Pronta para diagnóstico",
-};
-
-function buildFallbackMessage(
-	template: string,
-	contact: Partial<ContactInput>,
-	score: ScoreResult,
-): string {
-	const name = contact.name?.trim() || "Olá";
-	return `${template}\n\nNome: ${name}\nSegmento: ${SEGMENT_LABELS[score.segment]}\nScore: ${score.total}/100`;
+function isExternalHref(href: string): boolean {
+	return /^https?:\/\//i.test(href);
 }
 
 export function ResultScreen(props: Props) {
@@ -60,9 +43,8 @@ export function ResultScreen(props: Props) {
 
 	if (mode === "success") {
 		const cta = quiz.thanksScreen.cta;
-		const ctaHref = cta?.whatsappMessage
-			? whatsappUrlWithText(cta.whatsappMessage)
-			: cta?.href;
+		const ctaHref = cta?.href;
+		const isExternalCta = ctaHref ? isExternalHref(ctaHref) : false;
 		return (
 			<section className="relative w-full px-4 py-16 sm:py-20">
 				<div className="mx-auto w-full max-w-2xl text-center">
@@ -86,8 +68,8 @@ export function ResultScreen(props: Props) {
 					{cta && ctaHref ? (
 						<a
 							href={ctaHref}
-							target="_blank"
-							rel="noopener noreferrer"
+							target={isExternalCta ? "_blank" : undefined}
+							rel={isExternalCta ? "noopener noreferrer" : undefined}
 							onClick={() =>
 								track("whatsapp_post_success_clicked", { sessionId })
 							}
@@ -103,12 +85,7 @@ export function ResultScreen(props: Props) {
 	}
 
 	if (mode === "fallback") {
-		const message = buildFallbackMessage(
-			quiz.errorScreen.fallbackWhatsappTemplate,
-			props.contact,
-			props.score,
-		);
-		const whatsappHref = whatsappUrlWithText(message);
+		const whatsappHref = quiz.thanksScreen.cta?.href ?? "/raio-x/agendar";
 		return (
 			<section className="relative w-full px-4 py-16 sm:py-20">
 				<div className="mx-auto w-full max-w-2xl text-center">
@@ -121,8 +98,6 @@ export function ResultScreen(props: Props) {
 					<div className="mt-8 flex flex-col items-center gap-3">
 						<a
 							href={whatsappHref}
-							target="_blank"
-							rel="noopener noreferrer"
 							onClick={() =>
 								track("whatsapp_fallback_used", {
 									sessionId,
@@ -149,7 +124,7 @@ export function ResultScreen(props: Props) {
 				</h1>
 				<p className="mt-4 text-base leading-relaxed text-muted sm:text-lg">
 					Tivemos um problema ao registrar suas respostas. Tente novamente ou
-					fale com a Laura direto pelo WhatsApp.
+					peça o agendamento pelo WhatsApp.
 				</p>
 				<div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
 					<button
@@ -161,11 +136,7 @@ export function ResultScreen(props: Props) {
 						{quiz.errorScreen.retryLabel}
 					</button>
 					<a
-						href={whatsappUrlWithText(
-							quiz.errorScreen.fallbackWhatsappTemplate,
-						)}
-						target="_blank"
-						rel="noopener noreferrer"
+						href={quiz.thanksScreen.cta?.href ?? "/raio-x/agendar"}
 						onClick={() =>
 							track("whatsapp_fallback_used", {
 								sessionId,

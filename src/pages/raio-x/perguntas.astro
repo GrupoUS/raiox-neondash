@@ -2,10 +2,7 @@
 import { getEntry } from "astro:content";
 import Quiz from "../../components/quiz/Quiz";
 import Layout from "../../layouts/Layout.astro";
-import {
-	WHATSAPP_DEFAULT_SITE_MESSAGE,
-	whatsappUrlWithText,
-} from "../../lib/whatsapp";
+import { raioXWhatsappUrls } from "../../lib/whatsapp";
 
 const entry = await getEntry("quizzes", "raio-x");
 if (!entry) {
@@ -16,12 +13,12 @@ const webhookUrl = import.meta.env.PUBLIC_QUIZ_WEBHOOK_URL as
 	| string
 	| undefined;
 
-const fallbackWhatsappHref = whatsappUrlWithText(WHATSAPP_DEFAULT_SITE_MESSAGE);
+const fallbackWhatsappHref = raioXWhatsappUrls()[0] ?? "/raio-x/agendar";
 ---
 
 <Layout
 	title="Raio-X Gratuito — Perguntas | Grupo US"
-	description="Responda às perguntas do Raio-X em menos de 2 minutos para a Laura preparar sua Sessão de Diagnóstico Gratuita sob medida para sua clínica de estética."
+	description="Responda às perguntas do Raio-X em cerca de 3 minutos para a Laura preparar sua Sessão de Diagnóstico Gratuita sob medida para sua clínica de estética."
 	noIndex={true}
 	withAnalytics={true}
 >
@@ -31,6 +28,7 @@ const fallbackWhatsappHref = whatsappUrlWithText(WHATSAPP_DEFAULT_SITE_MESSAGE);
 			quiz={entry.data}
 			webhookUrl={webhookUrl}
 			landingPath="/raio-x/perguntas"
+			successRedirectPath="/raio-x/agendar"
 		/>
 		<noscript>
 			<section class="mx-auto w-full max-w-2xl px-4 py-16 text-center">
