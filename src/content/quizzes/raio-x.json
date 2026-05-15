@@ -1,13 +1,51 @@
 {
 	"slug": "raio-x",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"intro": {
 		"eyebrow": "Sessão de Diagnóstico Gratuita",
 		"headline": "Vamos entender o momento da sua clínica",
 		"subhead": "7 perguntas rápidas para a Laura preparar uma conversa sob medida com você. Leva cerca de 3 minutos.",
-		"helperText": "Suas respostas ficam apenas com nossa equipe. Sem listas, sem disparos."
+		"helperText": "Se você não terminar agora, nossa equipe ainda consegue retomar seu agendamento pelo contato informado."
 	},
 	"steps": [
+		{
+			"id": "contact",
+			"type": "contact",
+			"title": "Primeiro, seus dados de contato",
+			"helperText": "Assim a Laura consegue retomar seu agendamento mesmo se você sair antes de concluir o Raio-X.",
+			"fields": [
+				{
+					"name": "name",
+					"label": "Seu nome",
+					"placeholder": "Como prefere ser chamado(a)",
+					"required": true
+				},
+				{
+					"name": "whatsapp",
+					"label": "WhatsApp",
+					"placeholder": "(00) 00000-0000",
+					"required": true
+				},
+				{
+					"name": "email",
+					"label": "E-mail",
+					"placeholder": "voce@suaclinica.com.br",
+					"required": true
+				},
+				{
+					"name": "instagram",
+					"label": "Perfil do Instagram",
+					"placeholder": "@sua_clinica",
+					"required": false
+				},
+				{
+					"name": "cityState",
+					"label": "Cidade / UF",
+					"placeholder": "Opcional",
+					"required": false
+				}
+			]
+		},
 		{
 			"id": "gestao_precificacao",
 			"type": "multiple-choice",
@@ -208,44 +246,6 @@
 					"id": "so_clientes_novos",
 					"label": "Foco só em atrair clientes novos, nunca pensei na base existente",
 					"weight": 20
-				}
-			]
-		},
-		{
-			"id": "contact",
-			"type": "contact",
-			"title": "Para fechar — para onde enviamos seu agendamento?",
-			"helperText": "Depois do envio, você será direcionado ao WhatsApp com uma mensagem pronta para pedir sua Sessão Raio-X.",
-			"fields": [
-				{
-					"name": "name",
-					"label": "Seu nome",
-					"placeholder": "Como prefere ser chamado(a)",
-					"required": true
-				},
-				{
-					"name": "whatsapp",
-					"label": "WhatsApp",
-					"placeholder": "(00) 00000-0000",
-					"required": true
-				},
-				{
-					"name": "email",
-					"label": "E-mail",
-					"placeholder": "voce@suaclinica.com.br",
-					"required": true
-				},
-				{
-					"name": "instagram",
-					"label": "Perfil do Instagram",
-					"placeholder": "@sua_clinica",
-					"required": false
-				},
-				{
-					"name": "cityState",
-					"label": "Cidade / UF",
-					"placeholder": "Opcional",
-					"required": false
 				}
 			]
 		}

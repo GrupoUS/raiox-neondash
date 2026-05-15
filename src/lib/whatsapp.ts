@@ -8,6 +8,13 @@ export const RAIO_X_WHATSAPP_MESSAGE =
 
 export const RAIO_X_WHATSAPP_E164_DESTINATIONS = [WHATSAPP_SDR_E164] as const;
 
+export function normalizeWhatsappToE164(raw: string): string {
+	const digits = raw.replace(/\D/g, "");
+	if (digits.startsWith("55")) return digits;
+	if (digits.length >= 10) return `55${digits}`;
+	return digits;
+}
+
 function whatsappUrlWithNumber(
 	destinationE164: string,
 	message: string,
@@ -24,6 +31,13 @@ export function raioXWhatsappUrls(): string[] {
 	return RAIO_X_WHATSAPP_E164_DESTINATIONS.map((destination) =>
 		whatsappUrlWithNumber(destination, RAIO_X_WHATSAPP_MESSAGE),
 	);
+}
+
+export function whatsappUrlForLead(
+	rawWhatsapp: string,
+	message: string,
+): string {
+	return whatsappUrlWithNumber(normalizeWhatsappToE164(rawWhatsapp), message);
 }
 
 const WHATSAPP_DESTINATIONS = new Set([

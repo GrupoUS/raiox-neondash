@@ -9,10 +9,6 @@ if (!entry) {
 	throw new Error("Quiz entry 'raio-x' not found in src/content/quizzes/");
 }
 
-const webhookUrl = import.meta.env.PUBLIC_QUIZ_WEBHOOK_URL as
-	| string
-	| undefined;
-
 const fallbackWhatsappHref = raioXWhatsappUrls()[0] ?? "/raio-x/agendar";
 ---
 
@@ -26,7 +22,8 @@ const fallbackWhatsappHref = raioXWhatsappUrls()[0] ?? "/raio-x/agendar";
 		<Quiz
 			client:load
 			quiz={entry.data}
-			webhookUrl={webhookUrl}
+			webhookUrl="/api/leads/complete"
+			partialLeadUrl="/api/leads/capture"
 			landingPath="/raio-x/perguntas"
 			successRedirectPath="/raio-x/agendar"
 		/>

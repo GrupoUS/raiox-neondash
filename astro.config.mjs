@@ -2,11 +2,13 @@
 
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
+import vercel from "@astrojs/vercel";
 import tailwindcss from "@tailwindcss/vite";
 import { defineConfig, fontProviders } from "astro/config";
 import { EnumChangefreq } from "sitemap";
 
-const SITEMAP_EXCLUDE_RE = /\/raio-x(\/(agendar|perguntas))?\/?$/;
+const SITEMAP_EXCLUDE_RE =
+	/(\/raio-x(\/(agendar|perguntas))?|\/admin(\/.*)?)\/?$/;
 const SITEMAP_HOME_RE = /^https?:\/\/[^/]+\/?$/;
 const SITEMAP_PRIVACY_RE = /\/politica-de-privacidade\/?$/;
 
@@ -48,6 +50,7 @@ export default defineConfig({
 			},
 		}),
 	],
+	adapter: vercel(),
 	vite: {
 		plugins: [tailwindcss()],
 	},

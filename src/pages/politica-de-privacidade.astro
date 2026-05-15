@@ -1,7 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const lastUpdated = "04 de maio de 2026";
+const lastUpdated = "15 de maio de 2026";
 ---
 
 <Layout
@@ -35,16 +35,17 @@ const lastUpdated = "04 de maio de 2026";
 			<ul class="list-disc pl-5 space-y-2 text-base text-muted leading-relaxed">
 				<li>
 					<strong class="text-foreground">Dados de contato</strong>: nome,
-					número de WhatsApp e e-mail informados no Raio-X.
+					número de WhatsApp, e-mail e perfil do Instagram informados no
+					Raio-X.
 				</li>
 				<li>
 					<strong class="text-foreground">Dados de negócio (opcionais)</strong>:
-					nome da clínica e cidade/UF.
+					cidade/UF.
 				</li>
 				<li>
 					<strong class="text-foreground">Respostas do diagnóstico</strong>:
-					estágio, faixa de faturamento, gargalos percebidos, urgência e
-					histórico de consultoria.
+					respostas sobre gestão, marketing e vendas, além do score e gargalo
+					principal calculados pelo Raio-X.
 				</li>
 				<li>
 					<strong class="text-foreground">Dados técnicos agregados</strong>:
@@ -75,7 +76,8 @@ const lastUpdated = "04 de maio de 2026";
 				</li>
 				<li>
 					Realizar contato comercial direto (WhatsApp ou e-mail) para
-					agendamento da sessão.
+					agendamento da sessão, inclusive se você sair antes de concluir todas
+					as perguntas após informar seus dados e consentir com o contato.
 				</li>
 				<li>
 					Enviar comunicação posterior estritamente relacionada à Sessão de
@@ -100,7 +102,8 @@ const lastUpdated = "04 de maio de 2026";
 				<li>
 					<strong class="text-foreground">Consentimento</strong> (art. 7º, I,
 					LGPD) — para o tratamento dos dados informados no Raio-X. O
-					consentimento é registrado com data e hora no momento do envio.
+					consentimento é registrado com data e hora no momento em que você
+					avança após preencher os dados de contato.
 				</li>
 				<li>
 					<strong class="text-foreground">Legítimo interesse</strong> (art. 7º,
@@ -115,11 +118,12 @@ const lastUpdated = "04 de maio de 2026";
 				4. Compartilhamento com operadores
 			</h2>
 			<p class="text-base text-muted leading-relaxed">
-				Suas respostas e contato são enviados ao nosso sistema de gestão de
-				relacionamento (CRM) por meio de webhook seguro, a fim de organizar o
-				agendamento e o histórico do atendimento. Não compartilhamos seus
-				dados com terceiros para qualquer finalidade não declarada nesta
-				política.
+				Seus dados de contato, respostas e status do preenchimento são
+				armazenados em ambiente restrito e podem ser enviados ao nosso sistema
+				de gestão de relacionamento (CRM) ou automação de atendimento por meio
+				de webhook seguro, a fim de organizar o agendamento e o histórico do
+				atendimento. Não compartilhamos seus dados com terceiros para qualquer
+				finalidade não declarada nesta política.
 			</p>
 			<p class="text-base text-muted leading-relaxed">
 				Plausible e Vercel Web Analytics atuam como operadores de métricas
@@ -174,8 +178,10 @@ const lastUpdated = "04 de maio de 2026";
 			<p class="text-base text-muted leading-relaxed">
 				O site utiliza apenas armazenamento local de sessão (sessionStorage)
 				para preservar suas respostas durante o preenchimento do Raio-X — esses
-				dados ficam no seu navegador e são apagados ao final da sessão. As
-				ferramentas de métricas usadas são cookieless por padrão.
+				dados ficam no seu navegador e são apagados ao final da sessão. O
+				painel administrativo usa cookie de sessão restrito apenas para manter
+				o login do gestor. As ferramentas de métricas usadas são cookieless por
+				padrão.
 			</p>
 		</section>
 

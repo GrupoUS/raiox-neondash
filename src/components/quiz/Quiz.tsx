@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { track, trackOnce } from "../../lib/analytics";
+import { normalizeWhatsappToE164 } from "../../lib/whatsapp";
 import { ProgressBar } from "./ProgressBar";
 import { QuestionContact } from "./QuestionContact";
 import { QuestionMultipleChoice } from "./QuestionMultipleChoice";
@@ -19,6 +20,7 @@ import { useQuizState } from "./useQuizState";
 type Props = {
 	quiz: QuizContent;
 	webhookUrl?: string;
+	partialLeadUrl?: string;
 	landingPath?: string;
 	successRedirectPath?: string;
 };
@@ -51,21 +53,21 @@ function readUtm(): Record<string, string> {
 	return out;
 }
 
-function normalizeWhatsapp(raw: string): string {
-	const digits = raw.replace(/\D/g, "");
-	if (digits.startsWith("55")) return `+${digits}`;
-	if (digits.length >= 10) return `+55${digits}`;
-	return raw;
+function normalizeWhatsappForPayload(raw: string): string {
+	const e164 = normalizeWhatsappToE164(raw);
+	return e164 ? `+${e164}` : raw;
 }
 
 export default function Quiz({
 	quiz,
 	webhookUrl,
+	partialLeadUrl = "/api/leads/capture",
 	landingPath = "/raio-x/perguntas",
 	successRedirectPath = "/raio-x/agendar",
 }: Props) {
 	const [state, dispatch] = useQuizState(quiz);
 	const [contactErrors, setContactErrors] = useState<ContactErrors>({});
+	const [isCapturingContact, setIsCapturingContact] = useState(false);
 	const total = quiz.steps.length;
 	const step = quiz.steps[state.currentStep];
 
@@ -148,7 +150,17 @@ export default function Quiz({
 		}
 	};
 
-	const handleSubmit = async () => {
+	const readMeta = () => ({
+		utm: readUtm(),
+		referrer: typeof document !== "undefined" ? document.referrer : undefined,
+		userAgent:
+			typeof navigator !== "undefined"
+				? navigator.userAgent.slice(0, 200)
+				: undefined,
+		landingPath,
+	});
+
+	const parseContact = () => {
 		const parse = contactSchema.safeParse({
 			...state.contact,
 			consentGiven: state.consentGiven,
@@ -160,9 +172,65 @@ export default function Quiz({
 				if (field) errors[field] = issue.message;
 			}
 			setContactErrors(errors);
-			return;
+			return null;
 		}
 		setContactErrors({});
+		return parse.data;
+	};
+
+	const buildContactPayload = (contact: ContactInput, timestamp: string) => ({
+		name: contact.name,
+		whatsapp: normalizeWhatsappForPayload(contact.whatsapp),
+		email: contact.email,
+		instagram: contact.instagram || undefined,
+		cityState: contact.cityState || undefined,
+		consentGiven: true,
+		consentTimestamp: timestamp,
+	});
+
+	const capturePartialLead = async () => {
+		if (!partialLeadUrl || state.partialCapturedAt) return true;
+		const contact = parseContact();
+		if (!contact) return false;
+
+		const capturedAt = new Date().toISOString();
+		setIsCapturingContact(true);
+		try {
+			const res = await fetch(partialLeadUrl, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					eventType: "partial_contact",
+					quizId: quiz.slug,
+					quizVersion: quiz.version,
+					capturedAt,
+					sessionId: state.sessionId,
+					contact: buildContactPayload(contact, capturedAt),
+					meta: readMeta(),
+				}),
+				keepalive: true,
+			});
+			if (!res.ok) throw new Error(`http_${res.status}`);
+			dispatch({ type: "SET_PARTIAL_CAPTURED", capturedAt });
+			track("lead_partial_captured", {
+				sessionId: state.sessionId,
+			});
+			return true;
+		} catch (err) {
+			const code = err instanceof Error ? err.message.slice(0, 60) : "unknown";
+			track("lead_partial_capture_failed", {
+				sessionId: state.sessionId,
+				errorCode: code,
+			});
+			return true;
+		} finally {
+			setIsCapturingContact(false);
+		}
+	};
+
+	const handleSubmit = async () => {
+		const contact = parseContact();
+		if (!contact) return;
 
 		const score = calculateScore(state.answers, quiz);
 		track("quiz_completed", {
@@ -195,26 +263,9 @@ export default function Quiz({
 			submittedAt,
 			sessionId: state.sessionId,
 			answers: getAnswerExportShape(state.answers),
-			contact: {
-				name: parse.data.name,
-				whatsapp: normalizeWhatsapp(parse.data.whatsapp),
-				email: parse.data.email,
-				instagram: parse.data.instagram ?? undefined,
-				cityState: parse.data.cityState ?? undefined,
-				consentGiven: true,
-				consentTimestamp: submittedAt,
-			},
+			contact: buildContactPayload(contact, submittedAt),
 			score,
-			meta: {
-				utm: readUtm(),
-				referrer:
-					typeof document !== "undefined" ? document.referrer : undefined,
-				userAgent:
-					typeof navigator !== "undefined"
-						? navigator.userAgent.slice(0, 200)
-						: undefined,
-				landingPath,
-			},
+			meta: readMeta(),
 		};
 
 		dispatch({ type: "SUBMIT_START" });
@@ -254,9 +305,15 @@ export default function Quiz({
 	const handleAdvance = () => {
 		if (isLast) {
 			void handleSubmit();
-		} else {
-			dispatch({ type: "NEXT" });
+			return;
 		}
+		if (step?.type === "contact") {
+			void capturePartialLead().then((shouldAdvance) => {
+				if (shouldAdvance) dispatch({ type: "NEXT" });
+			});
+			return;
+		}
+		dispatch({ type: "NEXT" });
 	};
 
 	if (state.status === "success") {
@@ -302,7 +359,7 @@ export default function Quiz({
 					canBack={state.currentStep > 0}
 					canAdvance={canAdvance}
 					isLast={isLast}
-					isSubmitting={state.status === "submitting"}
+					isSubmitting={state.status === "submitting" || isCapturingContact}
 					error={
 						isLast && Object.keys(contactErrors).length > 0
 							? "Revise os campos destacados antes de continuar."

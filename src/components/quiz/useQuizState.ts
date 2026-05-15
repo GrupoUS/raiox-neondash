@@ -17,6 +17,7 @@ export type QuizState = {
 	answers: AnswersMap;
 	contact: Partial<ContactInput>;
 	consentGiven: boolean;
+	partialCapturedAt?: string;
 	status: Status;
 	errorMsg?: string;
 	startedAt: number;
@@ -26,6 +27,7 @@ export type QuizAction =
 	| { type: "SET_ANSWER"; stepId: string; answer: AnswerValue }
 	| { type: "SET_CONTACT"; contact: Partial<ContactInput> }
 	| { type: "SET_CONSENT"; consent: boolean }
+	| { type: "SET_PARTIAL_CAPTURED"; capturedAt: string }
 	| { type: "NEXT" }
 	| { type: "BACK" }
 	| { type: "GOTO"; step: number }
@@ -51,6 +53,7 @@ function initialState(): QuizState {
 		answers: {},
 		contact: {},
 		consentGiven: false,
+		partialCapturedAt: undefined,
 		status: "idle",
 		startedAt: Date.now(),
 	};
@@ -71,6 +74,8 @@ function reducer(state: QuizState, action: QuizAction): QuizState {
 			return { ...state, contact: { ...state.contact, ...action.contact } };
 		case "SET_CONSENT":
 			return { ...state, consentGiven: action.consent };
+		case "SET_PARTIAL_CAPTURED":
+			return { ...state, partialCapturedAt: action.capturedAt };
 		case "NEXT":
 			return { ...state, currentStep: state.currentStep + 1 };
 		case "BACK":
