@@ -59,6 +59,18 @@ function normalizeWhatsappForPayload(raw: string): string {
 	return e164 ? `+${e164}` : raw;
 }
 
+// Shared id between the browser Pixel event (fbq eventID) and the server-side
+// Conversions API event, so Meta dedupes the two.
+function newEventId(): string {
+	if (
+		typeof crypto !== "undefined" &&
+		typeof crypto.randomUUID === "function"
+	) {
+		return crypto.randomUUID();
+	}
+	return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+}
+
 export default function Quiz({
 	quiz,
 	webhookUrl,
@@ -203,6 +215,7 @@ export default function Quiz({
 		if (!contact) return false;
 
 		const capturedAt = new Date().toISOString();
+		const eventId = newEventId();
 		setIsCapturingContact(true);
 		try {
 			const res = await fetch(partialLeadUrl, {
@@ -216,14 +229,19 @@ export default function Quiz({
 					sessionId: state.sessionId,
 					contact: buildContactPayload(contact, capturedAt),
 					meta: readMeta(),
+					eventId,
 				}),
 				keepalive: true,
 			});
 			if (!res.ok) throw new Error(`http_${res.status}`);
 			dispatch({ type: "SET_PARTIAL_CAPTURED", capturedAt });
-			track("lead_partial_captured", {
-				sessionId: state.sessionId,
-			});
+			track(
+				"lead_partial_captured",
+				{
+					sessionId: state.sessionId,
+				},
+				eventId,
+			);
 			return true;
 		} catch (err) {
 			const code = err instanceof Error ? err.message.slice(0, 60) : "unknown";
@@ -241,13 +259,18 @@ export default function Quiz({
 		const contact = parseContact();
 		if (!contact) return;
 
+		const eventId = newEventId();
 		const score = calculateScore(state.answers, quiz);
-		track("quiz_completed", {
-			sessionId: state.sessionId,
-			score: score.total,
-			intent: score.intent,
-			segment: score.segment,
-		});
+		track(
+			"quiz_completed",
+			{
+				sessionId: state.sessionId,
+				score: score.total,
+				intent: score.intent,
+				segment: score.segment,
+			},
+			eventId,
+		);
 		if (isHighIntent(score)) {
 			track("high_intent_lead", {
 				sessionId: state.sessionId,
@@ -275,6 +298,7 @@ export default function Quiz({
 			contact: buildContactPayload(contact, submittedAt),
 			score,
 			meta: readMeta(),
+			eventId,
 		};
 
 		dispatch({ type: "SUBMIT_START" });

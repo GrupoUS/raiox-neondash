@@ -73,7 +73,11 @@ function toMetaProps(props?: TrackProps): TrackProps | undefined {
 
 const seen = new Set<string>();
 
-export function track(eventName: string, props?: TrackProps): void {
+export function track(
+	eventName: string,
+	props?: TrackProps,
+	eventId?: string,
+): void {
 	if (typeof window === "undefined") return;
 
 	try {
@@ -103,8 +107,11 @@ export function track(eventName: string, props?: TrackProps): void {
 		if (window.__fbReady && typeof window.fbq === "function") {
 			const std = metaStandardEvent(eventName);
 			const fbProps = toMetaProps(props);
-			if (std) window.fbq("track", std, fbProps);
-			else window.fbq("trackCustom", eventName, fbProps);
+			// eventID lets Meta dedupe this browser event against the server-side
+			// Conversions API event carrying the same id + event name.
+			const opts = eventId ? { eventID: eventId } : undefined;
+			if (std) window.fbq("track", std, fbProps, opts);
+			else window.fbq("trackCustom", eventName, fbProps, opts);
 		}
 	} catch {
 		/* noop */

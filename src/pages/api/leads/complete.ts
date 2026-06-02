@@ -6,6 +6,12 @@ import {
 	completeLead,
 	getLeadStoreConfigStatus,
 } from "../../../lib/server/leads-store";
+import {
+	buildEventSourceUrl,
+	isCapiConfigured,
+	readCapiRequestContext,
+	sendCapiEvent,
+} from "../../../lib/server/meta-capi";
 
 export const prerender = false;
 
@@ -61,10 +67,23 @@ export const POST: APIRoute = async ({ request }) => {
 	}
 
 	const result = await completeLead(parsed.data);
-	const [externalWebhook, notification] = await Promise.all([
+	const capiContext = readCapiRequestContext(request);
+	const [externalWebhook, notification, capi] = await Promise.all([
 		forwardToExternalWebhook(parsed.data),
 		result.shouldNotify
 			? notifyLeadOwner("completed_quiz", result.lead)
+			: Promise.resolve({ status: "skipped" as const }),
+		result.shouldNotify && isCapiConfigured()
+			? sendCapiEvent({
+					eventName: "CompleteRegistration",
+					eventId: parsed.data.eventId,
+					lead: result.lead,
+					eventSourceUrl: buildEventSourceUrl(
+						request,
+						parsed.data.meta.landingPath,
+					),
+					...capiContext,
+				})
 			: Promise.resolve({ status: "skipped" as const }),
 	]);
 
@@ -74,5 +93,6 @@ export const POST: APIRoute = async ({ request }) => {
 		created: result.created,
 		externalWebhook,
 		notification,
+		capi,
 	});
 };

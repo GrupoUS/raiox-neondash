@@ -45,12 +45,17 @@ const leadBasePayloadSchema = z.object({
 export const partialLeadPayloadSchema = leadBasePayloadSchema.extend({
 	capturedAt: z.string().datetime(),
 	eventType: z.literal("partial_contact"),
+	// Shared with the browser Pixel's `eventID` to dedupe browser + CAPI Lead.
+	eventId: z.string().min(6).optional(),
 });
 
 export const completedLeadPayloadSchema = leadBasePayloadSchema.extend({
 	submittedAt: z.string().datetime(),
 	answers: answersExportSchema,
 	score: leadScoreSchema,
+	// Shared with the browser Pixel's `eventID` to dedupe browser + CAPI
+	// CompleteRegistration.
+	eventId: z.string().min(6).optional(),
 });
 
 export const storedLeadEventSchema = z.object({
