@@ -176,6 +176,10 @@ const fbDomainVerification = import.meta.env.PUBLIC_FB_DOMAIN_VERIFICATION;
 					window.addEventListener("consent:marketing-granted", function () {
 						try {
 							window.fbq("consent", "grant");
+							// Re-fire PageView: the init-time PageView ran under consent=revoke
+							// and is suppressed, not replayed on grant. This counts the
+							// current page once the visitor accepts (same session).
+							window.fbq("track", "PageView");
 						} catch (e) {}
 					});
 				} catch (e) {}
