@@ -19,7 +19,9 @@
 
 	/* Text */
 	--color-text-primary: #fafaf9;
-	--color-text-muted: #94a3b8;
+	/* Secondary text — bumped from #94a3b8 for higher contrast on navy
+	   (WCAG AA on long pages; ref: docs/landing-pages-design-conversao). */
+	--color-text-muted: #b8c0d0;
 
 	/* Typography */
 	--font-serif: var(--font-playfair), Georgia, serif;
@@ -202,6 +204,58 @@ body {
 	color: var(--color-text-primary);
 }
 
+/* ===== Scroll Progress Bar ===== */
+/* Width driven by --scroll-progress (0..1), written rAF-throttled in
+   interactions.ts. An indicator, not decoration — stays active under
+   prefers-reduced-motion (no transition to animate anyway). */
+.scroll-progress-bar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 3px;
+	z-index: 9999;
+	transform: scaleX(var(--scroll-progress, 0));
+	transform-origin: left center;
+	background: linear-gradient(
+		90deg,
+		var(--color-gold),
+		var(--color-gold-light)
+	);
+	box-shadow: 0 0 10px color-mix(in srgb, var(--color-gold) 40%, transparent);
+	pointer-events: none;
+}
+
+/* ===== Mobile CTA Bar entrance (one-shot slide-up) ===== */
+@keyframes slide-up-bar {
+	from {
+		transform: translateY(100%);
+	}
+	to {
+		transform: translateY(0);
+	}
+}
+
+.mobile-bar-enter {
+	animation: slide-up-bar 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* ===== Sticky desktop offer card (fade in past hero, out at final CTA) ===== */
+[data-offer-card] {
+	opacity: 0;
+	transform: translateY(1rem);
+	pointer-events: none;
+	transition:
+		opacity 0.5s ease,
+		transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-offer-card].is-visible {
+	opacity: 1;
+	transform: translateY(0);
+	pointer-events: auto;
+}
+
 /* ===== Scroll-Reveal Animations ===== */
 
 @keyframes reveal-up {
@@ -308,6 +362,28 @@ body {
 
 [data-reveal="scale"].revealed {
 	animation: reveal-scale 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Connector line draw-in (HowItWorks). Hidden as scaleX(0); draws left→right
+   on reveal. `forwards` is safe here — the line has no hover/tilt to mask. */
+[data-reveal="line"] {
+	transform: scaleX(0);
+	transform-origin: left center;
+}
+
+[data-reveal="line"].revealed {
+	animation: line-draw 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes line-draw {
+	from {
+		opacity: 0;
+		transform: scaleX(0);
+	}
+	to {
+		opacity: 1;
+		transform: scaleX(1);
+	}
 }
 
 /* Staggered children */

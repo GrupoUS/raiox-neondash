@@ -21,7 +21,9 @@
 		],
 		"cta": {
 			"label": "Quero minha Sessão",
-			"helperText": "Resposta em até 24 horas no WhatsApp"
+			"helperText": "Resposta em até 24 horas no WhatsApp",
+			"microproof": "Conduzida por quem vive a rotina de clínicas de estética todos os dias.",
+			"consultiveVariant": "Ver se faz sentido pra mim"
 		},
 		"image": {
 			"src": "../../assets/sacha/sacha-hero.jpg",
@@ -151,6 +153,43 @@
 			"Você espera resposta em 5 minutos. A sessão é honesta porque é estruturada — leva 45.",
 			"Você não está disposto a olhar números reais da sua clínica. Sem dado, qualquer conversa vira achismo."
 		]
+	},
+	"midCta": {
+		"headline": "Pronto para enxergar sua clínica como ela realmente é?",
+		"ctaLabel": "Quero meu Raio-X agora",
+		"microcopy": "Sete perguntas rápidas — cerca de 3 minutos"
+	},
+	"comparison": {
+		"eyebrow": "Por que um Raio-X primeiro?",
+		"headline": "Mais marketing não é diagnóstico.",
+		"subhead": "A diferença entre apagar incêndio e enxergar a operação inteira antes de decidir.",
+		"traditional": {
+			"label": "O caminho comum",
+			"items": [
+				"Investe em mais tráfego antes de saber onde o lead esfria.",
+				"Decisões por intuição, sem custo real por procedimento na mão.",
+				"Consultoria genérica que não conhece a rotina de uma clínica de estética.",
+				"Foco em vender um produto — não em entender a sua operação."
+			]
+		},
+		"raiox": {
+			"label": "A Sessão de Diagnóstico Raio-X",
+			"items": [
+				"Mapeia o gargalo prioritário antes de qualquer novo investimento.",
+				"Análise estruturada de captação, agenda, conversão e retenção.",
+				"Conduzida por quem vive a rotina de clínicas de estética.",
+				"Você sai com um caminho prático — mesmo sem fechar nenhum programa."
+			]
+		}
+	},
+	"offerSummary": {
+		"label": "Sessão de Diagnóstico Raio-X",
+		"points": [
+			"100% gratuita e individual",
+			"45 minutos por videochamada",
+			"Vagas limitadas por semana"
+		],
+		"ctaLabel": "Quero minha Sessão"
 	},
 	"faq": {
 		"headline": "Perguntas frequentes",

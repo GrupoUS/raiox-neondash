@@ -1,0 +1,114 @@
+---
+import { Check, X } from "lucide-react";
+
+interface Column {
+	label: string;
+	items: string[];
+}
+
+interface Props {
+	eyebrow?: string;
+	headline: string;
+	subhead?: string;
+	traditional: Column;
+	raiox: Column;
+}
+
+const { eyebrow, headline, subhead, traditional, raiox } = Astro.props;
+---
+
+<section
+	class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8"
+	data-section="comparison"
+	aria-labelledby="comparison-headline"
+>
+	<div class="max-w-6xl mx-auto">
+		<header class="text-center mb-10 md:mb-14">
+			{
+				eyebrow && (
+					<p
+						class="text-sm md:text-base font-medium uppercase tracking-[0.2em] text-gold mb-5"
+						data-reveal="up"
+					>
+						{eyebrow}
+					</p>
+				)
+			}
+			<h2
+				id="comparison-headline"
+				class="font-serif text-3xl md:text-4xl lg:text-5xl font-bold leading-tight mb-4"
+				data-reveal="up"
+				data-reveal-delay="1"
+			>
+				<span class="text-gradient-gold">{headline}</span>
+			</h2>
+			{
+				subhead && (
+					<p
+						class="text-base md:text-lg text-muted max-w-2xl mx-auto"
+						data-reveal="up"
+						data-reveal-delay="2"
+					>
+						{subhead}
+					</p>
+				)
+			}
+		</header>
+
+		<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
+			<div
+				class="relative rounded-2xl bg-navy-light/30 border border-gold/10 p-6 md:p-8 card-hover-lift h-full"
+				data-reveal="up"
+				data-glow-card
+			>
+				<h3 class="font-serif text-xl md:text-2xl font-bold text-muted mb-6">
+					{traditional.label}
+				</h3>
+				<ul class="space-y-4 list-none">
+					{
+						traditional.items.map((item) => (
+							<li class="flex items-start gap-3 text-sm md:text-base text-muted leading-relaxed">
+								<span
+									class="shrink-0 mt-0.5 size-6 rounded-full bg-navy-lighter/50 flex items-center justify-center text-muted"
+									aria-hidden="true"
+								>
+									<X width={15} height={15} />
+								</span>
+								<span>{item}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<div
+				class="relative rounded-2xl glass-card p-6 md:p-8 h-full"
+				data-reveal="up"
+				data-reveal-delay="1"
+				data-tilt
+				data-glow-card
+			>
+				<div data-tilt-layer>
+					<h3 class="font-serif text-xl md:text-2xl font-bold text-gold mb-6">
+						{raiox.label}
+					</h3>
+					<ul class="space-y-4 list-none">
+						{
+							raiox.items.map((item) => (
+								<li class="flex items-start gap-3 text-sm md:text-base text-foreground leading-relaxed">
+									<span
+										class="shrink-0 mt-0.5 size-6 rounded-full bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30"
+										aria-hidden="true"
+									>
+										<Check width={15} height={15} />
+									</span>
+									<span>{item}</span>
+								</li>
+							))
+						}
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

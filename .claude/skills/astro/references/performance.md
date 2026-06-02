@@ -7,15 +7,15 @@ Astro achieves **40% faster load times** and **90% less JavaScript** compared to
 - Zero client-side JS unless explicitly opted in
 - Automatic asset optimization via Vite
 
-## Core Web Vitals Targets (orientativo para este projeto — meça & anote)
+## Core Web Vitals Targets
 
-> Intensidade "dinâmico forte": alvos orientativos, não gates de merge. Ver .claude/rules/stability.md § Performance gates. Piso duro é prefers-reduced-motion.
+> Advisory — medir & anotar, não bloquear merge. CLS é higiene de layout (mantém hard). O único hard floor de motion é `prefers-reduced-motion`.
 
 | Metric | Target | How Astro Helps |
 |--------|--------|----------------|
 | LCP (Largest Contentful Paint) | < 2.5s | Static HTML, preloaded assets |
 | CLS (Cumulative Layout Shift) | 0 | Explicit image dimensions |
-| INP | ~200ms (orientativo) | JS COMPARTILHADO mínimo, hidratação adiada; 3D/hover interativo pode custar mais |
+| INP (Interaction to Next Paint) | ~200ms | Minimal JS, deferred hydration |
 | FCP (First Contentful Paint) | < 1.8s | No JS blocking render |
 | TTFB (Time to First Byte) | < 800ms | Static files from CDN |
 
@@ -103,11 +103,13 @@ Key: `display=swap` prevents Flash of Invisible Text (FOIT).
 
 ## JavaScript Budget
 
+> Advisory. Libs de animação vivem dentro do seu island — nunca no entry da landing.
+
 | Category | Target |
 |----------|--------|
-| Initial / shared JS bundle | ~50KB (orientativo) — mantenha libs de animação FORA do bundle compartilhado |
-| Per-island JS | tão pequeno quanto o efeito permitir — island 3D/parallax rico pode ser maior, escopo nele |
-| Total page JS | ~100KB (orientativo) — meça & anote em vez de bloquear |
+| Initial JS bundle | ~< 50KB (advisory; libs de animação dentro do island) |
+| Per-island JS | As small as possible |
+| Total page JS | < 100KB |
 
 ### Reducing JS
 
@@ -130,8 +132,8 @@ Key: `display=swap` prevents Flash of Invisible Text (FOIT).
 # Check bundle sizes
 ANALYZE=true bun run build
 
-# Lighthouse audit
-npx lighthouse http://localhost:4321 --preset=desktop
+# Lighthouse audit (with local preview running)
+bunx lighthouse http://localhost:4321 --preset=desktop
 ```
 
 ## Preloading & Prefetching
@@ -149,31 +151,19 @@ npx lighthouse http://localhost:4321 --preset=desktop
 
 ## Animation Performance
 
-Prefira `transform`, `opacity`, `filter` (compostos na GPU) — caminho mais barato:
+Motion é ferramenta de design de primeira classe (3D tilt, parallax, glow, profundidade em camadas são incentivados — ver `docs/motion-depth-playbook.md`). Prefira `transform`/`opacity` (GPU-composited) quando o efeito for equivalente, por performance; layout props / 3D / parallax são permitidos quando o efeito pedir. Único hard floor: degradar sob `prefers-reduced-motion`.
 
 ```css
-.animate { transition: transform 0.3s, opacity 0.3s, box-shadow 0.3s, filter 0.3s; }
+/* Preferido quando equivalente — GPU composited */
+.animate { transition: transform 0.3s, opacity 0.3s; }
+
+/* OK quando o efeito pedir (layout/paint) — honrar prefers-reduced-motion */
+.animate { transition: width 0.3s, height 0.3s, top 0.3s; }
 ```
 
-Motion de layout-property e 3D são PERMITIDOS quando o efeito precisa — meça o custo e forneça fallback de reduced-motion:
+### Accordion / expand panels
 
-```css
-.expand { transition: grid-template-rows 0.3s; }
-.tilt { transform: perspective(800px) rotateX(6deg) rotateY(-6deg); }
-.parallax { transform: translate3d(0, calc(var(--scroll) * 0.2px), 0); }
-```
-
-Com Framer Motion:
-```tsx
-const reduce = useReducedMotion();
-<motion.div animate={reduce ? {} : { rotateY: 12, scale: 1.04 }} />
-```
-
-`prefers-reduced-motion` / `useReducedMotion()` é obrigatório em TODOS os itens acima.
-
-### Accordion / expand panels (padrão preferido)
-
-PREFIRA CSS grid `0fr` ↔ `1fr` (mais limpo, sem jank; mantém Motion em `transform`/`opacity` para o chevron). Um reveal Framer height/`AnimatePresence` é permitido quando se quer um efeito de disclosure mais rico, desde que honre `useReducedMotion()`.
+FAQ (e similares): `<details>` nativo, CSS `grid-template-rows: 0fr` ↔ `1fr`, OU `height`/`AnimatePresence` animado — todos OK desde que honrem `prefers-reduced-motion` (ver `references/islands-architecture.md` → *Known case: FAQ accordion*).
 
 ## Checklist
 
@@ -183,6 +173,6 @@ PREFIRA CSS grid `0fr` ↔ `1fr` (mais limpo, sem jank; mantém Motion em `trans
 - [ ] Fonts use `display=swap`
 - [ ] Only necessary islands use `client:load`
 - [ ] Below-fold islands use `client:visible`
-- [ ] Shared JS ~50KB (orientativo; libs de animação escopadas no island)
-- [ ] Animações preferem `transform`/`opacity`/`filter`; layout-prop/3D/parallax usados intencionalmente e medidos; painéis PREFEREM CSS grid `0fr`/`1fr`
-- [ ] `prefers-reduced-motion` tratado em TODAS as animações (DURO — incluindo 3D/parallax/mouse-glow)
+- [ ] Initial JS ~< 50KB (advisory; libs de animação dentro do island, não no entry)
+- [ ] Motion prefere `transform`/`opacity` quando equivalente; layout/3D/parallax/`height` OK quando o efeito pedir
+- [ ] `prefers-reduced-motion` handled for all animations (hard floor)

@@ -38,6 +38,8 @@ const landings = defineCollection({
 					cta: z.object({
 						label: z.string(),
 						helperText: z.string().optional(),
+						microproof: z.string().optional(),
+						consultiveVariant: z.string().optional(),
 					}),
 					image: z
 						.object({
@@ -64,11 +66,31 @@ const landings = defineCollection({
 						.length(3)
 						.optional(),
 				}),
+				proof: z
+					.object({
+						stats: z
+							.array(
+								z.object({
+									value: z.string(),
+									label: z.string(),
+								}),
+							)
+							.min(3),
+						note: z.string().optional(),
+					})
+					.optional(),
 				problem: z
 					.object({
 						eyebrow: z.string().optional(),
 						headline: z.string(),
 						paragraphs: z.array(z.string()).min(1),
+						image: z
+							.object({
+								src: image(),
+								alt: z.string().min(10),
+								objectPosition: z.string().optional(),
+							})
+							.optional(),
 						costs: z
 							.array(
 								z.object({
@@ -126,6 +148,35 @@ const landings = defineCollection({
 						headline: z.string(),
 						intro: z.string().optional(),
 						items: z.array(z.string()).min(3).max(5),
+					})
+					.optional(),
+				midCta: z
+					.object({
+						headline: z.string(),
+						ctaLabel: z.string(),
+						microcopy: z.string().optional(),
+					})
+					.optional(),
+				comparison: z
+					.object({
+						eyebrow: z.string().optional(),
+						headline: z.string(),
+						subhead: z.string().optional(),
+						traditional: z.object({
+							label: z.string(),
+							items: z.array(z.string()).min(2),
+						}),
+						raiox: z.object({
+							label: z.string(),
+							items: z.array(z.string()).min(2),
+						}),
+					})
+					.optional(),
+				offerSummary: z
+					.object({
+						label: z.string(),
+						points: z.array(z.string()).min(1),
+						ctaLabel: z.string(),
 					})
 					.optional(),
 				faq: z

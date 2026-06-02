@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "GPUS Astro Landing — Claude Project Config",
+  "description": "Per-project instance SSOT for GPUS Astro landing pages. Governance prose (.claude/, AGENTS.md) reads these values via ${...} placeholders so the same governance layer is portable across all Grupo US projects.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["project", "paths", "tooling", "gates"],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["name", "displayName", "stack", "stagingUrl", "productionUrl", "locale"],
+      "properties": {
+        "name": { "type": "string", "description": "Machine-readable slug, e.g. 'aula-trintae3'." },
+        "displayName": { "type": "string", "description": "Human-readable name, e.g. 'Aula Gratuita TRINTAE3 — Grupo US'." },
+        "parentBrand": { "type": "string", "description": "Parent brand, e.g. 'Grupo US · Dra. Sacha Gualberto'." },
+        "purpose": { "type": "string", "description": "One-line product purpose." },
+        "stack": { "type": "string" },
+        "stagingUrl": { "type": "string" },
+        "productionUrl": { "type": "string" },
+        "locale": { "type": "string" },
+        "designModelRepo": { "type": "string", "description": "Optional sibling repo used as the visual model, e.g. '../trintae3'." }
+      }
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Content SSOT mapping for the landing.",
+      "properties": {
+        "productSlug": { "type": "string", "description": "Content Collection slug, e.g. 'aula-trintae3'." },
+        "productJson": { "type": "string", "description": "Path to the copy SSOT JSON, e.g. 'src/content/products/<slug>.json'." },
+        "ogImage": { "type": "string", "description": "Default OG image path under public/." },
+        "anchors": { "type": "array", "items": { "type": "string" }, "description": "Internal section anchors." },
+        "legalRoutes": { "type": "array", "items": { "type": "string" }, "description": "Legal routes, e.g. ['/termos','/politica-de-privacidade']." },
+        "sections": { "type": "object", "additionalProperties": { "type": "string" }, "description": "Component → anchor map for design chains." }
+      }
+    },
+    "lead": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Lead capture + WhatsApp SDR config.",
+      "properties": {
+        "sdrName": { "type": "string", "description": "SDR display name, e.g. 'Laura' (GPUS default)." },
+        "whatsappGreeting": { "type": "string", "description": "Mandatory WhatsApp message prefix, e.g. 'Olá, Laura!'." },
+        "whatsappHelper": { "type": "string", "description": "WhatsApp SSOT helper module path." },
+        "formComponent": { "type": "string", "description": "Lead form component path." },
+        "endpointEnv": { "type": "string", "description": "Env var name holding the form POST endpoint." },
+        "leadTable": { "type": "string", "description": "DB table name for leads, if any." }
+      }
+    },
+    "tracking": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Analytics env var names (values live in env, never committed).",
+      "properties": {
+        "ga4Env": { "type": "string" },
+        "pixelEnv": { "type": "string" }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "tooling": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["packageManager", "buildTool", "typeChecker", "linter"],
+      "properties": {
+        "packageManager": { "type": "string" },
+        "buildTool": { "type": "string" },
+        "typeChecker": { "type": "string" },
+        "linter": { "type": "string" },
+        "testRunner": { "type": "string" },
+        "deployer": { "type": "string" },
+        "frontendFramework": { "type": "string" },
+        "database": { "type": "string" },
+        "orm": { "type": "string" }
+      }
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "lighthouse": {
+          "type": "object",
+          "additionalProperties": { "type": "number" }
+        },
+        "lcp": { "type": "number" },
+        "cls": { "type": "number" },
+        "inp": { "type": "number" },
+        "initialJsKb": { "type": "number" }
+      }
+    },
+    "protectedFiles": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "exact": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "segments": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "contains": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "rulesDir": { "type": "string" },
+    "templatesDir": { "type": "string" },
+    "agentsFile": { "type": "string" },
+    "claudeMdFile": { "type": "string" }
+  }
+}

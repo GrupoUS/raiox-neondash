@@ -111,16 +111,16 @@ When a page has matching content, emit the corresponding schema. Validate agains
 
 ---
 
-## CWV thresholds (ADVISORY — meça & anote, não trava merge)
+## CWV thresholds
 
-Intensidade "dinâmico forte": alvos orientativos, não gates de merge. Meça, registre no PR, sinalize regressões — motion rico / 3D / parallax pode mover esses números (trade-off aceito). Piso duro = `prefers-reduced-motion`. Ver `.claude/rules/stability.md § Performance gates`.
+> Advisory — targets orientativos: medir & anotar, não bloquear merge (a11y `prefers-reduced-motion` e CLS/layout hygiene seguem hard). Ver `.claude/rules/stability.md` § perf gates.
 
-| Metric | Alvo orientativo |
+| Metric | Threshold |
 |---|---|
-| LCP | ~2.5s (proteja o elemento LCP) |
-| CLS | ~0 de imagens (mantenha `width`/`height` em mídia — proteção grátis; motion de interação intencional não conta) |
-| INP | ~200ms (afrouxado de 100ms — 3D/hover interativo pode custar mais) |
-| Initial (shared) JS | ~50KB em páginas pré-renderizadas (libs de animação dentro do island) |
+| LCP | < 2.5s (advisory) |
+| CLS | 0 |
+| INP | ~200ms (advisory) |
+| Initial JS | ~< 50KB on prerendered pages (advisory; libs de animação dentro do island) |
 
 Strategies:
 - Hero image with eager loading + `fetchpriority="high"`.

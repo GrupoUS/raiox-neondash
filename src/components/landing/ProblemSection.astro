@@ -8,8 +8,19 @@ interface Props {
 const { eyebrow, headline, paragraphs } = Astro.props;
 ---
 
-<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8">
-	<div class="max-w-3xl lg:max-w-4xl mx-auto text-center">
+<section
+	class="relative overflow-hidden py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8"
+	data-section="problem"
+>
+	<div class="absolute inset-0 -z-10 pointer-events-none" aria-hidden="true">
+		<div class="scanner-grid-bg absolute inset-0 opacity-30"></div>
+		<div
+			class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[42rem] h-[42rem] max-w-full rounded-full bg-gold-soft blur-3xl opacity-[0.12]"
+		>
+		</div>
+	</div>
+
+	<div class="relative max-w-3xl lg:max-w-4xl mx-auto text-center">
 		{
 			eyebrow && (
 				<p

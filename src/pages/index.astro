@@ -1,5 +1,6 @@
 ---
 import { getEntry } from "astro:content";
+import ComparisonBlock from "../components/landing/ComparisonBlock.astro";
 import CostOfChaos from "../components/landing/CostOfChaos.astro";
 import CriteriaColumn from "../components/landing/CriteriaColumn.astro";
 import DiagnosticBenefits from "../components/landing/DiagnosticBenefits.astro";
@@ -9,7 +10,9 @@ import FAQ from "../components/landing/FAQ.astro";
 import HowItWorks from "../components/landing/HowItWorks.astro";
 import MidCTA from "../components/landing/MidCTA.astro";
 import MobileCTABar from "../components/landing/MobileCTABar.astro";
+import OfferSummaryCard from "../components/landing/OfferSummaryCard.astro";
 import ProblemSection from "../components/landing/ProblemSection.astro";
+import ProofBar from "../components/landing/ProofBar.astro";
 import SectionDivider from "../components/landing/SectionDivider.astro";
 import Layout from "../layouts/Layout.astro";
 
@@ -73,7 +76,11 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 	jsonLd={combinedJsonLd}
 >
 	<div class="pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
-		<DiagnosticHero hero={data.hero} primaryCtaUrl={primaryCtaHref} />
+		<div data-section="hero">
+			<DiagnosticHero hero={data.hero} primaryCtaUrl={primaryCtaHref} />
+		</div>
+
+		{data.proof && <ProofBar stats={data.proof.stats} note={data.proof.note} />}
 
 		{
 			data.problem && (
@@ -85,32 +92,63 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 			)
 		}
 
-		{data.problem && <CostOfChaos items={data.problem.costs} />}
+		{
+			data.problem && (
+				<div data-section="cost">
+					<CostOfChaos items={data.problem.costs} />
+				</div>
+			)
+		}
 
-		<DiagnosticBenefits
-			headline={data.benefits.headline}
-			items={data.benefits.items}
-		/>
+		<div data-section="benefits">
+			<DiagnosticBenefits
+				headline={data.benefits.headline}
+				items={data.benefits.items}
+			/>
+		</div>
 
 		{
 			data.howItWorks && (
-				<HowItWorks
-					headline={data.howItWorks.headline}
-					subhead={data.howItWorks.subhead}
-					image={data.howItWorks.image}
-					steps={data.howItWorks.steps}
+				<div data-section="howItWorks">
+					<HowItWorks
+						headline={data.howItWorks.headline}
+						subhead={data.howItWorks.subhead}
+						image={data.howItWorks.image}
+						steps={data.howItWorks.steps}
+					/>
+				</div>
+			)
+		}
+
+		{
+			data.comparison && (
+				<ComparisonBlock
+					eyebrow={data.comparison.eyebrow}
+					headline={data.comparison.headline}
+					subhead={data.comparison.subhead}
+					traditional={data.comparison.traditional}
+					raiox={data.comparison.raiox}
 				/>
 			)
 		}
 
-		<MidCTA
-			headline="Pronto para enxergar sua clínica como ela realmente é?"
-			ctaLabel="Quero meu Raio-X agora"
-			ctaHref={primaryCtaHref}
-			microcopy="Sete perguntas rápidas — cerca de 3 minutos"
-		/>
+		{
+			data.midCta && (
+				<div data-section="midCta">
+					<MidCTA
+						headline={data.midCta.headline}
+						ctaLabel={data.midCta.ctaLabel}
+						ctaHref={primaryCtaHref}
+						microcopy={data.midCta.microcopy}
+					/>
+				</div>
+			)
+		}
 
-		<section class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8">
+		<section
+			class="py-16 sm:py-20 md:py-24 lg:py-28 px-5 sm:px-6 lg:px-8"
+			data-section="criteria"
+		>
 			<div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-stretch">
 				<CriteriaColumn
 					headline={data.qualification.headline}
@@ -136,16 +174,31 @@ const combinedJsonLd = faqJsonLd ? [serviceJsonLd, faqJsonLd] : serviceJsonLd;
 
 		{
 			data.faq && (
-				<FAQ
-					headline={data.faq.headline}
-					subhead={data.faq.subhead}
-					items={data.faq.items}
-				/>
+				<div data-section="faq">
+					<FAQ
+						headline={data.faq.headline}
+						subhead={data.faq.subhead}
+						items={data.faq.items}
+					/>
+				</div>
 			)
 		}
 
-		<DiagnosticFinalCTA finalCta={data.finalCta} primaryCtaUrl={primaryCtaHref} />
+		<div data-section="finalCta">
+			<DiagnosticFinalCTA finalCta={data.finalCta} primaryCtaUrl={primaryCtaHref} />
+		</div>
 	</div>
 
 	<MobileCTABar label={data.hero.cta.label} href={primaryCtaHref} />
+
+	{
+		data.offerSummary && (
+			<OfferSummaryCard
+				label={data.offerSummary.label}
+				points={data.offerSummary.points}
+				ctaLabel={data.offerSummary.ctaLabel}
+				ctaHref={primaryCtaHref}
+			/>
+		)
+	}
 </Layout>

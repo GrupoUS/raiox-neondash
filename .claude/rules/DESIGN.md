@@ -1,7 +1,7 @@
 # Design — Universal Tier 2 Rules
 
 > Universal design do/don't. Portable to any project.
-> Project tokens (color palette, typography pairing, brand utilities, glow / glass / depth / 3D / elevation) live in the project's brand / theme skill — Claude auto-loads via skill description match. Veja `gpus-theme` para o vocabulário de tokens de shadow/elevation/glow/3D.
+> Project tokens (color palette, typography pairing, brand utilities, glow / glass / depth) live in the project's brand / theme skill — Claude auto-loads via skill description match.
 > Tech-stack syntax (Tailwind v4 `@theme`, vanilla-extract, CSS Modules, etc.) lives in the matching tech-stack skill.
 
 ---
@@ -54,12 +54,12 @@
 - Touch target: **≥ 44 × 44 px** on mobile, ≥ 36 × 36 px on desktop.
 - Focus ring on `:focus-visible`: 2px solid + 2px offset.
 - Icon-only buttons require `aria-label`.
-- Active state via `transform: scale(0.98)` (transform-only, never `padding`).
+- Active state via `transform: scale(0.98)` (or any tactile press effect you like).
 
 ### Cards
 
 - Padding scales by viewport: smaller on mobile, larger on desktop.
-- Hover lift: `transform: translateY(-Npx)` + optional `scale(1.0X)` — never animate `top`.
+- Hover lift: `transform: translateY(-Npx)` + optional `scale(1.0X)`, or richer choreography — go bold.
 - Borders: ghost (low-contrast) by default; named token color on premium / focus.
 
 ### Inputs
@@ -80,7 +80,7 @@
 
 - 8px spacing grid — every margin / padding / gap is a multiple of 8 (or 4 in tight UI).
 - Container: max-width pattern (`max-w-7xl mx-auto px-6 lg:px-8` or equivalent).
-- Asymmetric splits (7/5, 8/4, ou extremo 90/10) for hero. Avoid 50/50 — visually static. Composições em camadas / sobrepostas (eixo Z) e parallax são encorajadas.
+- Asymmetric splits (7/5, 8/4) for hero. Avoid 50/50 — visually static.
 - Section vertical spacing: generous on desktop (≥ 96px), compressed on mobile (≥ 64px).
 
 ### Responsive breakpoints
@@ -124,23 +124,18 @@
 
 ## 7. Motion
 
-> Intensity target: **dinâmico forte.** Motion é ferramenta de design de primeira classe — profundidade em camadas, 3D, glow e dinamismo são encorajados, não racionados. O único piso duro é `prefers-reduced-motion`.
+Motion is encouraged — bold, dynamic, expressive. Animate freely.
 
-### Prefira (mais barato, primeira escolha)
-- `transform` (translate, scale, rotate, rotateX/Y/Z, perspective)
-- `opacity`
-- `filter` (`blur`, `brightness`, `drop-shadow`) + `backdrop-filter`
-- CSS grid `grid-template-rows: 0fr ↔ 1fr` para disclosure
+### Allowed (anything)
+- `transform` (translate, scale, rotate, skew, 3D), `opacity`, `filter` (`blur`, `brightness`, `drop-shadow`), `clip-path`, animated gradients.
+- Layout properties — `width`, `height`, `top`, `left`, `padding`, `margin`, `border-width` — allowed when the effect calls for it.
+- `transition: all` allowed.
+- Accordion / disclosure may animate via `height`, CSS grid `0fr ↔ 1fr`, or native `<details>` — author's choice.
 
-Compostos na GPU; caminho padrão.
+### Performance note (preference, not a rule)
+- `transform` + `opacity` animate on the compositor (no layout / paint) — prefer them when they produce the *same* visual result, for smoother INP. Not mandatory; reach for layout-property animation when it unlocks the effect you want. Trade-off (INP / CLS / Lighthouse) is an accepted project decision.
 
-### Use com intenção (permitido quando o efeito pedir)
-- Layout props (`width`, `height`, `top`, `left`, `padding`, `margin`, `border-width`, `clip-path`) ok para efeitos que precisam (cards expandindo, painéis morphing, bordas animadas) — meça o custo, prefira `transform` se der o mesmo resultado.
-- 3D / tilt (`perspective` + `rotateX/Y`, `preserve-3d`), parallax, entrances escalonadas, gradientes animados (`background-position` / conic / `@property` hue), mouse-glow / spotlight, transições de sombra + glow em camadas.
-- Transições multi-propriedade nomeadas (evite `transition: all` — nomeie as props; higiene de perf, não proibição de motion).
-- Accordion: grid `0fr/1fr` ou `<details>` PREFERIDO, reveal Framer height / `AnimatePresence` permitido para efeito mais rico.
-
-### Required (piso duro de acessibilidade — inegociável)
+### Required (accessibility only)
 - `prefers-reduced-motion` honored on every animation:
   ```css
   @media (prefers-reduced-motion: reduce) {
@@ -148,19 +143,15 @@ Compostos na GPU; caminho padrão.
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
     }
   }
   ```
-- Islands React / Framer usam `useReducedMotion()`.
-- Listeners de pointer-parallax / mouse-glow / tilt são pulados (ou ficam estáticos) sob reduced motion.
-- Fallback deixa conteúdo totalmente visível e usável (nada preso em `opacity:0` ou fora da tela).
+- React / Framer islands wrap animations in the framework's reduced-motion hook.
 
-### Durações sugeridas (guia, não gate)
-- Hover / focus: 150–250ms ease
-- Reveal / entrance escalonada: 300–600ms ease-out (passo ~60–120ms)
-- 3D tilt / parallax follow: contínuo eased (~120–200ms lerp)
-- Transição de seção: 200–400ms ease-in-out
+### Suggested durations (tune freely)
+- Hover / focus: ~150ms
+- Reveal on scroll: ~300–600ms
+- Page / hero choreography: as the moment deserves
 
 ---
 
@@ -184,20 +175,19 @@ Compostos na GPU; caminho padrão.
 
 ## 9. Depth & elevation
 
-> Reenquadrado: **premium com profundidade.** Construa hierarquia com tom AND sombra + glow em camadas. Sombras multi-camada e glow em tiers leem como intencional e premium — use.
+Layer with whatever reads best — tonal contrast, shadow, glow, glass. Dramatic depth is welcome.
 
 | Level | Surface | Effect |
 |---|---|---|
-| 0 | Page background | tonal base — mesh / noise / gradiente animado bem-vindos |
-| 1 | Section alternate | passo tonal, glow ambiente opcional |
-| 2 | Card (resting) | border + sombra em camadas ambient+key; brand glow em premium |
-| 3 | Glass / blur | translucent + backdrop-blur + inner highlight + soft outer shadow |
-| 4 | Hover / focus lift | `translateY(-Npx)` ou scale + sombra mais profunda + glow + 3D tilt opcional |
-| 5 | CTA halo | tier de glow brand — encorajado em CTAs primários; pode pulsar / animar, reduced-motion → glow estático |
-| 6 | Floating / parallax layer | camada de profundidade deslocada, spread maior, blur em camadas distantes |
-| 7 | Modal / overlay | raio maior + sombra mais pesada + scrim |
+| 0 | Page background | none |
+| 1 | Section alternate | tonal step |
+| 2 | Card | border + optional glow |
+| 3 | Glass / blur | translucent + backdrop-blur (use liberally) |
+| 4 | Hover lift | translate + shadow (soft or bold) |
+| 5 | CTA halo | brand-color glow — use where it earns attention |
+| 6 | Modal | large radius + heavy shadow + overlay |
 
-Construa sombras em CAMADAS (ambient larga baixa-opacidade + key mais apertada) = premium. Glow é feature, não defeito (CTAs, cards premium, focus — use tokens de glow do skill de tema). 3D (tilt no hover, parallax em camadas) bem-vindo. Ainda evite um anel solitário `0 0 50px hard-color` SEM camadas de apoio (parece inacabado — coloque em camadas).
+Shadows and glows: soft *or* dramatic — your call. Big colored glows are fair game when they serve the design.
 
 ---
 
@@ -218,10 +208,10 @@ Construa sombras em CAMADAS (ambient larga baixa-opacidade + key mais apertada) 
 | `tabular-nums` for numerics | Pure `#000` / `#fff` body text |
 | One icon library, named imports | `import *` of icon library |
 | 8px spacing grid | Inline custom CSS bypassing tokens |
-| Sombras em camadas + glow em tiers + glass para profundidade premium | Um anel solitário `0 0 50px` sem camadas de sombra |
-| `prefers-reduced-motion` em TODA animação (piso duro) | Qualquer animação sem fallback de reduced-motion |
+| Soft *or* dramatic shadows / glow / glass | Flat, depthless surfaces when depth would help |
+| `prefers-reduced-motion` honored | Ignoring `prefers-reduced-motion` |
 | `<button>` actions / `<a>` nav | `href="#"` placeholders |
-| Prefira `transform`+`opacity`+`filter`; use layout props / 3D / parallax quando o efeito pedir | `transition: all` (nomeie as props — higiene, não proibição) |
+| Expressive motion (any property) | Janky motion with no reduced-motion fallback |
 | Validate contrast before commit | Cross-mode bleed |
 
 ---

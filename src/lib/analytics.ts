@@ -12,6 +12,8 @@
  * code review — there is no runtime scrubber.
  */
 
+import { isWhatsAppDestination } from "./whatsapp";
+
 export type TrackProps = Record<string, string | number | boolean | undefined>;
 
 type PlausibleFn = (
@@ -80,7 +82,15 @@ export function attachCtaClickListener(): void {
 				cta.getAttribute("aria-label") ??
 				cta.textContent?.trim().slice(0, 60) ??
 				"";
-			track("quiz_cta_clicked", { location, label });
+			const href =
+				cta.getAttribute("href") ??
+				cta.closest("a")?.getAttribute("href") ??
+				"";
+			const eventName =
+				href && isWhatsAppDestination(href)
+					? `click_whatsapp_${location}`
+					: `click_cta_${location}`;
+			track(eventName, { location, label });
 		},
 		{ passive: true },
 	);

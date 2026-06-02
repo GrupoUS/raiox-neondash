@@ -11,10 +11,10 @@ Project-specific values (project name, package manager, protected paths) come fr
 ## Configured hooks
 
 ### SessionStart
-- **`session_context.py`** — emits a short `additionalContext` tag (`[PROJECT] Bun | branch:<branch> | gates: check+lint+test`). One line, ~80 chars. Source-aware: `startup` / `resume` / `compact`.
+- **`session_context.py`** — emits a short `additionalContext` tag (`[PROJECT] Bun | branch:<branch> | gates: lint+astro-check+build`). One line, ~80 chars. Source-aware: `startup` / `resume` / `compact`.
 
 ### PreToolUse
-- **`smart_bash_approver.py`** (matcher `Bash`) — auto-allows safe commands (read-only git/gh, package manager test/lint/build/dev, common DB/cloud CLIs, version checks, `mkdir -p`, `cp`, `mv`, etc.); blocks dangerous patterns (`rm -rf /`, `DROP DATABASE`, force-push to main/master, `mkfs`, fork bomb, etc.); asks on cleanup ops (`__pycache__`, `.next/cache`, `dist/*.log`, etc.); falls through to `ask` for unknown commands.
+- **`smart_bash_approver.py`** (matcher `Bash`) — auto-allows safe commands (read-only git/gh, Bun lint/build/predeploy commands, `bunx` tools, version checks, local read commands); blocks dangerous patterns (`rm -rf /`, `DROP DATABASE`, force-push, PR merge/approve, non-Bun package managers, `mkfs`, fork bomb, etc.); asks on cleanup, branch-changing, mutative git/gh, long-running dev server, and unknown commands. Main-only workflow: edits and pushes to `main` are allowed; force-push and PR auto-merge remain blocked.
 - **`protect_files.py`** (matcher `Edit|Write`) — blocks edits to sensitive files. Generic defaults: `.env*`, lockfiles (`bun.lockb`, `bun.lock`, `package-lock.json`, `pnpm-lock.yaml`, `yarn.lock`), `.git/`, `credentials/`, `secrets/`, `api-keys/`. Per-project additions read from `config.json::protectedFiles` + `${overlay}/protected-files.json`.
 - **`task_routing_guard.py`** (matcher `Agent`) — validates `subagent_type` against the known set, and enforces `run_in_background: true` for read-only research agents (`explore`, `explorer-agent`, `librarian`) when the runtime exposes the field.
 
@@ -49,15 +49,14 @@ git status, git diff, git log, git branch, git fetch, git show, git stash, git r
 # Filesystem read
 ls, cat, head, tail, grep, rg, find, which, pwd, echo, tree, stat, wc
 
-# Package managers (any of: bun / npm / pnpm / yarn)
-<pm> install, <pm> run test, <pm> run lint, <pm> run build, <pm> run dev
-bunx / npx / pnpm dlx / yarn dlx
+# Package manager (Bun only)
+bun install, bun run lint, bun run build, bunx astro check, bunx <tool>
+# npm / npx / pnpm / yarn are blocked in this project
 
 # Type checkers
 tsc, tsgo
 
-# Database / cloud CLIs (read-only introspection)
-neonctl, supabase, fly, vercel, railway, wrangler
+# Optional local CLIs (read-only introspection)
 psql, mysql, sqlite3
 
 # Version checks
@@ -73,8 +72,8 @@ rm -rf /, rm -rf ~, rm -rf $HOME
 # Database
 DROP DATABASE, DROP TABLE, TRUNCATE
 
-# Git dangerous
-git push --force main, git push --force master, git reset --hard HEAD~
+# Git / GitHub dangerous
+git checkout main, git switch main, git push origin main, git push --force, gh pr merge, gh pr approve
 
 # System
 chmod -R 777 /, dd if=... of=/dev/, :(){ :|:& };:
@@ -102,10 +101,10 @@ python -m py_compile .claude/hooks/*.py
 
 # Session context — must stay short
 echo '{"source":"startup"}' | python .claude/hooks/session_context.py
-# expect: {"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"[PROJECT] Bun | branch:<...> | gates: check+lint+test"}}
+# expect: {"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"[PROJECT] Bun | branch:<...> | gates: lint+astro-check+build"}}
 
 # Bash approver
-echo '{"tool_input":{"command":"bun test"}}' | python .claude/hooks/smart_bash_approver.py    # allow
+echo '{"tool_input":{"command":"bun run lint"}}' | python .claude/hooks/smart_bash_approver.py    # allow
 echo '{"tool_input":{"command":"rm -rf /"}}' | python .claude/hooks/smart_bash_approver.py    # deny
 
 # File protection

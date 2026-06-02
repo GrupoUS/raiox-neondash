@@ -47,21 +47,21 @@ Invariant per project lives in cardinal rules (`.claude/CLAUDE.md`).
 
 ---
 
-## Performance gates (ADVISORY — meça & anote, não trava merge)
+## Performance gates (ADVISORY)
 
-Core Web Vitals são alvos ORIENTATIVOS para a intensidade "dinâmico forte". Meça, registre o número no PR, sinalize regressões — mas motion rico / 3D / parallax pode legitimamente mover esses números, e é um trade-off aceito. NÃO bloqueia merge.
+Core Web Vitals = **alvos orientativos: medir & anotar, NÃO travam merge** (doutrina "dinâmico forte" — motion/3D/parallax/glow podem trocar contra CWV; é decisão aceita de projeto):
 
-| Metric | Alvo orientativo |
+| Metric | Advisory target |
 |---|---|
-| LCP (Largest Contentful Paint) | ~2.5s (proteja o elemento LCP; hero text-first + `client:idle` ainda recomendado) |
-| CLS (Cumulative Layout Shift) | ~0 de imagens (mantenha `width`/`height` em mídia — proteção CLS grátis; motion de interação intencional que desloca layout é ok e não conta contra isso) |
-| INP (Interaction to Next Paint) | ~200ms (afrouxado de 100ms — 3D interativo / hover pesado pode custar mais; mantenha responsivo, anote) |
-| Initial (shared) JS | ~50KB (orientativo; libs de animação dentro do island) |
-| Lighthouse Performance / A11y / BP / SEO | ~90 perf, A11y defendido (carrega `prefers-reduced-motion`) |
+| LCP | < 2.5s |
+| CLS | ~0 (manter `width`/`height` em imagens, `--py` só em transform livre) |
+| INP | ~200ms (afrouxado de 100ms para motion rico) |
+| Initial JS on prerendered pages | < 50KB (libs de animação **dentro do island**, fora da entry da landing) |
+| Lighthouse Perf / A11y / BP / SEO | ≥ 95 desejável em rotas críticas |
 
-O ÚNICO piso duro de acessibilidade é `prefers-reduced-motion`.
+Project gates (route list, budget) → `.claude/config.json::gates` (advisory).
 
-Project-specific gates (route list, custom budget) → `.claude/config.json::gates`.
+> **Hard floor (NÃO advisory — gate de merge):** a11y (`prefers-reduced-motion` estendido a 3D/parallax/glow, contraste, foco, labels), render-mode estático/MPA (sem SSR/SPA/`ClientRouter`), tokens-only (incl. sombra/glow/3D), Lucide-only, content/contato SSOT, contratos do Layout. Estes nunca afrouxam.
 
 ---
 
@@ -90,27 +90,13 @@ grep -rnE "<h1[^>]*>" <src>/pages | wc -l
 # expect: ≤ 1 per page
 ```
 
-### Layout-property animation — scan orientativo (não é gate de falha)
-
-```bash
-grep -rnE "transition.*\b(width|height|top|left|padding|margin)\b" <src>/styles
-# Informativo: lista transições de layout-prop. NÃO é falha — animar layout é permitido quando o efeito precisa. Use para conferir que cada hit é intencional e tem fallback de prefers-reduced-motion.
-```
-
-### Reduced-motion fallback presente (checagem DURA — deve passar)
-
-```bash
-grep -rn "prefers-reduced-motion" <src>/styles
-# expect: pelo menos um bloco global de reduce; todo island JS/Framer usa useReducedMotion()
-```
-
 ### Bundle audit
 
 ```bash
 ${tooling.packageManager} run ${tooling.buildTool}
 # After build, audit largest chunks:
 ls -lh <dist>/<assets>/*.js | sort -k5 -rh | head -5
-# expect: top initial-bundle files < 50KB on prerendered pages
+# advisory: top initial-bundle files ~< 50KB on prerendered pages (anotar; libs de animação ficam no island)
 ```
 
 ### Type / lint / test gates
@@ -157,10 +143,8 @@ ${tooling.packageManager} run ${tooling.buildTool}
 
 ### Design
 
-- Hardcoded hex outside design-token source. (Cardinal 7 — INALTERADO)
-- Mixing icon libraries. (Cardinal 3 — INALTERADO)
-- `transition: all` — nomeie as props (higiene; transições multi-propriedade ricas são ok).
-- Uma animação SEM fallback de `prefers-reduced-motion`. (piso duro)
+- Hardcoded hex outside design-token source.
+- Mixing icon libraries.
 - Missing `width` / `height` on images → CLS hazard.
 - Pure black / white text on colored background.
 
@@ -169,8 +153,7 @@ ${tooling.packageManager} run ${tooling.buildTool}
 - Drop the skip link or move it past first focusable.
 - Drop the `<noscript>` fallback when reveal-on-scroll patterns hide content.
 - `href="#"` for actions.
-- **Ignore `prefers-reduced-motion`** — O piso duro de acessibilidade; toda animação (2D, 3D, parallax, mouse-glow, staggered, gradiente) deve degradar.
-- Caminho reduced-motion que deixa conteúdo preso em `opacity:0` / fora da tela / mid-transform.
+- Ignore `prefers-reduced-motion`.
 - Icon-only buttons missing `aria-label`.
 
 ### Tooling
@@ -186,7 +169,11 @@ ${tooling.packageManager} run ${tooling.buildTool}
 | Symptom | First check |
 |---|---|
 | Section blank with JS off | `<noscript>` reveal fallback present? |
-| FAQ stutters on expand | Se usando height tween, troque por CSS grid `0fr/1fr` (ou `<details>`) para reveal mais suave; cheque que a transição é GPU-friendly |
+| FAQ stutters on expand | Layout thrash on low-end device? Switch to grid `0fr/1fr` or `transform` if needed — any approach is allowed |
+| Hover/tilt "morto" após reveal | Reveal usa `animation: … forwards`? Trava o `transform` no fim do keyframe → mascara hover/3D. Remover `forwards`, fixar fim com `.revealed{opacity:1}` (gotcha #1, `docs/motion-depth-playbook.md`) |
+| Tilt e hover-lift se anulam | Dois `transform` na mesma regra brigam — em card com `[data-tilt]`, o tilt É o hover (remover `card-hover-lift`) |
+| Glow/`::before` tinge o texto | `[data-glow-card]::before` precisa de `z-index: -1` (pinta acima do fundo, atrás do conteúdo) |
+| Parallax salta | `data-parallax` em elemento que já usa `transform` p/ posicionar — só onde o transform está livre |
 | LCP regression | Hero image priority hint + island hydration directive (idle vs eager)? |
 | CLS spike | Missing `width` / `height` on `<img>` / responsive image component? |
 | 404 on bookmarked URL | Redirect config entry missing? |

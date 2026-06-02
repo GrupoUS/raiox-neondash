@@ -1,0 +1,45 @@
+---
+import { ArrowRight, Check } from "lucide-react";
+import Button from "../shared/Button.astro";
+
+interface Props {
+	label: string;
+	points: string[];
+	ctaLabel: string;
+	ctaHref: string;
+}
+
+const { label, points, ctaLabel, ctaHref } = Astro.props;
+---
+
+<aside
+	class="hidden lg:block fixed bottom-6 right-6 z-40 w-72 glass-card-bright rounded-2xl p-5"
+	aria-label="Resumo da oferta"
+	data-offer-card
+>
+	<p class="font-serif text-lg font-bold text-gold mb-3">{label}</p>
+	<ul class="space-y-2 mb-4 list-none">
+		{
+			points.map((point) => (
+				<li class="flex items-start gap-2 text-sm text-foreground/90 leading-snug">
+					<span class="shrink-0 mt-0.5 text-gold" aria-hidden="true">
+						<Check width={16} height={16} />
+					</span>
+					<span>{point}</span>
+				</li>
+			))
+		}
+	</ul>
+	<Button
+		variant="primary"
+		size="md"
+		href={ctaHref}
+		glow={false}
+		dataCtaLocation="offerSummary"
+		ariaLabel={ctaLabel}
+		class="w-full"
+	>
+		<span>{ctaLabel}</span>
+		<ArrowRight aria-hidden="true" width={18} height={18} />
+	</Button>
+</aside>

@@ -30,6 +30,8 @@ interface HeroData {
 	cta: {
 		label: string;
 		helperText?: string;
+		microproof?: string;
+		consultiveVariant?: string;
 	};
 	image?: {
 		src: ImageMetadata;
@@ -161,6 +163,14 @@ function resolveTrustIcon(name: string) {
 					{
 						hero.cta.helperText && (
 							<p class="text-sm text-muted">{hero.cta.helperText}</p>
+						)
+					}
+
+					{
+						hero.cta.microproof && (
+							<p class="text-sm text-foreground/80 max-w-sm leading-relaxed">
+								{hero.cta.microproof}
+							</p>
 						)
 					}
 
