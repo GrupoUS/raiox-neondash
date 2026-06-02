@@ -135,36 +135,52 @@ const fbDomainVerification = import.meta.env.PUBLIC_FB_DOMAIN_VERIFICATION;
 
 		{enableVercelAnalytics && <Analytics />}
 
-		{
-			fbPixelId && (
-				<script is:inline define:vars={{ fbPixelId }}>
-					{`/* Meta Pixel — official base code (loads fbevents.js on page load so the
-					   pixel is detectable) + Meta Consent API: events/cookies are withheld
-					   via "revoke" until the visitor accepts marketing cookies (LGPD). */
-					!(function (f, b, e, v, n, t, s) {
-						if (f.fbq) return;
-						n = f.fbq = function () {
-							n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-						};
-						if (!f._fbq) f._fbq = n;
-						n.push = n; n.loaded = !0; n.version = "2.0"; n.queue = [];
-						t = b.createElement(e); t.async = !0; t.src = v;
-						s = b.getElementsByTagName(e)[0]; s.parentNode.insertBefore(t, s);
-					})(window, document, "script", "https://connect.facebook.net/en_US/fbevents.js");
+		<script is:inline define:vars={{ fbPixelId: fbPixelId ?? "" }}>
+			/* Meta Pixel — official base code (loads fbevents.js on page load so the
+			   pixel is detectable) + Meta Consent API: events/cookies are withheld via
+			   "revoke" until the visitor accepts marketing cookies (LGPD). Inert unless
+			   PUBLIC_FB_PIXEL_ID is set. */
+			if (fbPixelId) {
+				!(function (f, b, e, v, n, t, s) {
+					if (f.fbq) return;
+					n = f.fbq = function () {
+						n.callMethod
+							? n.callMethod.apply(n, arguments)
+							: n.queue.push(arguments);
+					};
+					if (!f._fbq) f._fbq = n;
+					n.push = n;
+					n.loaded = !0;
+					n.version = "2.0";
+					n.queue = [];
+					t = b.createElement(e);
+					t.async = !0;
+					t.src = v;
+					s = b.getElementsByTagName(e)[0];
+					s.parentNode.insertBefore(t, s);
+				})(
+					window,
+					document,
+					"script",
+					"https://connect.facebook.net/en_US/fbevents.js",
+				);
+				try {
+					var granted = false;
 					try {
-						var granted = false;
-						try { granted = localStorage.getItem("marketing-consent") === "granted"; } catch (e) {}
-						window.fbq("consent", granted ? "grant" : "revoke");
-						window.fbq("init", fbPixelId);
-						window.fbq("track", "PageView");
-						window.__fbReady = true;
-						window.addEventListener("consent:marketing-granted", function () {
-							try { window.fbq("consent", "grant"); } catch (e) {}
-						});
-					} catch (e) {}`}
-				</script>
-			)
-		}
+						granted = localStorage.getItem("marketing-consent") === "granted";
+					} catch (e) {}
+					window.fbq("consent", granted ? "grant" : "revoke");
+					window.fbq("init", fbPixelId);
+					window.fbq("track", "PageView");
+					window.__fbReady = true;
+					window.addEventListener("consent:marketing-granted", function () {
+						try {
+							window.fbq("consent", "grant");
+						} catch (e) {}
+					});
+				} catch (e) {}
+			}
+		</script>
 
 		<noscript>
 			<style>
