@@ -31,3 +31,7 @@
 {"timestamp": "2026-06-01T23:29:19Z", "session_id": "0ba4be8f-6586-4062-94ed-d9ff5855cb00", "agent_id": "a63af0af0d5a6422d", "agent_type": "frontend-specialist", "transcript_lines": 651, "background": "unknown"}
 {"timestamp": "2026-06-01T23:31:43Z", "session_id": "0ba4be8f-6586-4062-94ed-d9ff5855cb00", "agent_id": "ad3dede4d649e27cc", "agent_type": "verification", "transcript_lines": 71, "background": "unknown"}
 {"timestamp": "2026-06-02T14:33:35Z", "session_id": "7127f8a0-69ae-4d09-a838-1a2745991ed9", "agent_id": "a1add9cec91b8781e", "agent_type": "Plan", "transcript_lines": 52, "background": "unknown"}
+{"timestamp": "2026-06-02T16:20:15Z", "session_id": "6214dc8c-bfcd-419b-b888-a1bb7a91f113", "agent_id": "a7e7110e2b5a63bdd", "agent_type": "librarian", "transcript_lines": 39, "background": "unknown"}
+{"timestamp": "2026-06-02T16:24:34Z", "session_id": "6214dc8c-bfcd-419b-b888-a1bb7a91f113", "agent_id": "a01ed8403169ddd2c", "agent_type": "verification", "transcript_lines": 41, "background": "unknown"}
+{"timestamp": "2026-06-02T16:30:03Z", "session_id": "6214dc8c-bfcd-419b-b888-a1bb7a91f113", "agent_id": "a01ed8403169ddd2c", "agent_type": "verification", "transcript_lines": 47, "background": "unknown"}
+{"timestamp": "2026-06-02T16:33:53Z", "session_id": "6214dc8c-bfcd-419b-b888-a1bb7a91f113", "agent_id": "a01ed8403169ddd2c", "agent_type": "verification", "transcript_lines": 59, "background": "unknown"}
