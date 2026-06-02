@@ -38,3 +38,8 @@
 {"timestamp": "2026-06-02T16:15:31Z", "prompt_sha256_12": "9b3d423d725c", "prompt_length": 187, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "librarian", "explorer"]}
 {"timestamp": "2026-06-02T16:30:04Z", "prompt_sha256_12": "c5062fc87268", "prompt_length": 5497, "mode": "parallel-authorized", "recommended_agents": ["debugger", "frontend-specialist", "librarian", "explorer"]}
 {"timestamp": "2026-06-02T16:33:54Z", "prompt_sha256_12": "6bb259cc91b4", "prompt_length": 6076, "mode": "parallel-authorized", "recommended_agents": ["debugger", "frontend-specialist", "librarian", "explorer"]}
+{"timestamp": "2026-06-02T16:35:57Z", "prompt_sha256_12": "c8ebbf0aed72", "prompt_length": 120, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "explorer"]}
+{"timestamp": "2026-06-02T17:00:45Z", "prompt_sha256_12": "b353942026a8", "prompt_length": 237, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "librarian", "explorer"]}
+{"timestamp": "2026-06-02T17:08:37Z", "prompt_sha256_12": "53273dc4817a", "prompt_length": 74, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "librarian", "explorer"]}
+{"timestamp": "2026-06-02T17:18:05Z", "prompt_sha256_12": "52c57511c971", "prompt_length": 324, "mode": "routing-hint-only", "recommended_agents": ["frontend-specialist", "librarian", "explorer"]}
+{"timestamp": "2026-06-02T17:23:40Z", "prompt_sha256_12": "719a638401e6", "prompt_length": 6480, "mode": "parallel-authorized", "recommended_agents": ["debugger", "frontend-specialist", "librarian", "explorer"]}
