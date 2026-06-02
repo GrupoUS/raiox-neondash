@@ -1,7 +1,12 @@
 ---
-// Cookie consent (marketing) — opt-in gate for the Meta Pixel (LGPD).
+// Cookie consent (marketing) — opt-out notice for the Meta Pixel.
 // Plausible + Vercel Analytics are cookieless (legitimate interest) and run
 // regardless; this banner governs ONLY marketing cookies (Meta Pixel).
+//
+// HYBRID OPT-OUT: the Pixel starts in consent=grant by default (Layout.astro
+// bootstrap). This banner lets the visitor REFUSE, which revokes the browser
+// Pixel. The server-side CAPI top-of-funnel reinforcement is independent of
+// this decision (documented in the spec).
 //
 // Microcopy lives inline as compliance chrome (same precedent as the skip-link
 // and <noscript> fallback in Layout.astro), not product copy.
@@ -9,7 +14,7 @@
 // Contract with the Meta Pixel bootstrap in Layout.astro:
 //   localStorage "marketing-consent" = "granted" | "denied"
 //   localStorage "marketing-consent-ts" = ISO timestamp
-//   on grant → window.dispatchEvent(new Event("consent:marketing-granted"))
+//   on refusal → window.dispatchEvent(new Event("consent:marketing-revoked"))
 //
 // Hidden by default (hidden attr); the inline script reveals it only when no
 // prior decision exists, so JS-off users never see a dead banner.
@@ -27,8 +32,8 @@
 	>
 		<p class="text-sm leading-relaxed text-muted sm:flex-1">
 			Usamos cookies de marketing (Meta Pixel) para medir e melhorar nossas
-			campanhas de tráfego. As métricas de navegação seguem anônimas. Você
-			decide.{" "}
+			campanhas de tráfego. A medição já está ativa; se preferir, você pode
+			recusar. As métricas de navegação seguem anônimas.{" "}
 			<a
 				href="/politica-de-privacidade"
 				class="text-gold underline underline-offset-2 hover:text-gold-light"
@@ -84,8 +89,10 @@
 					/* storage blocked — still honor the click for this page */
 				}
 				banner.hidden = true;
-				if (status === "granted") {
-					window.dispatchEvent(new Event("consent:marketing-granted"));
+				// Opt-out: grant is the Pixel default (Layout bootstrap), so "Aceitar"
+				// needs no event. "Recusar" revokes the browser Pixel this session.
+				if (status === "denied") {
+					window.dispatchEvent(new Event("consent:marketing-revoked"));
 				}
 			};
 

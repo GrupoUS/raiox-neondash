@@ -24,10 +24,28 @@ export type CapiResult =
 	| { status: "sent" }
 	| { status: "failed"; reason: string };
 
-export type CapiEventName = "Lead" | "CompleteRegistration";
+export type CapiEventName =
+	| "Lead"
+	| "CompleteRegistration"
+	| "PageView"
+	| "ViewContent"
+	| "Contact";
 
 function sha256(value: string): string {
 	return createHash("sha256").update(value).digest("hex");
+}
+
+/**
+ * Builds Meta's `_fbc` value from a raw `fbclid` URL param, for when the browser
+ * cookie isn't set yet (e.g. the first PageView beacon fires before the Pixel
+ * persists `_fbc`). Format: `fb.1.<unix-ms>.<fbclid>`.
+ */
+function buildFbcFromFbclid(
+	fbclid: string | undefined,
+	eventTimeSeconds: number,
+): string | undefined {
+	if (!fbclid) return undefined;
+	return `fb.1.${eventTimeSeconds * 1000}.${fbclid}`;
 }
 
 function hashEmail(email: string | undefined): string | undefined {
@@ -89,12 +107,15 @@ export type CapiEventInput = {
 	eventName: CapiEventName;
 	eventId?: string;
 	eventTime?: number;
-	lead: StoredLead;
+	/** Present only for conversion events. Top-of-funnel events send no PII. */
+	lead?: StoredLead;
 	eventSourceUrl?: string;
 	clientIp?: string;
 	clientUserAgent?: string;
 	fbp?: string;
 	fbc?: string;
+	/** Raw `fbclid` URL param; used to synthesize `_fbc` when the cookie is absent. */
+	fbclid?: string;
 };
 
 export async function sendCapiEvent(
@@ -105,25 +126,31 @@ export async function sendCapiEvent(
 	if (!token || !pixelId)
 		return { status: "skipped", reason: "not_configured" };
 
-	const { lead } = input;
-	const name = hashName(lead.contact.name);
-	const userData: Record<string, unknown> = {
-		em: hashEmail(lead.contact.email),
-		ph: hashPhone(lead.contact.whatsapp),
-		fn: name.fn,
-		ln: name.ln,
-	};
+	const eventTime = input.eventTime ?? Math.floor(Date.now() / 1000);
+
+	// PII (hashed contact) only when a consented lead is present. Top-of-funnel
+	// events (PageView / ViewContent / Contact) carry only browser/network ids.
+	const userData: Record<string, unknown> = {};
+	const lead = input.lead;
+	if (lead) {
+		const name = hashName(lead.contact.name);
+		userData.em = hashEmail(lead.contact.email);
+		userData.ph = hashPhone(lead.contact.whatsapp);
+		userData.fn = name.fn;
+		userData.ln = name.ln;
+	}
 	if (input.clientIp) userData.client_ip_address = input.clientIp;
 	if (input.clientUserAgent) userData.client_user_agent = input.clientUserAgent;
 	if (input.fbp) userData.fbp = input.fbp;
-	if (input.fbc) userData.fbc = input.fbc;
+	const fbc = input.fbc ?? buildFbcFromFbclid(input.fbclid, eventTime);
+	if (fbc) userData.fbc = fbc;
 	for (const key of Object.keys(userData)) {
 		if (userData[key] === undefined) delete userData[key];
 	}
 
 	const event: Record<string, unknown> = {
 		event_name: input.eventName,
-		event_time: input.eventTime ?? Math.floor(Date.now() / 1000),
+		event_time: eventTime,
 		action_source: "website",
 		user_data: userData,
 	};

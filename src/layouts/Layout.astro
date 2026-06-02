@@ -137,8 +137,8 @@ const fbDomainVerification = import.meta.env.PUBLIC_FB_DOMAIN_VERIFICATION;
 
 		<script is:inline define:vars={{ fbPixelId: fbPixelId ?? "" }}>
 			/* Meta Pixel — official base code (loads fbevents.js on page load so the
-			   pixel is detectable) + Meta Consent API: events/cookies are withheld via
-			   "revoke" until the visitor accepts marketing cookies (LGPD). Inert unless
+			   pixel is detectable) + Meta Consent API in HYBRID OPT-OUT mode (default
+			   "grant", revoked only on explicit refusal; PageView mirrored to CAPI). Inert unless
 			   PUBLIC_FB_PIXEL_ID is set. */
 			if (fbPixelId) {
 				!(function (f, b, e, v, n, t, s) {
@@ -165,21 +165,55 @@ const fbDomainVerification = import.meta.env.PUBLIC_FB_DOMAIN_VERIFICATION;
 					"https://connect.facebook.net/en_US/fbevents.js",
 				);
 				try {
-					var granted = false;
+					// Hybrid opt-out: grant by default; only revoke if the visitor
+					// explicitly refused marketing cookies (LGPD decision recorded in spec).
+					var denied = false;
 					try {
-						granted = localStorage.getItem("marketing-consent") === "granted";
+						denied = localStorage.getItem("marketing-consent") === "denied";
 					} catch (e) {}
-					window.fbq("consent", granted ? "grant" : "revoke");
+					window.fbq("consent", denied ? "revoke" : "grant");
 					window.fbq("init", fbPixelId);
-					window.fbq("track", "PageView");
+
+					// Shared id so this browser PageView dedupes against the CAPI
+					// PageView fired by the first-party beacon below.
+					var pvId =
+						typeof crypto !== "undefined" && crypto.randomUUID
+							? crypto.randomUUID()
+							: Date.now() + "-" + Math.random().toString(36).slice(2);
+					window.fbq("track", "PageView", {}, { eventID: pvId });
 					window.__fbReady = true;
-					window.addEventListener("consent:marketing-granted", function () {
+
+					// First-party CAPI beacon for PageView — ad-blocker-proof and
+					// consent-independent (rejecting only revokes the browser Pixel).
+					try {
+						var fbclid = new URLSearchParams(window.location.search).get(
+							"fbclid",
+						);
+						var pvBody = JSON.stringify({
+							event: "PageView",
+							eventId: pvId,
+							landingPath: window.location.pathname,
+							fbclid: fbclid || undefined,
+						});
+						if (navigator && typeof navigator.sendBeacon === "function") {
+							navigator.sendBeacon(
+								"/api/track/event",
+								new Blob([pvBody], { type: "application/json" }),
+							);
+						} else {
+							fetch("/api/track/event", {
+								method: "POST",
+								headers: { "Content-Type": "application/json" },
+								body: pvBody,
+								keepalive: true,
+							}).catch(function () {});
+						}
+					} catch (e) {}
+
+					// Honor an explicit refusal made this session → stop the Pixel.
+					window.addEventListener("consent:marketing-revoked", function () {
 						try {
-							window.fbq("consent", "grant");
-							// Re-fire PageView: the init-time PageView ran under consent=revoke
-							// and is suppressed, not replayed on grant. This counts the
-							// current page once the visitor accepts (same session).
-							window.fbq("track", "PageView");
+							window.fbq("consent", "revoke");
 						} catch (e) {}
 					});
 				} catch (e) {}
