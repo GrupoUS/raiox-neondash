@@ -15,6 +15,40 @@ const prefersReducedMotion = window.matchMedia(
 ).matches;
 const hasFinePointer = window.matchMedia("(pointer: fine)").matches;
 
+/* ---- Shared rAF-throttled scroll loop ----------------------------------
+   parallax, progress bar and offer card read scroll state once per frame
+   through a single listener instead of each registering its own. */
+interface ScrollContext {
+	scrollY: number;
+	vh: number;
+	progress: number;
+}
+type ScrollUpdater = (ctx: ScrollContext) => void;
+const scrollUpdaters: ScrollUpdater[] = [];
+let scrollTicking = false;
+
+function runScrollUpdaters(): void {
+	const doc = document.documentElement;
+	const scrollY = window.scrollY;
+	const max = doc.scrollHeight - doc.clientHeight;
+	const ctx: ScrollContext = {
+		scrollY,
+		vh: window.innerHeight,
+		progress: max > 0 ? Math.min(scrollY / max, 1) : 0,
+	};
+	for (const update of scrollUpdaters) update(ctx);
+	scrollTicking = false;
+}
+
+function onScroll(): void {
+	if (!scrollTicking) {
+		scrollTicking = true;
+		requestAnimationFrame(runScrollUpdaters);
+	}
+}
+
+const COUNTUP_RE = /^(\D*)([\d.,]+)(.*)$/s;
+
 /* ---- Mouse-follow glow (activates [data-glow-card] radial highlight) ---- */
 function initGlow(): void {
 	const cards = document.querySelectorAll<HTMLElement>("[data-glow-card]");
@@ -63,58 +97,31 @@ function initParallax(): void {
 	const items = [...document.querySelectorAll<HTMLElement>("[data-parallax]")];
 	if (!items.length) return;
 
-	let ticking = false;
-	const update = (): void => {
-		const vh = window.innerHeight;
+	scrollUpdaters.push((ctx) => {
 		for (const el of items) {
 			const speed = Number.parseFloat(el.dataset.parallax || "0.15");
 			const rect = el.getBoundingClientRect();
-			const progress = (rect.top + rect.height / 2 - vh / 2) / vh; // -1..1
+			const progress = (rect.top + rect.height / 2 - ctx.vh / 2) / ctx.vh; // -1..1
 			el.style.setProperty("--py", `${(-progress * speed * 100).toFixed(1)}px`);
 		}
-		ticking = false;
-	};
-
-	window.addEventListener(
-		"scroll",
-		() => {
-			if (!ticking) {
-				ticking = true;
-				requestAnimationFrame(update);
-			}
-		},
-		{ passive: true },
-	);
-	update();
+	});
 }
 
 /* ---- Scroll progress bar + scroll-depth events ---- */
 function initScrollProgress(): void {
 	const bar = document.querySelector<HTMLElement>("[data-scroll-progress]");
-	let ticking = false;
-	const update = (): void => {
-		const doc = document.documentElement;
-		const max = doc.scrollHeight - doc.clientHeight;
-		const progress = max > 0 ? Math.min(window.scrollY / max, 1) : 0;
-		bar?.style.setProperty("--scroll-progress", progress.toFixed(4));
-		const pct = progress * 100;
-		if (pct >= 25) trackOnce("scroll_25", "scroll_25");
-		if (pct >= 50) trackOnce("scroll_50", "scroll_50");
-		if (pct >= 75) trackOnce("scroll_75", "scroll_75");
-		if (pct >= 90) trackOnce("scroll_90", "scroll_90");
-		ticking = false;
-	};
-	window.addEventListener(
-		"scroll",
-		() => {
-			if (!ticking) {
-				ticking = true;
-				requestAnimationFrame(update);
-			}
-		},
-		{ passive: true },
-	);
-	update();
+	const depths = [25, 50, 75, 90];
+	let depthIdx = 0; // cursor: stop checking once every threshold has fired
+
+	scrollUpdaters.push((ctx) => {
+		bar?.style.setProperty("--scroll-progress", ctx.progress.toFixed(4));
+		const pct = ctx.progress * 100;
+		while (depthIdx < depths.length && pct >= depths[depthIdx]) {
+			const d = depths[depthIdx];
+			trackOnce(`scroll_${d}`, `scroll_${d}`);
+			depthIdx++;
+		}
+	});
 }
 
 /* ---- section_view_* once per section ---- */
@@ -162,7 +169,7 @@ function initCountUp(): void {
 
 	const animate = (el: HTMLElement): void => {
 		const raw = el.textContent?.trim() ?? "";
-		const match = raw.match(/^(\D*)([\d.,]+)(.*)$/s);
+		const match = raw.match(COUNTUP_RE);
 		if (!match) return;
 		const [, prefix, numStr, suffix] = match;
 		const target = Number.parseFloat(
@@ -204,11 +211,9 @@ function initOfferCard(): void {
 	if (!card) return;
 
 	let finalCtaVisible = false;
-	let ticking = false;
 	const update = (): void => {
 		const pastHero = window.scrollY > window.innerHeight * 0.7;
 		card.classList.toggle("is-visible", pastHero && !finalCtaVisible);
-		ticking = false;
 	};
 
 	const finalCta = document.querySelector("[data-section='finalCta']");
@@ -222,16 +227,7 @@ function initOfferCard(): void {
 		).observe(finalCta);
 	}
 
-	window.addEventListener(
-		"scroll",
-		() => {
-			if (!ticking) {
-				ticking = true;
-				requestAnimationFrame(update);
-			}
-		},
-		{ passive: true },
-	);
+	scrollUpdaters.push(update);
 	update();
 }
 
@@ -245,6 +241,10 @@ try {
 	initCountUp();
 	initOfferCard();
 	attachCtaClickListener();
+	if (scrollUpdaters.length) {
+		window.addEventListener("scroll", onScroll, { passive: true });
+		runScrollUpdaters();
+	}
 } catch {
 	/* interactions are progressive enhancement — never break the page */
 }

@@ -22,8 +22,7 @@
 		"cta": {
 			"label": "Quero minha Sessão",
 			"helperText": "Resposta em até 24 horas no WhatsApp",
-			"microproof": "Conduzida por quem vive a rotina de clínicas de estética todos os dias.",
-			"consultiveVariant": "Ver se faz sentido pra mim"
+			"microproof": "Conduzida por quem vive a rotina de clínicas de estética todos os dias."
 		},
 		"image": {
 			"src": "../../assets/sacha/sacha-hero.jpg",

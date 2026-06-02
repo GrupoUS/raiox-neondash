@@ -190,6 +190,11 @@ Gold é **hierarquia e impacto** — **sem teto fixo de cobertura**. A disciplin
 - `rounded-full`, 11–12px, weight 500, letter-spacing 0.04em, UPPERCASE.
 - Padding `px-3 py-1`.
 
+### Number / corner badge (decorativo)
+- Número de etapa (`01–04`), contador, selo de canto, label sobre imagem.
+- **Pill sólido** (`bg-navy` + `ring` gold) **ancorado na borda** do círculo/card com offset pequeno (`-top-2`/`-right-1`) — lê como *colado*, contido, igual em mobile e desktop.
+- **Nunca** número grande transparente (`bg-transparent` + `text-2xl`) com offset grande (`-top-3`) flutuando no vazio: parece solto, desconectado, "fora do card".
+
 ---
 
 ## 6. Layout
@@ -199,6 +204,15 @@ Gold é **hierarquia e impacto** — **sem teto fixo de cobertura**. A disciplin
 - **Quebrar o 50/50:** splits assimétricos (7/5, 8/4) no hero; 50/50 é visualmente estático. Adicionar intenção estrutural (overlap, profundidade).
 - **Spine editorial:** numeração estrutural (`01–04`) cria F-pattern e mata anáfora; alternar alinhamento esquerda/centro entre blocos.
 - Espaçamento vertical de seção: generoso desktop (≥ 96px), comprimido mobile (≥ 64px).
+
+### Containment / overflow
+
+Texto e números ficam **dentro** do card/seção — nunca vazam pra fora.
+
+- **Conteúdo flui, não estoura:** deixar texto quebrar (`min-w-0` em filho de flex/grid; sem `whitespace-nowrap` em label longo). Sem `height` fixa que corta linha — reservar espaço em vez de cortar. Se o conteúdo cresce, o card cresce junto.
+- **Cortar ≠ conter:** não usar `overflow-hidden` pra mascarar texto que vaza. Se vaza, corrigir o layout (espaço, wrap, posição), não esconder o overflow. (`overflow-hidden` é legítimo só pra clipar imagem/efeito em `rounded-*`, nunca pra esconder texto.)
+- **`absolute` = badge ancorado, não flutuante:** todo decorativo posicionado sobrepõe a **borda do âncora** com fundo sólido + `ring`, offset pequeno (`-top-2`/`-right-1`). Offset negativo grande (`-top-3`) + `bg-transparent` flutua no vazio e parece fora do card — ver § Badges. Todo `absolute` precisa de pai `relative` dimensionado, senão escapa pro ancestral errado.
+- **Testar nos extremos:** `01` e `100`, 1 linha e 4 linhas, pt-BR longo, viewport estreito. O elemento contém em todos.
 
 ### Responsive
 
@@ -350,6 +364,8 @@ Princípio: **restraint = premium**. "Sofisticação com presença" (escala, pes
 | `tabular-nums` em números | `#000` / `#fff` puro em body |
 | Lucide, named imports | Misturar bibliotecas de ícone / emoji |
 | 8px spacing grid + splits assimétricos | 50/50 estático · CSS inline furando tokens |
+| Conteúdo contido (texto quebra, badge ancorado na borda) | Texto/número vazando do card · número transparente flutuando em offset negativo grande |
+| `overflow-hidden` só pra clipar imagem/efeito em `rounded-*` | `overflow-hidden` pra esconder texto que estoura (mascara o bug) |
 | Gold focal (1 destaque/bloco), sem teto | Gold floodado (tudo dourado, nada destaca) |
 | Sombras/glow/glass suaves **ou** dramáticos | Superfícies chapadas quando profundidade ajudaria |
 | Motion expressivo (qualquer propriedade) | Motion travado sem fallback de reduced-motion |

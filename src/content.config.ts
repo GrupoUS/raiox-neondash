@@ -39,7 +39,6 @@ const landings = defineCollection({
 						label: z.string(),
 						helperText: z.string().optional(),
 						microproof: z.string().optional(),
-						consultiveVariant: z.string().optional(),
 					}),
 					image: z
 						.object({
@@ -84,13 +83,6 @@ const landings = defineCollection({
 						eyebrow: z.string().optional(),
 						headline: z.string(),
 						paragraphs: z.array(z.string()).min(1),
-						image: z
-							.object({
-								src: image(),
-								alt: z.string().min(10),
-								objectPosition: z.string().optional(),
-							})
-							.optional(),
 						costs: z
 							.array(
 								z.object({
