@@ -50,11 +50,16 @@ function resolveIcon(name: string) {
 					const Icon = resolveIcon(item.icon);
 					return (
 						<li
-							class="group glass-card card-hover-lift rounded-2xl p-7 md:p-8 lg:p-9 flex flex-col items-start gap-4 hover:ring-1 hover:ring-gold/40"
+							class="group glass-card rounded-2xl p-7 md:p-8 lg:p-9 flex flex-col items-start gap-4 hover:ring-1 hover:ring-gold/40"
 							data-reveal="up"
 							data-reveal-delay={String(Math.min(index + 1, 6))}
+							data-tilt
+							data-glow-card
 						>
-							<div class="size-14 rounded-2xl bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30">
+							<div
+								class="size-14 rounded-2xl bg-gold-soft flex items-center justify-center text-gold ring-1 ring-gold/30 transition-transform duration-300 group-hover:scale-110"
+								data-tilt-layer
+							>
 								<Icon aria-hidden="true" width={28} height={28} />
 							</div>
 							<div class="flex-1 min-w-0">

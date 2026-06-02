@@ -119,7 +119,7 @@ Fix: Use `client:only` for browser-dependent components, or guard with `typeof w
 
 ## Known case: FAQ accordion (React island)
 
-**Goal:** Expand/collapse answer panels without Framer Motion animating **layout height** (`height: 0` ↔ `"auto"`), which conflicts with project rules (jank, INP, and “no height tweens” in Motion).
+**Goal:** Um expand/collapse limpo e sem jank. O padrão PREFERIDO é um reveal com CSS grid (mais barato, mais suave). Um reveal Framer height/`AnimatePresence` é permitido quando se quer um efeito de disclosure mais rico — custa mais layout work, então meça e use `useReducedMotion()`.
 
 **Pattern (Na Mesa Certa / approved):**
 
@@ -129,8 +129,8 @@ Fix: Use `client:only` for browser-dependent components, or guard with `typeof w
 4. **Directive:** `client:visible` is appropriate — FAQ is below the fold.
 
 ```tsx
-// ❌ Avoid: AnimatePresence + motion.div height for the answer body
-// ✅ Prefer: grid rows 0fr/1fr on a wrapper; Motion only on icon if needed
+// Preferido: grid rows 0fr/1fr no wrapper; Motion no chevron (rotate/opacity)
+// Permitido para reveal mais rico: AnimatePresence + motion height, sob useReducedMotion()
 
 <div
   className="grid transition-[grid-template-rows] duration-300 ease-out"

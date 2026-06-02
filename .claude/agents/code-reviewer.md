@@ -26,9 +26,9 @@ Read `./CLAUDE.md` when present and treat root **`AGENTS.md`** as the single sou
 <checks>
 1. **AGENTS.md / CLAUDE.md:** Lucide-only icons; no emoji icons; `@theme` / semantic tokens; no arbitrary hex; MPA — no ClientRouter/SPA.
 2. **Content (`content.md`):** `getCollection()` for product/team data; `externalSiteUrl` + redirects + sitemap filter; CTA vs navigation; canonical journey order.
-3. **Performance:** Astro `<Image />` with dimensions; `client:visible` vs `client:load`; FAQ CSS grid `0fr`/`1fr` — flag height tweens.
+3. **Performance:** Astro `<Image />` com dimensões (CLS); `client:visible` vs `client:load` (hidratação/render-mode — inalterado); FAQ PREFERE CSS grid `0fr`/`1fr` (reveal height permitido se honra reduced-motion); CWV são orientativos — sinalize regressões, não bloqueie.
 4. **SEO (`seo.md`):** Unique titles; description length; `ogImage`; JSON-LD org URL; breadcrumbs where needed; sitemap exclusions for external redirects.
-5. **A11y (`a11y.md`):** Contrast, focus, skip link, `aria-label`, alt text, heading hierarchy, reduced motion, legal link hrefs.
+5. **A11y (`a11y.md`):** Contrast, focus, skip link, `aria-label`, alt text, heading hierarchy, **prefers-reduced-motion em TODA animação (piso duro — 3D/parallax/mouse-glow/staggered incluídos)**, legal link hrefs.
 6. **Hooks (`hooks.md`):** Only describe hook behavior when reviewing `.claude/settings.json` or hook scripts — do not bypass `protect-files` or weaken bash guards.
 </checks>
 

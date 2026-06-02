@@ -188,9 +188,9 @@ DESIGN COMMITMENT: [Style Name]
 3. All colors → semantic design tokens (never hardcode hex)
 4. Add data queries (per project's data layer — tRPC / server actions / loaders / fetch)
 5. TypeScript interfaces
-6. Scroll-triggered entrance animations (staggered) — gated by `prefers-reduced-motion`
-7. Micro-interactions (`scale` / `translate` / `opacity` only — never animate layout properties)
-8. `prefers-reduced-motion` support mandatory
+6. Entrances orquestradas e escalonadas, parallax, gradientes animados — gated by `prefers-reduced-motion`
+7. Micro-interactions: PREFIRA `scale` / `translate` / `opacity` / `filter`; layout props, 3D tilt e mouse-glow permitidos quando o efeito pedir (meça custo); use tokens de elevation/glow/3D do `gpus-theme`
+8. `prefers-reduced-motion` support mandatory — cobre 3D / parallax / mouse-glow / staggered
 
 ### Phase 3 — Validate
 
@@ -201,8 +201,8 @@ If ANY trigger is true → delete the implementation and restart:
 | Trigger | Fail condition | Fix |
 |---|---|---|
 | Safe Split | `grid-cols-2`, 50/50, 60/40, 70/30 layouts | Switch to 90/10, 100% stacked, or overlapping |
-| Glass Trap | `backdrop-blur` without solid borders | Remove blur → solid colors + raw 1-2px borders |
-| Glow Trap | Soft gradients to "pop" elements | High-contrast solid colors or grain textures |
+| Glass feito de forma preguiçosa | `backdrop-blur` without solid borders | Use `.glass-card` em camadas (blur + inner highlight + `--shadow-glass`) |
+| Glow feito de forma preguiçosa | Glow solitário sem base de contraste | `--glow-gold-*` em tiers sobre base de alto contraste; glow é on-brand, só coloque em camadas |
 | Bento Trap | Safe rounded grid boxes | Fragment grid, break alignment intentionally |
 | Blue Trap | Default blue/teal as primary | Use project tokens or distinctive accent |
 | Line Trap | `1px solid` border dividers | Background shifts, thick padding, ghost borders |
@@ -219,7 +219,8 @@ If ANY trigger is true → delete the implementation and restart:
 - [ ] Drag interactions have non-drag alternatives (WCAG 2.2 SC 2.5.7)
 - [ ] Key content left-aligned (NN Group: 69% more attention on left half)
 - [ ] Choices grouped if >7 options (Hick's Law)
-- [ ] Hover/state animations via CSS transitions, not JS (protects INP < 200ms at p75)
+- [ ] Motion é responsivo; motion JS rico permitido — INP ~200ms orientativo
+- [ ] `prefers-reduced-motion` honrado em toda animação (DURO)
 
 #### Visual quality
 
@@ -245,6 +246,7 @@ If ANY trigger is true → delete the implementation and restart:
 | Write code before DESIGN COMMITMENT | Declare geometry/typography/palette/effects first |
 | Use ui-ux-pro-max in frontend-specialist | Phase 0 (explorer) only |
 | Hardcode colors | Semantic design tokens |
+| Hardcode shadow/glow/perspective em componentes | Use tokens de elevation/glow/3D do `gpus-theme` (Cardinal 7) |
 | Custom modal from scratch | Design system Dialog primitive |
 | Nested ScrollArea | Single at layout level |
 | Components in `ui/` | `components/[feature]/` |

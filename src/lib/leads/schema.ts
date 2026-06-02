@@ -72,6 +72,7 @@ export const storedLeadSchema = z.object({
 	score: leadScoreSchema.optional(),
 	meta: leadMetaSchema,
 	events: z.array(storedLeadEventSchema).default([]),
+	contactedAt: z.string().datetime().optional(),
 });
 
 export type LeadContact = z.infer<typeof leadContactSchema>;

@@ -1,7 +1,7 @@
 # Design — Universal Tier 2 Rules
 
 > Universal design do/don't. Portable to any project.
-> Project tokens (color palette, typography pairing, brand utilities, glow / glass / depth) live in the project's brand / theme skill — Claude auto-loads via skill description match.
+> Project tokens (color palette, typography pairing, brand utilities, glow / glass / depth / 3D / elevation) live in the project's brand / theme skill — Claude auto-loads via skill description match. Veja `gpus-theme` para o vocabulário de tokens de shadow/elevation/glow/3D.
 > Tech-stack syntax (Tailwind v4 `@theme`, vanilla-extract, CSS Modules, etc.) lives in the matching tech-stack skill.
 
 ---
@@ -80,7 +80,7 @@
 
 - 8px spacing grid — every margin / padding / gap is a multiple of 8 (or 4 in tight UI).
 - Container: max-width pattern (`max-w-7xl mx-auto px-6 lg:px-8` or equivalent).
-- Asymmetric splits (7/5, 8/4) for hero. Avoid 50/50 — visually static.
+- Asymmetric splits (7/5, 8/4, ou extremo 90/10) for hero. Avoid 50/50 — visually static. Composições em camadas / sobrepostas (eixo Z) e parallax são encorajadas.
 - Section vertical spacing: generous on desktop (≥ 96px), compressed on mobile (≥ 64px).
 
 ### Responsive breakpoints
@@ -124,18 +124,23 @@
 
 ## 7. Motion
 
-### Allowed
-- `transform` (translate, scale, rotate)
+> Intensity target: **dinâmico forte.** Motion é ferramenta de design de primeira classe — profundidade em camadas, 3D, glow e dinamismo são encorajados, não racionados. O único piso duro é `prefers-reduced-motion`.
+
+### Prefira (mais barato, primeira escolha)
+- `transform` (translate, scale, rotate, rotateX/Y/Z, perspective)
 - `opacity`
-- `filter` (sparingly — `blur`, `brightness`)
-- CSS grid `grid-template-rows: 0fr ↔ 1fr` for accordion / disclosure expansion
+- `filter` (`blur`, `brightness`, `drop-shadow`) + `backdrop-filter`
+- CSS grid `grid-template-rows: 0fr ↔ 1fr` para disclosure
 
-### Forbidden
-- Layout properties: `width`, `height`, `top`, `left`, `padding`, `margin`, `border-width`
-- `transition: all`
-- Animating accordion panel via `height: 0/auto` (use grid pattern above, or native `<details>`)
+Compostos na GPU; caminho padrão.
 
-### Required
+### Use com intenção (permitido quando o efeito pedir)
+- Layout props (`width`, `height`, `top`, `left`, `padding`, `margin`, `border-width`, `clip-path`) ok para efeitos que precisam (cards expandindo, painéis morphing, bordas animadas) — meça o custo, prefira `transform` se der o mesmo resultado.
+- 3D / tilt (`perspective` + `rotateX/Y`, `preserve-3d`), parallax, entrances escalonadas, gradientes animados (`background-position` / conic / `@property` hue), mouse-glow / spotlight, transições de sombra + glow em camadas.
+- Transições multi-propriedade nomeadas (evite `transition: all` — nomeie as props; higiene de perf, não proibição de motion).
+- Accordion: grid `0fr/1fr` ou `<details>` PREFERIDO, reveal Framer height / `AnimatePresence` permitido para efeito mais rico.
+
+### Required (piso duro de acessibilidade — inegociável)
 - `prefers-reduced-motion` honored on every animation:
   ```css
   @media (prefers-reduced-motion: reduce) {
@@ -143,15 +148,19 @@
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
     }
   }
   ```
-- React / Framer islands wrap animations in the framework's reduced-motion hook.
+- Islands React / Framer usam `useReducedMotion()`.
+- Listeners de pointer-parallax / mouse-glow / tilt são pulados (ou ficam estáticos) sob reduced motion.
+- Fallback deixa conteúdo totalmente visível e usável (nada preso em `opacity:0` ou fora da tela).
 
-### Standard durations
-- Hover / focus: 150ms ease
-- Reveal on scroll: 300ms ease-out
-- Page transition: 200ms ease-in-out
+### Durações sugeridas (guia, não gate)
+- Hover / focus: 150–250ms ease
+- Reveal / entrance escalonada: 300–600ms ease-out (passo ~60–120ms)
+- 3D tilt / parallax follow: contínuo eased (~120–200ms lerp)
+- Transição de seção: 200–400ms ease-in-out
 
 ---
 
@@ -175,19 +184,20 @@
 
 ## 9. Depth & elevation
 
-Layer by tonal contrast, not aggressive shadow:
+> Reenquadrado: **premium com profundidade.** Construa hierarquia com tom AND sombra + glow em camadas. Sombras multi-camada e glow em tiers leem como intencional e premium — use.
 
 | Level | Surface | Effect |
 |---|---|---|
-| 0 | Page background | none |
-| 1 | Section alternate | tonal step |
-| 2 | Card | thin border, optional brand glow on premium |
-| 3 | Glass / blur | translucent + backdrop-blur |
-| 4 | Hover lift | `translateY(-Npx)` + soft shadow |
-| 5 | CTA halo | brand-color glow (sparingly — primary CTAs only) |
-| 6 | Modal | larger radius + heavier shadow + overlay |
+| 0 | Page background | tonal base — mesh / noise / gradiente animado bem-vindos |
+| 1 | Section alternate | passo tonal, glow ambiente opcional |
+| 2 | Card (resting) | border + sombra em camadas ambient+key; brand glow em premium |
+| 3 | Glass / blur | translucent + backdrop-blur + inner highlight + soft outer shadow |
+| 4 | Hover / focus lift | `translateY(-Npx)` ou scale + sombra mais profunda + glow + 3D tilt opcional |
+| 5 | CTA halo | tier de glow brand — encorajado em CTAs primários; pode pulsar / animar, reduced-motion → glow estático |
+| 6 | Floating / parallax layer | camada de profundidade deslocada, spread maior, blur em camadas distantes |
+| 7 | Modal / overlay | raio maior + sombra mais pesada + scrim |
 
-Shadows: soft, low-spread. Avoid `0 0 50px hard-color` — looks unstyled.
+Construa sombras em CAMADAS (ambient larga baixa-opacidade + key mais apertada) = premium. Glow é feature, não defeito (CTAs, cards premium, focus — use tokens de glow do skill de tema). 3D (tilt no hover, parallax em camadas) bem-vindo. Ainda evite um anel solitário `0 0 50px hard-color` SEM camadas de apoio (parece inacabado — coloque em camadas).
 
 ---
 
@@ -208,10 +218,10 @@ Shadows: soft, low-spread. Avoid `0 0 50px hard-color` — looks unstyled.
 | `tabular-nums` for numerics | Pure `#000` / `#fff` body text |
 | One icon library, named imports | `import *` of icon library |
 | 8px spacing grid | Inline custom CSS bypassing tokens |
-| Soft shadows / glow / glass | Aggressive `box-shadow` glows |
-| `prefers-reduced-motion` everywhere | Animate `width` / `height` / `top` / `left` / `padding` / `margin` |
+| Sombras em camadas + glow em tiers + glass para profundidade premium | Um anel solitário `0 0 50px` sem camadas de sombra |
+| `prefers-reduced-motion` em TODA animação (piso duro) | Qualquer animação sem fallback de reduced-motion |
 | `<button>` actions / `<a>` nav | `href="#"` placeholders |
-| `transform` + `opacity` only | `transition: all` |
+| Prefira `transform`+`opacity`+`filter`; use layout props / 3D / parallax quando o efeito pedir | `transition: all` (nomeie as props — higiene, não proibição) |
 | Validate contrast before commit | Cross-mode bleed |
 
 ---

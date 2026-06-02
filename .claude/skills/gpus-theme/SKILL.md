@@ -1,13 +1,13 @@
 ---
 name: gpus-theme
-description: Use when applying GPUS branding (Portal Grupo US) to other projects, setting up shadcn/ui with Navy/Gold palette, or copying the complete light/dark theme configuration. Includes CSS variables, Tailwind v4 theme, and shadcn configuration.
+description: Use when applying GPUS branding (Portal Grupo US) to other projects, setting up shadcn/ui with Navy/Gold palette, or copying the complete light/dark theme configuration. Includes CSS variables, Tailwind v4 theme, and shadcn configuration. Also covers per-product palette variants (darker/lighter, adjacent metallics/blues) that differentiate a landing while keeping the brand DNA.
 ---
 
 # GPUS Theme
 
 Portable design system from the Portal Grupo US project featuring a Navy/Gold color palette with complete light and dark theme support.
 
-> **Identity:** Navy backgrounds + Gold accents. Professional, premium, educational.
+> **Identity:** Navy backgrounds + Gold accents. Professional, premium, educational. — **premium COM PROFUNDIDADE**: sombras em camadas, glow gold em tiers, glass e 3D sutil dão dimensão à superfície. (Reenquadrado de "flat/minimal"; profundidade e dinamismo são on-brand.)
 
 ## Institutional site (`gpus` repo) vs portable theme
 
@@ -69,6 +69,8 @@ export default {
 | **accent**      | Light gold `38 60% 95%` | Muted `26 5% 27%`  | Highlights      |
 | **destructive** | Red `0 84% 60%`         | Red `0 84% 60%`    | Errors          |
 
+> **Variar por produto (referência, não cópia).** Navy/Gold é o canon; cada produto/landing pode usar uma **variante adjacente** (mais escura/clara, ou metálico/azul vizinho) para não ficar tudo igual, mantendo o DNA (azul-escuro + metálico quente). Cardápio pronto + como aplicar → `references/palette-variants.md`. O site institucional `gpus` permanece Navy/Gold canônico.
+
 ### Border Radius
 
 - Base: `0.625rem` (10px)
@@ -76,12 +78,46 @@ export default {
 
 ### Custom Utilities
 
-| Class             | Effect                          |
-| ----------------- | ------------------------------- |
-| `.bg-mesh`        | Radial gradient mesh background |
-| `.glass-card`     | Glassmorphism with blur         |
-| `.bg-noise`       | Subtle noise texture overlay    |
-| `.animate-ripple` | Button ripple animation         |
+| Class                  | Effect                                            |
+| ---------------------- | ------------------------------------------------- |
+| `.bg-mesh`             | Radial gradient mesh background                   |
+| `.glass-card`          | Glassmorphism with blur                           |
+| `.bg-noise`            | Subtle noise texture overlay                      |
+| `.animate-ripple`      | Button ripple animation                           |
+| `.bg-mesh-animated`    | Gradiente mesh em drift                           |
+| `.elevation-1..4`      | Tiers de sombra em camadas (ambient + key)        |
+| `.glow-gold` / `.glow-gold-strong` | Glow brand em tiers                   |
+| `.glow-focus`          | Focus ring com glow                               |
+| `.tilt-3d`             | Tilt perspective no hover, reduced-motion safe    |
+| `.parallax-layer`      | Camada de parallax (will-change: transform)       |
+| `.mouse-glow`          | Spotlight de pointer, island-driven               |
+| `.animate-float`       | Float contínuo (eixo Y)                           |
+
+> Novas — direção premium-com-profundidade / dinâmico forte. Reduced-motion: efeitos contínuos/pointer congelam ou ficam estáticos.
+
+---
+
+## Depth, Glow & 3D token vocabulary
+
+Vocabulário de tokens para a direção premium-com-profundidade / dinâmico forte:
+
+**Elevation**
+- `--shadow-elevation-1..4` — sombras de 2 camadas (ambient + key), tiers crescentes.
+- `--shadow-glass` — sombra externa suave + inner highlight para glass.
+
+**Glow**
+- `--glow-gold-sm` / `-md` / `-lg` / `-strong` — glow brand gold em tiers.
+- `--glow-focus` — focus ring com glow (contraste AA preservado).
+
+**3D**
+- `--perspective-card` — perspective base para tilt de cards.
+- `--tilt-max-deg` — ângulo máximo de tilt.
+
+**Motion**
+- `--gradient-mesh-shift-duration` — duração do drift do mesh animado.
+- `--float-distance` / `--float-duration` — distância e duração do float.
+
+> Definidos em `theme-tokens.css` `:root` / `.dark`, expostos via `@theme` espelhando o mapping `--color-*` (Cardinal 7 fortalecido — sem shadow/hex inline).
 
 ---
 
@@ -114,6 +150,7 @@ export default {
 | File                          | Purpose                         |
 | ----------------------------- | ------------------------------- |
 | `references/css-variables.md` | Complete CSS variable reference |
+| `references/palette-variants.md` | Variantes de paleta por produto (mais escuro/claro, metálicos/azuis adjacentes) |
 | `references/shadcn-config.md` | shadcn/ui configuration details |
 | `assets/theme-tokens.css`     | Portable CSS file               |
 | `assets/tailwind-theme.ts`    | Tailwind v3 config export       |

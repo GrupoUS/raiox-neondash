@@ -54,6 +54,7 @@ const STEP_ICONS = [FileText, MessageCircle, Video, MapPin] as const;
 					class="relative mx-auto mb-12 md:mb-16 max-w-2xl lg:max-w-3xl aspect-[16/10] rounded-2xl overflow-hidden ring-1 ring-gold/20 shadow-2xl"
 					data-reveal="up"
 					data-reveal-delay="1"
+					data-parallax="0.1"
 				>
 					<Image
 						src={image.src}
@@ -95,7 +96,7 @@ const STEP_ICONS = [FileText, MessageCircle, Video, MapPin] as const;
 											aria-hidden="true"
 										/>
 									)}
-									<div class="relative z-10 size-14 lg:size-16 rounded-full bg-navy ring-2 ring-gold flex items-center justify-center text-gold shadow-lg shadow-gold/20">
+									<div class="relative z-10 size-14 lg:size-16 rounded-full bg-navy ring-2 ring-gold flex items-center justify-center text-gold shadow-lg shadow-gold/20 transition-[transform,box-shadow] duration-300 group-hover:scale-110 group-hover:shadow-gold/40">
 										<Icon aria-hidden="true" width={24} height={24} />
 									</div>
 									<span

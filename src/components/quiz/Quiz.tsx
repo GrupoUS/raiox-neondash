@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { track, trackOnce } from "../../lib/analytics";
 import { normalizeWhatsappToE164 } from "../../lib/whatsapp";
 import { ProgressBar } from "./ProgressBar";
@@ -70,6 +71,14 @@ export default function Quiz({
 	const [isCapturingContact, setIsCapturingContact] = useState(false);
 	const total = quiz.steps.length;
 	const step = quiz.steps[state.currentStep];
+
+	// Step transition direction (+1 forward / -1 back) for the slide animation.
+	const prefersReducedMotion = useReducedMotion();
+	const prevStepRef = useRef(state.currentStep);
+	const direction = state.currentStep >= prevStepRef.current ? 1 : -1;
+	useEffect(() => {
+		prevStepRef.current = state.currentStep;
+	}, [state.currentStep]);
 
 	// quiz_started once per session
 	// biome-ignore lint/correctness/useExhaustiveDependencies: trackOnce dedupes by sessionId; quiz.version captured at first call.
@@ -353,51 +362,70 @@ export default function Quiz({
 		<QuizContainer intro={quiz.intro}>
 			<div className="flex flex-col gap-8">
 				<ProgressBar current={state.currentStep + 1} total={total} />
-				<QuizStep
-					title={step.title}
-					helperText={step.helperText}
-					canBack={state.currentStep > 0}
-					canAdvance={canAdvance}
-					isLast={isLast}
-					isSubmitting={state.status === "submitting" || isCapturingContact}
-					error={
-						isLast && Object.keys(contactErrors).length > 0
-							? "Revise os campos destacados antes de continuar."
-							: undefined
-					}
-					onBack={() => dispatch({ type: "BACK" })}
-					onAdvance={handleAdvance}
-				>
-					{step.type === "multiple-choice" ? (
-						<QuestionMultipleChoice
-							step={step}
-							value={state.answers[step.id]}
-							onChange={handleAnswer}
-						/>
-					) : null}
-					{step.type === "scale" ? (
-						<QuestionScale
-							step={step}
-							value={state.answers[step.id]}
-							onChange={handleAnswer}
-						/>
-					) : null}
-					{step.type === "contact" ? (
-						<QuestionContact
-							step={step}
-							contact={state.contact}
-							consentGiven={state.consentGiven}
-							consent={quiz.consent}
-							errors={contactErrors}
-							onChangeContact={(patch) =>
-								dispatch({ type: "SET_CONTACT", contact: patch })
+				<AnimatePresence mode="wait" initial={false}>
+					<motion.div
+						key={state.currentStep}
+						initial={
+							prefersReducedMotion ? false : { opacity: 0, x: 24 * direction }
+						}
+						animate={{ opacity: 1, x: 0 }}
+						exit={
+							prefersReducedMotion
+								? { opacity: 0 }
+								: { opacity: 0, x: -24 * direction }
+						}
+						transition={{
+							duration: prefersReducedMotion ? 0 : 0.28,
+							ease: [0.16, 1, 0.3, 1],
+						}}
+					>
+						<QuizStep
+							title={step.title}
+							helperText={step.helperText}
+							canBack={state.currentStep > 0}
+							canAdvance={canAdvance}
+							isLast={isLast}
+							isSubmitting={state.status === "submitting" || isCapturingContact}
+							error={
+								isLast && Object.keys(contactErrors).length > 0
+									? "Revise os campos destacados antes de continuar."
+									: undefined
 							}
-							onChangeConsent={(c) =>
-								dispatch({ type: "SET_CONSENT", consent: c })
-							}
-						/>
-					) : null}
-				</QuizStep>
+							onBack={() => dispatch({ type: "BACK" })}
+							onAdvance={handleAdvance}
+						>
+							{step.type === "multiple-choice" ? (
+								<QuestionMultipleChoice
+									step={step}
+									value={state.answers[step.id]}
+									onChange={handleAnswer}
+								/>
+							) : null}
+							{step.type === "scale" ? (
+								<QuestionScale
+									step={step}
+									value={state.answers[step.id]}
+									onChange={handleAnswer}
+								/>
+							) : null}
+							{step.type === "contact" ? (
+								<QuestionContact
+									step={step}
+									contact={state.contact}
+									consentGiven={state.consentGiven}
+									consent={quiz.consent}
+									errors={contactErrors}
+									onChangeContact={(patch) =>
+										dispatch({ type: "SET_CONTACT", contact: patch })
+									}
+									onChangeConsent={(c) =>
+										dispatch({ type: "SET_CONSENT", consent: c })
+									}
+								/>
+							) : null}
+						</QuizStep>
+					</motion.div>
+				</AnimatePresence>
 			</div>
 		</QuizContainer>
 	);

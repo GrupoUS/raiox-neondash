@@ -119,9 +119,9 @@ Rules: high-contrast pairings (display + mono, serif + geometric sans), weight e
 
 **Color & Theme:** Commit to a cohesive aesthetic. Dominant colors with sharp accents outperform timid, evenly-distributed palettes. **Purple/violet/indigo are FORBIDDEN as primary/brand color** unless explicitly requested — it's the #1 AI design cliché.
 
-**Motion:** One well-orchestrated page load with staggered reveals creates more delight than scattered micro-interactions. GPU-accelerated properties only (`transform`, `opacity`). `prefers-reduced-motion` support is MANDATORY.
+**Motion:** Motion orquestrado e em camadas é a direção da marca ("dinâmico forte") — entrances escalonadas, 3D tilt, parallax, gradientes animados, mouse-glow. PREFIRA `transform`/`opacity`/`filter` composto na GPU; use layout props / 3D / parallax quando o efeito pedir (meça o custo). Suporte a `prefers-reduced-motion` é OBRIGATÓRIO — o único piso duro.
 
-**Backgrounds:** Create atmosphere and depth — never default to solid white/gray.
+**Backgrounds:** Create atmosphere and depth — never default to solid white/gray. gradientes em camadas, mesh animado, noise, camadas de parallax.
 
 **Geometry extremes — make a choice, don't sit in the middle:**
 - **0-2px** → Tech, Luxury, Brutalist (sharp/crisp)
@@ -134,14 +134,14 @@ Rules: high-contrast pairings (display + mono, serif + geometric sans), weight e
 
 1. **Standard Hero Split** — Left text / Right image. Most overused layout.
 2. **Bento Grids** as default — OK for complex data, NOT for landing pages.
-3. **Mesh/Aurora Gradients** — Floating colored blobs in background.
-4. **Glassmorphism** — Blur + thin border ≠ premium.
+3. **Aimless Mesh/Aurora blobs** — blobs aleatórios sem intenção compositiva. (Mesh/gradientes animados COM intenção e profundidade são encorajados — ver `gpus-theme`.)
+4. **Lazy Glassmorphism** — só blur + thin border. (Glass feito CERTO — blur + inner highlight + sombra em camadas via `.glass-card` / `--shadow-glass` — é premium e encorajado.)
 5. **Fintech Blue/Cyan** — The "safe" escape palette.
 6. **Generic Copy** — "Orchestrate", "Empower", "Elevate", "Seamless".
 7. **Purple/Violet/Indigo** — #1 AI cliché.
-8. **Neumorphism** — Low contrast accessibility nightmare.
+8. **Neumorphism** — Low contrast accessibility nightmare. — problema de a11y, não anti-profundidade.
 9. **10-12px body text** — Fails readability and accessibility minimums.
-10. **JS-driven hover animations** — Use CSS transitions; JS animations kill INP scores.
+10. **Animação JS sem fallback de `prefers-reduced-motion`** — Motion JS rico (3D tilt, parallax, mouse-glow, entrances Framer escalonadas) é encorajado. Use `useReducedMotion()` em todo island; INP é orientativo (~200ms), não gate duro.
 
 **Alternative layouts:** Massive Typographic Hero (300px+ headline), Center-Staggered, Layered Depth (Z-axis overlapping), Vertical Narrative, Extreme Asymmetry 90/10.
 
@@ -249,7 +249,8 @@ Review checklist:
 - [ ] WCAG 2.2 SC 2.5.7 — drag interactions have a non-drag alternative
 - [ ] WCAG 2.2 SC 3.3.7 — multi-step forms auto-populate previous entries
 - [ ] Touch targets ≥ 44×44px; minimum 24×24px with adequate spacing (SC 2.5.8)
-- [ ] CSS transitions for hover/state changes — not JS-driven animations (protects INP < 200ms)
+- [ ] Hover/state motion funciona e é responsivo; motion JS rico (3D/parallax/mouse-glow/Framer) é permitido — INP ~200ms orientativo
+- [ ] `prefers-reduced-motion` / `useReducedMotion()` em TODA animação (piso DURO)
 - [ ] Responsive — mobile-first, tested on breakpoints
 - [ ] Dark mode — toggle light ↔ dark verified
 - [ ] Error handling — boundaries, graceful fallbacks

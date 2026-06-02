@@ -85,10 +85,10 @@ const variants = shouldReduceMotion
 
 **Rule:** Every Framer Motion animation in every Island must call `useReducedMotion()` and disable animations when true. No exceptions.
 
-### FAQ accordion: expand/collapse without Framer `height`
+### FAQ accordion: expand/collapse
 
-- **Do not** drive the answer panel with `AnimatePresence` + `motion.div` `height: 0` ↔ `auto` (layout thrash, conflicts with “no height animation” guidance).
-- **Do** use a **CSS grid** wrapper: outer `grid` with `grid-template-rows: 0fr` (collapsed) ↔ `1fr` (expanded), inner `min-h-0 overflow-hidden`, and `transition-[grid-template-rows]` (or equivalent). Chevron rotation can stay on Framer with **only** `rotate` / `opacity` — no panel height tweens.
+- **Prefira** o reveal CSS grid (mais limpo). Um reveal `AnimatePresence` + `motion.div` `height` é permitido para efeito de disclosure mais rico quando honra `useReducedMotion()`.
+- **Do** use a **CSS grid** wrapper: outer `grid` with `grid-template-rows: 0fr` (collapsed) ↔ `1fr` (expanded), inner `min-h-0 overflow-hidden`, and `transition-[grid-template-rows]` (or equivalent). Chevron rotation can stay on Framer with `rotate` / `opacity`.
 - Wire `aria-expanded`, `aria-controls`, and `role="region"` / `aria-hidden` on the collapsible region per the accordion pattern.
 
 ### Lucide React
@@ -102,7 +102,7 @@ const variants = shouldReduceMotion
 - Direct `Date.now()` or `new Date()` in render without isMounted guard
 - Missing `useReducedMotion()` in any Framer Motion usage
 - Large dependency imports inside Islands (keep bundle small)
-- Framer Motion animating **accordion panel height** (`height` to `"auto"`) instead of CSS grid `0fr`/`1fr`
+- Framer panel-height reveal usado como PADRÃO onde grid `0fr`/`1fr` limpo serviria
 
 ---
 
@@ -139,7 +139,7 @@ const variants = shouldReduceMotion
 ### Tailwind anti-patterns to flag
 
 - Hardcoded hex colors (e.g., `bg-[#1a1a2e]`, `text-[#d4af37]`)
-- `transition: all` (animate only specific properties)
+- `transition: all` — nomeie as props (transições multi-propriedade ricas são ok; higiene)
 - `outline-none` without a replacement focus style
 - Arbitrary values that duplicate existing semantic tokens
 - Inline styles that could be Tailwind classes
@@ -157,14 +157,13 @@ const variants = shouldReduceMotion
 | ------ | --------- | ------------------------------------------------------ |
 | LCP    | < 2.5s   | Preload hero image, use Astro `<Image>` with priority  |
 | CLS    | 0         | Explicit `width`/`height` on all images and embeds     |
-| FID    | < 100ms  | Minimal JS — only 3 React Islands                      |
+| INP    | ~200ms (orientativo) | JS compartilhado mínimo; 3D/hover interativo pode custar mais — meça & anote |
 | TBT    | < 200ms  | `client:visible` for below-fold Islands                |
 
 ### Animation performance
 
-- Only animate `transform` and `opacity` (GPU-composited properties) in Framer Motion.
-- Never animate `width`, `height`, `top`, `left`, `margin`, `padding` in Motion or other JS-driven layout tweens.
-- **Exception (approved):** accordion show/hide via **CSS** `grid-template-rows: 0fr` ↔ `1fr` (browser handles layout; not a Framer `height` tween).
+- Prefira `transform`/`opacity`/`filter` (GPU-composited); animar `width`, `height`, `top`, `left`, `margin`, `padding` (e 3D/parallax) é permitido quando o efeito precisa — meça custo e forneça fallback de `prefers-reduced-motion`.
+- **Padrão preferido:** accordion show/hide via **CSS** `grid-template-rows: 0fr` ↔ `1fr` (browser handles layout; reveal Framer `height` permitido para efeito mais rico).
 - Use `will-change: transform` sparingly and only on elements that actually animate.
 
 ### Font loading
@@ -188,7 +187,7 @@ const variants = shouldReduceMotion
 - `<img>` tags without explicit dimensions
 - Large unoptimized images (check `dist/` output sizes)
 - React Islands using `client:load` when `client:visible` suffices
-- CSS animations on layout properties
+- Animação (layout-prop, 3D ou parallax) SEM fallback de `prefers-reduced-motion`
 - Unused CSS/JS in the bundle
 
 ---
@@ -223,7 +222,7 @@ const variants = shouldReduceMotion
 - Carousel uses `aria-live="polite"` for slide changes.
 - Sections use `aria-labelledby` pointing to their heading.
 
-### `prefers-reduced-motion` contract
+### `prefers-reduced-motion` contract — HARD accessibility floor (a regra que não afrouxa)
 
 - Every Framer Motion component must use `useReducedMotion()`.
 - CSS animations must have `@media (prefers-reduced-motion: reduce)` fallbacks.
@@ -312,7 +311,7 @@ bun run preview
 | Hydration mismatch         | isMounted guard for client-only values (Date, window, Math)  |
 | Layout shift (CLS)         | Missing width/height on images or embeds                     |
 | Slow LCP                   | Hero image not preloaded, unoptimized format                 |
-| Animation jank             | Animating layout properties instead of transform/opacity     |
+| Animation jank             | Prefira transform/opacity/filter; se animar layout/3D, confirme intenção + fallback reduced-motion |
 | Focus not visible          | Missing focus-visible styles or outline-none without replace  |
 | Build failure              | Run `bunx astro check` for type errors, check imports        |
 | Island not interactive     | Missing or wrong `client:*` directive                        |

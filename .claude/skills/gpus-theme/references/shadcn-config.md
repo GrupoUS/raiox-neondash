@@ -47,8 +47,8 @@ Complete configuration for shadcn/ui in the GPUS project.
 The `new-york` style features:
 - Smaller, rounder corners
 - More compact spacing
-- Subtle shadows
-- Clean, modern aesthetic
+- Sombras em camadas + glow gold em tiers (profundidade premium — ver `gpus-theme/SKILL.md § Depth, Glow & 3D token vocabulary`)
+- Estética limpa, moderna, alto-contraste COM dimensão
 
 ---
 

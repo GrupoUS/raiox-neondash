@@ -24,6 +24,43 @@
 	/* Typography */
 	--font-serif: var(--font-playfair), Georgia, serif;
 	--font-sans: var(--font-inter), system-ui, sans-serif;
+
+	/* ===== Depth & Elevation (navy-tinted ambient + key) ===== */
+	/* Tailwind v4 auto-generates `shadow-*` utilities from --shadow-* keys
+	   AND exposes each as a CSS var for use inside custom utilities. */
+	--shadow-soft:
+		0 1px 2px color-mix(in srgb, var(--color-navy) 40%, transparent),
+		0 4px 12px color-mix(in srgb, var(--color-navy) 35%, transparent);
+	--shadow-float:
+		0 6px 16px color-mix(in srgb, var(--color-navy) 45%, transparent),
+		0 14px 40px color-mix(in srgb, var(--color-navy) 40%, transparent);
+	--shadow-deep:
+		0 10px 30px color-mix(in srgb, var(--color-navy) 50%, transparent),
+		0 30px 80px color-mix(in srgb, var(--color-navy) 45%, transparent);
+
+	/* Gold glow tiers (additive over the navy shadow) */
+	--shadow-glow-gold-sm: 0 0 16px
+		color-mix(in srgb, var(--color-gold) 18%, transparent);
+	--shadow-glow-gold: 0 0 28px
+		color-mix(in srgb, var(--color-gold) 28%, transparent);
+	--shadow-glow-gold-lg:
+		0 0 36px color-mix(in srgb, var(--color-gold) 38%, transparent),
+		0 0 70px color-mix(in srgb, var(--color-gold) 16%, transparent);
+
+	/* Inset edge-light — top bevel + bottom contact (the 3D rim) */
+	--shadow-edge-light:
+		inset 0 1px 0 color-mix(in srgb, white 10%, transparent),
+		inset 0 -1px 0 color-mix(in srgb, var(--color-navy) 60%, transparent);
+
+	/* Composite for tilt cards: deep ambient + gold rim + edge-light */
+	--shadow-3d:
+		0 18px 50px color-mix(in srgb, var(--color-navy) 50%, transparent),
+		0 0 30px color-mix(in srgb, var(--color-gold) 14%, transparent),
+		inset 0 1px 0 color-mix(in srgb, white 9%, transparent);
+
+	/* 3D tuning */
+	--perspective-card: 900px;
+	--tilt-max-deg: 8deg;
 }
 
 /* ===== Base Styles ===== */
@@ -231,17 +268,16 @@ body {
 	}
 }
 
-/* Disable infinite animations on mobile to save GPU */
+/* Mobile: keep motion alive but lighter — CTA glow keeps pulsing (dinâmico
+   forte), the mesh just drifts slower, and continuous float is dropped. 3D
+   tilt never runs on touch (interactions.ts gates it behind pointer:fine),
+   so scrolling stays smooth. */
 @media (max-width: 768px) {
-	.gold-pulse-glow::after {
-		animation: none;
-		opacity: 0.7;
-	}
 	.float-gentle {
 		animation: none;
 	}
 	.landing-mesh-bg {
-		animation: none;
+		animation-duration: 32s;
 	}
 }
 
@@ -250,24 +286,28 @@ body {
 	opacity: 0;
 }
 
+/* Hold the end state with a normal declaration (not animation `forwards`) so
+   the entrance animation does NOT permanently lock `transform` — otherwise it
+   masks every post-reveal hover lift / 3D tilt on the same element. */
 [data-reveal].revealed {
+	opacity: 1;
 	will-change: transform, opacity;
 }
 
 [data-reveal="up"].revealed {
-	animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation: reveal-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-reveal="left"].revealed {
-	animation: reveal-left 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation: reveal-left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-reveal="right"].revealed {
-	animation: reveal-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation: reveal-right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 [data-reveal="scale"].revealed {
-	animation: reveal-scale 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+	animation: reveal-scale 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Staggered children */
@@ -500,11 +540,79 @@ body {
 	opacity: 0;
 	transition: opacity 0.3s ease;
 	pointer-events: none;
-	z-index: 1;
+	/* Behind content, above the card's own background (card paints bg first,
+	   then negative z-index children, then content). */
+	z-index: -1;
 }
 
 [data-glow-card]:hover::before {
 	opacity: 1;
+}
+
+/* ===== Depth / 3D Tilt / Parallax System ===== */
+
+/* Larger hover lift (generous depth for cards) */
+@utility card-hover-lift-lg {
+	transition:
+		transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+		border-color 0.3s ease,
+		box-shadow 0.3s ease;
+	will-change: transform;
+}
+
+.card-hover-lift-lg:hover {
+	transform: translateY(-10px) scale(1.015);
+	box-shadow: var(--shadow-float), var(--shadow-glow-gold-sm);
+}
+
+/* 3D tilt: parent gives perspective, child rotates from --rx/--ry vars
+   (written by src/scripts/interactions.ts on pointermove) */
+@utility tilt-scene {
+	perspective: var(--perspective-card);
+}
+
+[data-tilt] {
+	--rx: 0deg;
+	--ry: 0deg;
+	/* Self-perspective: each card tilts with its own vanishing point — no
+	   `tilt-scene` ancestor needed (correct in multi-card grids). */
+	transform: perspective(var(--perspective-card)) rotateX(var(--rx))
+		rotateY(var(--ry));
+	transform-style: preserve-3d;
+	transition:
+		transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+		box-shadow 0.3s ease;
+	will-change: transform;
+}
+
+[data-tilt]:hover {
+	box-shadow: var(--shadow-3d);
+}
+
+/* Inner content floats forward for a parallax "pop" */
+[data-tilt] [data-tilt-layer] {
+	transform: translateZ(36px);
+	transform-style: preserve-3d;
+}
+
+/* Scroll parallax: only writes a transform var → zero CLS */
+[data-parallax] {
+	transform: translate3d(0, var(--py, 0), 0);
+	will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	[data-tilt] {
+		--rx: 0deg !important;
+		--ry: 0deg !important;
+		transition: none;
+	}
+	[data-tilt] [data-tilt-layer] {
+		transform: none;
+	}
+	[data-parallax] {
+		transform: none;
+	}
 }
 
 /* ===== Text Shimmer ===== */

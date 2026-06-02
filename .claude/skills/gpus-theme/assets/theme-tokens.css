@@ -50,6 +50,18 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
 
+  /* Depth / elevation — exposed so Tailwind `shadow-elevation-*` utilities resolve from tokens (Cardinal 7) */
+  --shadow-elevation-1: var(--shadow-elevation-1);
+  --shadow-elevation-2: var(--shadow-elevation-2);
+  --shadow-elevation-3: var(--shadow-elevation-3);
+  --shadow-elevation-4: var(--shadow-elevation-4);
+  --shadow-glass: var(--shadow-glass);
+  /* Glow — exposed as shadow utilities (`shadow-glow-gold-*`) */
+  --shadow-glow-gold-sm: var(--glow-gold-sm);
+  --shadow-glow-gold-md: var(--glow-gold-md);
+  --shadow-glow-gold-lg: var(--glow-gold-lg);
+  --shadow-glow-gold-strong: var(--glow-gold-strong);
+
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
 
@@ -130,6 +142,27 @@
     --sidebar-accent-foreground: 222 47% 11%;
     --sidebar-border: 214 32% 91%;
     --sidebar-ring: 38 60% 45%;
+
+    /* === DEPTH, GLOW & 3D (premium-com-profundidade) === */
+    /* Elevation — 2-layer ambient + key */
+    --shadow-elevation-1: 0 1px 2px hsl(var(--foreground) / 0.06), 0 1px 1px hsl(var(--foreground) / 0.04);
+    --shadow-elevation-2: 0 4px 12px hsl(var(--foreground) / 0.10), 0 2px 4px hsl(var(--foreground) / 0.06);
+    --shadow-elevation-3: 0 12px 28px hsl(var(--foreground) / 0.14), 0 6px 10px hsl(var(--foreground) / 0.08);
+    --shadow-elevation-4: 0 24px 56px hsl(var(--foreground) / 0.20), 0 10px 18px hsl(var(--foreground) / 0.10);
+    --shadow-glass: 0 8px 32px hsl(var(--foreground) / 0.18), inset 0 1px 0 hsl(0 0% 100% / 0.08);
+    /* Glow — brand gold tiers */
+    --glow-gold-sm: 0 0 8px hsl(var(--primary) / 0.35);
+    --glow-gold-md: 0 0 16px hsl(var(--primary) / 0.45), 0 0 4px hsl(var(--primary) / 0.30);
+    --glow-gold-lg: 0 0 28px hsl(var(--primary) / 0.55), 0 0 8px hsl(var(--primary) / 0.35);
+    --glow-gold-strong: 0 0 40px hsl(var(--primary) / 0.65), 0 0 14px hsl(var(--primary) / 0.45);
+    --glow-focus: 0 0 0 3px hsl(var(--ring) / 0.55), 0 0 12px hsl(var(--ring) / 0.40);
+    /* 3D */
+    --perspective-card: 1000px;
+    --tilt-max-deg: 8deg;
+    /* Continuous motion */
+    --float-distance: 10px;
+    --float-duration: 6s;
+    --gradient-mesh-shift-duration: 18s;
   }
 
   .dark {
@@ -191,6 +224,20 @@
     --sidebar-accent-foreground: 39 44% 65%;
     --sidebar-border: 39 29% 54%;
     --sidebar-ring: 39 29% 54%;
+
+    /* === DEPTH, GLOW & 3D (dark navy — neutral-dark shadow base, gold glow signature) === */
+    /* Elevation tuned for navy: deeper, neutral-dark shadow (not gold-tinted) */
+    --shadow-elevation-1: 0 1px 2px hsl(211 49% 4% / 0.40), 0 1px 1px hsl(211 49% 4% / 0.30);
+    --shadow-elevation-2: 0 4px 12px hsl(211 49% 4% / 0.50), 0 2px 4px hsl(211 49% 4% / 0.35);
+    --shadow-elevation-3: 0 12px 28px hsl(211 49% 4% / 0.55), 0 6px 10px hsl(211 49% 4% / 0.40);
+    --shadow-elevation-4: 0 24px 56px hsl(211 49% 4% / 0.65), 0 10px 18px hsl(211 49% 4% / 0.45);
+    --shadow-glass: 0 8px 32px hsl(211 49% 4% / 0.55), inset 0 1px 0 hsl(39 44% 65% / 0.10);
+    /* Glow inherits gold --primary; tiers carry on navy as brand signature */
+    --glow-gold-sm: 0 0 8px hsl(var(--primary) / 0.40);
+    --glow-gold-md: 0 0 16px hsl(var(--primary) / 0.50), 0 0 4px hsl(var(--primary) / 0.35);
+    --glow-gold-lg: 0 0 28px hsl(var(--primary) / 0.60), 0 0 8px hsl(var(--primary) / 0.40);
+    --glow-gold-strong: 0 0 40px hsl(var(--primary) / 0.70), 0 0 14px hsl(var(--primary) / 0.50);
+    --glow-focus: 0 0 0 3px hsl(var(--ring) / 0.60), 0 0 12px hsl(var(--ring) / 0.45);
   }
 }
 
@@ -246,6 +293,7 @@ body,
     background: hsl(var(--card) / 0.8);
     border: 1px solid hsl(var(--border) / 0.5);
     backdrop-filter: blur(12px);
+    box-shadow: var(--shadow-glass);
   }
 
   .bg-noise {
@@ -283,5 +331,78 @@ body,
 
   .animate-ripple {
     animation: ripple 0.6s linear;
+  }
+
+  /* === Depth / elevation tiers === */
+  .elevation-1 {
+    box-shadow: var(--shadow-elevation-1);
+  }
+  .elevation-2 {
+    box-shadow: var(--shadow-elevation-2);
+  }
+  .elevation-3 {
+    box-shadow: var(--shadow-elevation-3);
+  }
+  .elevation-4 {
+    box-shadow: var(--shadow-elevation-4);
+  }
+
+  /* === Gold glow tiers === */
+  .glow-gold {
+    box-shadow: var(--glow-gold-md);
+  }
+  .glow-gold-strong {
+    box-shadow: var(--glow-gold-strong);
+  }
+  .glow-focus:focus-visible {
+    box-shadow: var(--glow-focus);
+    outline: none;
+  }
+
+  /* === 3D tilt / parallax === */
+  .tilt-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.2s ease;
+  }
+  .parallax-layer {
+    will-change: transform;
+  }
+
+  /* === Continuous motion === */
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(calc(var(--float-distance) * -1));
+    }
+  }
+  .animate-float {
+    animation: float var(--float-duration) ease-in-out infinite;
+  }
+
+  @keyframes mesh-shift {
+    0% {
+      background-position: 0% 0%;
+    }
+    100% {
+      background-position: 100% 100%;
+    }
+  }
+  .bg-mesh-animated {
+    background-size: 200% 200%;
+    animation: mesh-shift var(--gradient-mesh-shift-duration) ease-in-out infinite alternate;
+  }
+
+  /* Reduced-motion hard floor: freeze continuous/pointer effects */
+  @media (prefers-reduced-motion: reduce) {
+    .animate-float,
+    .bg-mesh-animated {
+      animation: none !important;
+    }
+    .tilt-3d {
+      transform: none !important;
+    }
   }
 }

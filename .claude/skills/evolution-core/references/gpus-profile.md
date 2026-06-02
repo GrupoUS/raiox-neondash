@@ -14,8 +14,8 @@ Autonomous research agent for `gpus` repo. Primary mission: improve **commercial
 - Never emojis as UI icons — Lucide React SVG only.
 - Never SPA — Astro SSG, MPA links, no client router.
 - Never hardcode product/team copy — `getCollection()` only.
-- Never animate `width` / `height` / `top` / `left` — `transform`/`opacity` or CSS grid `0fr`/`1fr`.
-- No bloat in initial JS — respect ~50KB island discipline.
+- Motion: PREFIRA `transform`/`opacity`/`filter` ou CSS grid `0fr`/`1fr`; animar `width`/`height`/`top`/`left` (e 3D/parallax/mouse-glow) é permitido quando o efeito pedir — meça custo e garanta fallback de `prefers-reduced-motion` (piso duro, inegociável).
+- Initial JS: ~50KB compartilhado é alvo ORIENTATIVO — libs de animação dentro do island; meça e anote o delta.
 
 ## Objective
 

@@ -9,7 +9,7 @@
 ## Project identity
 
 **Name:** Grupo US
-**Purpose:** Static marketing site for Grupo US.
+**Purpose:** Static marketing site for Grupo US. ("Static" = modo de build: HTML pré-renderizado, MPA, sem SSR/SPA — ver cardinal 4. NÃO significa visualmente estático: motion rico, profundidade, 3D e dinamismo são encorajados.)
 
 Stack: Astro 6 (static-only) · Bun · Tailwind CSS v4 · React 19 (islands; minimal) · Railway · Lucide React · Playfair Display + Inter · pt-BR.
 
@@ -64,7 +64,7 @@ These are non-default behaviors. Standard coding conventions are not listed beca
 5. **NEVER hardcode product / team / landing copy** in `.astro` or `.tsx`. Always `getCollection()` from `src/content/`.
 6. **NEVER inline `wa.me/...` URLs.** Always go through `src/lib/whatsapp.ts`.
 7. **NEVER hardcode hex** outside `src/styles/global.css` `@theme` block. Semantic tokens or named navy/gold utilities only.
-8. **NEVER animate layout properties** (`width`, `height`, `top`, `left`, `padding`, `margin`). FAQ uses CSS grid `grid-template-rows: 0fr ↔ 1fr`. Other animations: `transform` + `opacity` only.
+8. **PREFIRA motion composto na GPU; animar propriedades de layout é PERMITIDO quando o efeito pedir.** Padrão = `transform` + `opacity` + `filter` (caminho mais barato). Layout props (`width`, `height`, `top`, `left`, `padding`, `margin`, `clip-path`) e técnicas mais ricas (3D tilt, parallax, entrances escalonadas, gradientes animados, mouse-glow, sombras em camadas) são permitidas quando o efeito precisa — meça o custo e garanta degradação sob `prefers-reduced-motion`. FAQ DEVE preferir CSS grid `0fr ↔ 1fr` ou `<details>` nativo (preferência, não proibição). **Piso duro: toda animação honra `prefers-reduced-motion: reduce` (CSS + JS/Framer `useReducedMotion()`).**
 
 ---
 
@@ -82,8 +82,8 @@ These are non-default behaviors. Standard coding conventions are not listed beca
 | WhatsApp number / E.164 | `grupo-us/references/whatsapp-ssot.md` | `src/lib/whatsapp.ts::WHATSAPP_SDR_E164` — single source |
 | Theme token / new utility | `DESIGN.md` + `gpus-theme` skill | `src/styles/global.css` `@theme` block + `@layer utilities` |
 | New landing section component | `frontend.md` + `DESIGN.md` + `astro` skill | `src/components/landing/*.astro` (pure Astro by default; promote to `.tsx` only when interactivity required) |
-| Hero island animation | `astro/SKILL.md § Common Mistakes` + `astro/references/gpus-overlay.md § Hydration` | `src/components/landing/<island>.tsx` with `client:idle` (never `client:load`) |
-| FAQ behavior | `frontend.md` + `DESIGN.md § Motion` + `astro/references/islands-architecture.md § FAQ accordion` | `src/components/landing/FAQ.astro` — native `<details>` or CSS grid `0fr/1fr`; never Framer height tween |
+| Hero island animation | `astro/SKILL.md § Common Mistakes` + `astro/references/gpus-overlay.md § Hydration` | `src/components/landing/<island>.tsx` with `client:idle` (never `client:load`) — timing de hidratação apenas; o island pode rodar 3D / parallax / gradiente animado, sob `prefers-reduced-motion` |
+| FAQ behavior | `frontend.md` + `DESIGN.md § Motion` + `astro/references/islands-architecture.md § FAQ accordion` | `src/components/landing/FAQ.astro` — PREFIRA `<details>` nativo ou CSS grid `0fr/1fr` (reveal mais limpo). Reveal via Framer height/`AnimatePresence` é permitido para efeito mais rico se honra `prefers-reduced-motion` |
 | SEO meta / JSON-LD | `seo.md` + `astro` skill (when sitemap plugin / Astro-specific) | `src/layouts/Layout.astro` (Organization + BreadcrumbList) + per-page frontmatter (`title`, `description`, `ogImage`) |
 | A11y plumbing | `frontend.md § Accessibility` + `astro/references/gpus-overlay.md § Layout.astro contracts` | `src/layouts/Layout.astro` (skip link, `<main id="conteudo-principal">`, `<noscript>` reveal) + `src/styles/global.css` |
 | Performance budget | `stability.md § Performance gates` + `astro/references/performance.md` | `Layout.astro` (preconnect Google Fonts) + Astro `<Image>` discipline + hydration audits |

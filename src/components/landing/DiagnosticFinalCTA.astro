@@ -50,7 +50,7 @@ const starsArray = Array.from({ length: starCount });
 >
 	<div class="absolute inset-0 pointer-events-none" aria-hidden="true">
 		<div
-			class="absolute top-0 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full bg-gold-soft blur-3xl opacity-40"
+			class="absolute top-0 left-1/2 -translate-x-1/2 w-[640px] h-[640px] rounded-full bg-gold-soft blur-3xl opacity-40 animate-pulse"
 		>
 		</div>
 	</div>
@@ -70,7 +70,10 @@ const starsArray = Array.from({ length: starCount });
 							data-reveal="up"
 							data-reveal-delay="1"
 						>
-							<div class="relative w-40 h-40 md:w-48 md:h-48 lg:w-72 lg:h-72 rounded-full overflow-hidden ring-2 ring-gold/50 shadow-2xl shadow-gold/10">
+							<div
+								class="relative w-40 h-40 md:w-48 md:h-48 lg:w-72 lg:h-72 rounded-full overflow-hidden ring-2 ring-gold/50 shadow-2xl shadow-gold/10"
+								data-tilt
+							>
 								<Image
 									src={finalCta.image.src}
 									alt={finalCta.image.alt}

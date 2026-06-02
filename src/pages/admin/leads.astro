@@ -17,6 +17,40 @@ const leads = storeStatus.configured ? await listLeads(150) : [];
 const partialLeads = leads.filter((lead) => lead.status === "partial");
 const completedLeads = leads.filter((lead) => lead.status === "completed");
 const hotLeads = leads.filter((lead) => lead.score?.intent === "hot");
+const uncontacted = leads.filter((lead) => !lead.contactedAt);
+
+const filter = Astro.url.searchParams.get("filter") ?? "all";
+const leadsByFilter = {
+	all: leads,
+	hot: hotLeads,
+	partial: partialLeads,
+	completed: completedLeads,
+	uncontacted,
+} as const;
+const visibleLeads =
+	leadsByFilter[filter as keyof typeof leadsByFilter] ?? leads;
+
+const filterTabs = [
+	{ key: "all", label: "Todos", count: leads.length, href: "/admin/leads" },
+	{
+		key: "uncontacted",
+		label: "Não-contatados",
+		count: uncontacted.length,
+		href: "/admin/leads?filter=uncontacted",
+	},
+	{
+		key: "hot",
+		label: "Hot",
+		count: hotLeads.length,
+		href: "/admin/leads?filter=hot",
+	},
+	{
+		key: "partial",
+		label: "Parciais",
+		count: partialLeads.length,
+		href: "/admin/leads?filter=partial",
+	},
+];
 
 const formatDate = (value?: string) =>
 	value
@@ -109,6 +143,25 @@ const segmentLabel: Record<string, string> = {
 				</div>
 			</div>
 
+			<nav class="mt-6 flex flex-wrap gap-2" aria-label="Filtrar leads">
+				{
+					filterTabs.map((tab) => (
+						<a
+							href={tab.href}
+							aria-current={filter === tab.key ? "page" : undefined}
+							class={`inline-flex min-h-[40px] items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition-colors ${
+								filter === tab.key
+									? "bg-gold text-navy"
+									: "border border-gold/30 text-gold hover:bg-gold/10"
+							}`}
+						>
+							{tab.label}
+							<span class="text-xs opacity-80">{tab.count}</span>
+						</a>
+					))
+				}
+			</nav>
+
 			<div class="mt-6 overflow-hidden rounded-xl border border-gold/20 bg-navy-light/40">
 				<div class="overflow-x-auto">
 					<table class="min-w-full border-collapse text-left text-sm">
@@ -125,7 +178,7 @@ const segmentLabel: Record<string, string> = {
 						</thead>
 						<tbody class="divide-y divide-gold/10">
 							{
-								leads.map((lead) => {
+								visibleLeads.map((lead) => {
 									const leadMessage = `Olá, ${lead.contact.name}! Aqui é a Laura do Grupo US. Vi seu interesse na Sessão Raio-X e quero te ajudar a agendar.`;
 									return (
 										<tr class="align-top text-foreground">
@@ -168,24 +221,56 @@ const segmentLabel: Record<string, string> = {
 												{formatDate(lead.updatedAt)}
 											</td>
 											<td class="px-4 py-4">
-												<a
-													href={whatsappUrlForLead(lead.contact.whatsapp, leadMessage)}
-													target="_blank"
-													rel="noopener noreferrer"
-													class="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-gold px-3 py-2 text-xs font-semibold text-navy transition-colors hover:bg-gold-light"
-												>
-													Chamar lead
-												</a>
+												<div class="flex flex-col gap-2">
+													<a
+														href={whatsappUrlForLead(lead.contact.whatsapp, leadMessage)}
+														target="_blank"
+														rel="noopener noreferrer"
+														class="inline-flex min-h-[40px] items-center justify-center rounded-lg bg-gold px-3 py-2 text-xs font-semibold text-navy transition-colors hover:bg-gold-light"
+													>
+														Chamar lead
+													</a>
+													{lead.contactedAt ? (
+														<div class="flex flex-col gap-1">
+															<span class="inline-flex items-center justify-center rounded-full bg-gold-soft px-3 py-1 text-xs font-semibold text-gold">
+																Contatado em {formatDate(lead.contactedAt)}
+															</span>
+															<form method="post" action="/api/admin/contacted">
+																<input type="hidden" name="id" value={lead.id} />
+																<input type="hidden" name="contacted" value="false" />
+																<input type="hidden" name="filter" value={filter} />
+																<button
+																	type="submit"
+																	class="text-xs text-muted underline transition-colors hover:text-foreground"
+																>
+																	Desmarcar
+																</button>
+															</form>
+														</div>
+													) : (
+														<form method="post" action="/api/admin/contacted">
+															<input type="hidden" name="id" value={lead.id} />
+															<input type="hidden" name="contacted" value="true" />
+															<input type="hidden" name="filter" value={filter} />
+															<button
+																type="submit"
+																class="inline-flex min-h-[40px] w-full items-center justify-center rounded-lg border border-gold/40 px-3 py-2 text-xs font-semibold text-gold transition-colors hover:bg-gold hover:text-navy"
+															>
+																Marcar contatado
+															</button>
+														</form>
+													)}
+												</div>
 											</td>
 										</tr>
 									);
 								})
 							}
 							{
-								leads.length === 0 && (
+								visibleLeads.length === 0 && (
 									<tr>
 										<td colspan="7" class="px-4 py-10 text-center text-muted">
-											Nenhum lead armazenado ainda.
+											Nenhum lead nesta lista.
 										</td>
 									</tr>
 								)

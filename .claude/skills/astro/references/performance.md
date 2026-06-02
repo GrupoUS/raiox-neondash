@@ -7,13 +7,15 @@ Astro achieves **40% faster load times** and **90% less JavaScript** compared to
 - Zero client-side JS unless explicitly opted in
 - Automatic asset optimization via Vite
 
-## Core Web Vitals Targets
+## Core Web Vitals Targets (orientativo para este projeto — meça & anote)
+
+> Intensidade "dinâmico forte": alvos orientativos, não gates de merge. Ver .claude/rules/stability.md § Performance gates. Piso duro é prefers-reduced-motion.
 
 | Metric | Target | How Astro Helps |
 |--------|--------|----------------|
 | LCP (Largest Contentful Paint) | < 2.5s | Static HTML, preloaded assets |
 | CLS (Cumulative Layout Shift) | 0 | Explicit image dimensions |
-| INP (Interaction to Next Paint) | < 100ms | Minimal JS, deferred hydration |
+| INP | ~200ms (orientativo) | JS COMPARTILHADO mínimo, hidratação adiada; 3D/hover interativo pode custar mais |
 | FCP (First Contentful Paint) | < 1.8s | No JS blocking render |
 | TTFB (Time to First Byte) | < 800ms | Static files from CDN |
 
@@ -103,9 +105,9 @@ Key: `display=swap` prevents Flash of Invisible Text (FOIT).
 
 | Category | Target |
 |----------|--------|
-| Initial JS bundle | < 50KB |
-| Per-island JS | As small as possible |
-| Total page JS | < 100KB |
+| Initial / shared JS bundle | ~50KB (orientativo) — mantenha libs de animação FORA do bundle compartilhado |
+| Per-island JS | tão pequeno quanto o efeito permitir — island 3D/parallax rico pode ser maior, escopo nele |
+| Total page JS | ~100KB (orientativo) — meça & anote em vez de bloquear |
 
 ### Reducing JS
 
@@ -147,28 +149,31 @@ npx lighthouse http://localhost:4321 --preset=desktop
 
 ## Animation Performance
 
-Only animate `transform` and `opacity` (GPU-accelerated):
+Prefira `transform`, `opacity`, `filter` (compostos na GPU) — caminho mais barato:
 
 ```css
-/* ✅ Good — GPU composited */
-.animate { transition: transform 0.3s, opacity 0.3s; }
-
-/* ❌ Bad — triggers layout/paint */
-.animate { transition: width 0.3s, height 0.3s, top 0.3s; }
+.animate { transition: transform 0.3s, opacity 0.3s, box-shadow 0.3s, filter 0.3s; }
 ```
 
-With Framer Motion:
+Motion de layout-property e 3D são PERMITIDOS quando o efeito precisa — meça o custo e forneça fallback de reduced-motion:
+
+```css
+.expand { transition: grid-template-rows 0.3s; }
+.tilt { transform: perspective(800px) rotateX(6deg) rotateY(-6deg); }
+.parallax { transform: translate3d(0, calc(var(--scroll) * 0.2px), 0); }
+```
+
+Com Framer Motion:
 ```tsx
-// ✅ Good
-<motion.div animate={{ opacity: 1, y: 0 }} />
-
-// ❌ Bad
-<motion.div animate={{ width: "100%", height: 200 }} />
+const reduce = useReducedMotion();
+<motion.div animate={reduce ? {} : { rotateY: 12, scale: 1.04 }} />
 ```
 
-### Accordion / expand panels (exception)
+`prefers-reduced-motion` / `useReducedMotion()` é obrigatório em TODOS os itens acima.
 
-Do **not** drive FAQ (or similar) panel open/close with Framer `height` tweens or `layout` height animations. Use **CSS `grid-template-rows: 0fr` ↔ `1fr`** on a wrapper (see `references/islands-architecture.md` → *Known case: FAQ accordion*). That keeps Motion on `transform`/`opacity` only (e.g. chevron) while the panel reveal stays in CSS.
+### Accordion / expand panels (padrão preferido)
+
+PREFIRA CSS grid `0fr` ↔ `1fr` (mais limpo, sem jank; mantém Motion em `transform`/`opacity` para o chevron). Um reveal Framer height/`AnimatePresence` é permitido quando se quer um efeito de disclosure mais rico, desde que honre `useReducedMotion()`.
 
 ## Checklist
 
@@ -178,6 +183,6 @@ Do **not** drive FAQ (or similar) panel open/close with Framer `height` tweens o
 - [ ] Fonts use `display=swap`
 - [ ] Only necessary islands use `client:load`
 - [ ] Below-fold islands use `client:visible`
-- [ ] Initial JS < 50KB
-- [ ] Animations use `transform`/`opacity` only in Framer Motion; expand/collapse panels use CSS grid `0fr`/`1fr`, not Motion `height`
-- [ ] `prefers-reduced-motion` handled for all animations
+- [ ] Shared JS ~50KB (orientativo; libs de animação escopadas no island)
+- [ ] Animações preferem `transform`/`opacity`/`filter`; layout-prop/3D/parallax usados intencionalmente e medidos; painéis PREFEREM CSS grid `0fr`/`1fr`
+- [ ] `prefers-reduced-motion` tratado em TODAS as animações (DURO — incluindo 3D/parallax/mouse-glow)

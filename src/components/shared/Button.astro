@@ -41,16 +41,20 @@ const sizeClasses: Record<Size, string> = {
 };
 
 const variantClasses: Record<Variant, string> = {
-	primary: "bg-gold text-navy hover:bg-gold-light border border-transparent",
-	whatsapp: "bg-gold text-navy hover:bg-gold-light border border-transparent",
+	primary:
+		"bg-gold text-navy hover:bg-gold-light border border-transparent hover:shadow-glow-gold",
+	whatsapp:
+		"bg-gold text-navy hover:bg-gold-light border border-transparent hover:shadow-glow-gold",
 	outline:
 		"bg-transparent text-gold border border-gold hover:bg-gold hover:text-navy",
 	ghost:
 		"bg-transparent text-foreground border border-transparent hover:bg-gold-soft",
 };
 
+// Tailwind v4 maps translate/scale to independent CSS properties, so the
+// hover lift and the active press scale compose without clobbering each other.
 const baseClasses =
-	"inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wide transition-[transform,background-color,color,border-color,box-shadow] duration-200 ease-out active:scale-[0.98]";
+	"inline-flex items-center justify-center gap-2 rounded-lg font-semibold tracking-wide transition-[transform,translate,scale,background-color,color,border-color,box-shadow] duration-200 ease-out hover:-translate-y-0.5 active:scale-[0.98]";
 
 const glowClass = glow ? "gold-pulse-glow" : "";
 

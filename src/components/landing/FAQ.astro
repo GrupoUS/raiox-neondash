@@ -71,20 +71,46 @@ const { headline, subhead, items } = Astro.props;
 </section>
 
 <style>
-	/* Cardinal #8 — animate grid-template-rows, never height */
+	/* PREFERRED disclosure: animate grid-template-rows, never height */
 	.faq-item .faq-content {
 		display: grid;
 		grid-template-rows: 0fr;
-		transition: grid-template-rows 200ms ease-in-out;
+		transition: grid-template-rows 260ms cubic-bezier(0.16, 1, 0.3, 1);
 	}
 	.faq-item[open] .faq-content {
 		grid-template-rows: 1fr;
+	}
+	/* Richer open feedback (depth + gold accent), grid reveal unchanged */
+	.faq-item {
+		transition:
+			box-shadow 0.3s ease,
+			border-color 0.3s ease;
+	}
+	.faq-item[open] {
+		border-color: color-mix(in srgb, var(--color-gold) 45%, transparent);
+		box-shadow: var(--shadow-glow-gold-sm);
 	}
 	.faq-summary::-webkit-details-marker {
 		display: none;
 	}
 	.faq-summary::marker {
 		display: none;
+	}
+	.faq-summary {
+		transition: color 0.2s ease;
+	}
+	.faq-summary:hover {
+		color: var(--color-gold-light);
+	}
+	/* Icon: gold fill on open + tactile scale */
+	.faq-icon {
+		transition:
+			background-color 0.2s ease,
+			transform 0.2s ease;
+	}
+	.faq-item[open] .faq-icon {
+		background-color: color-mix(in srgb, var(--color-gold) 14%, transparent);
+		transform: rotate(180deg);
 	}
 	/* +/- icon swap on [open] — pure CSS */
 	.faq-item .faq-icon-open {
@@ -97,8 +123,14 @@ const { headline, subhead, items } = Astro.props;
 		display: block;
 	}
 	@media (prefers-reduced-motion: reduce) {
-		.faq-item .faq-content {
+		.faq-item .faq-content,
+		.faq-item,
+		.faq-summary,
+		.faq-icon {
 			transition: none;
+		}
+		.faq-item[open] .faq-icon {
+			transform: none;
 		}
 	}
 </style>

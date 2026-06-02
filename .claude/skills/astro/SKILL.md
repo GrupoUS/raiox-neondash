@@ -188,9 +188,9 @@ import { ClientRouter } from 'astro:transitions';
 | Assuming no content config in Astro 6 | **This repo** uses `src/content.config.ts`; other projects may infer schemas only — always check the filesystem |
 | Using wrong path `src/content/config.ts` when the project has root `content.config.ts` | Align with Astro version + repo: Na Mesa Certa → `src/content.config.ts` |
 | Forgetting `width`/`height` on images | Always set dimensions to prevent CLS |
-| Framer Motion animating accordion **panel height** | Use CSS grid `grid-template-rows: 0fr` ↔ `1fr`; Motion only for chevron (`rotate`/`opacity`). See `references/islands-architecture.md` → *Known case: FAQ accordion* |
-| `client:load` on pure-visual hero islands (steals LCP from text-first hero) | Use `client:idle` so SSR text paints first; `client:load` only for persistent floating UI (e.g., chat widget) |
-| Setting `prerender = false` in static-only project | Static projects: never override; cardinal in repo overlay |
+| Framer panel-height reveal usado como PADRÃO | PREFIRA CSS grid `0fr` ↔ `1fr` (limpo); reveal height/`AnimatePresence` permitido para efeito mais rico quando honra `useReducedMotion()`. See `references/islands-architecture.md` → *Known case: FAQ accordion* |
+| `client:load` on pure-visual hero islands (steals LCP from text-first hero) | Use `client:idle` so SSR text paints first; `client:load` only for persistent floating UI (e.g., chat widget) — contrato de HIDRATAÇÃO/render-mode, INALTERADO. O island ainda pode rodar 3D/parallax rico |
+| Setting `prerender = false` in static-only project | Static projects: never override; cardinal in repo overlay — RENDER-MODE INVARIANT, INALTERADO |
 | Adding `<ClientRouter />` to MPA repo | Static MPA: no SPA router; full reload on navigation. See `references/gpus-overlay.md` |
 | Hardcoding landing copy in `.astro` / `.tsx` instead of Content Collection | Move strings to `src/content/<collection>/<slug>.json` and Zod-validate via `src/content.config.ts` |
 | Below-fold hero image with `loading="eager"` + `fetchpriority="high"` | Confirm position vs fold; below-fold → `lazy` + `low`. Wrong priority steals LCP from text hero |

@@ -30,6 +30,7 @@ export const GET: APIRoute = async ({ cookies }) => {
 			"intent",
 			"segment",
 			"quizVersion",
+			"contactedAt",
 		],
 		...leads.map((lead) => [
 			lead.id,
@@ -46,6 +47,7 @@ export const GET: APIRoute = async ({ cookies }) => {
 			lead.score?.intent ?? "",
 			lead.score?.segment ?? "",
 			lead.quizVersion,
+			lead.contactedAt ?? "",
 		]),
 	];
 	const csv = rows.map((row) => row.map(csvEscape).join(",")).join("\n");

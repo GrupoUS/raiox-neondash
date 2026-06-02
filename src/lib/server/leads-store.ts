@@ -208,3 +208,17 @@ export async function listLeads(limit = 100): Promise<StoredLead[]> {
 	const leads = await Promise.all(ids.map((id) => getLead(id)));
 	return leads.filter((lead): lead is StoredLead => Boolean(lead));
 }
+
+export async function setLeadContacted(
+	id: string,
+	contacted: boolean,
+): Promise<StoredLead | null> {
+	const existing = await getLead(id);
+	if (!existing) return null;
+	const lead = storedLeadSchema.parse({
+		...existing,
+		contactedAt: contacted ? new Date().toISOString() : undefined,
+	});
+	await persistLead(lead, false);
+	return lead;
+}

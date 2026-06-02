@@ -168,6 +168,32 @@ Complete list of CSS custom properties from the GPUS design system.
 
 ---
 
+## Depth, Glow & 3D (NEW)
+
+Tokens da direção premium-com-profundidade / dinâmico forte. Definidos em `:root` (e variantes ajustadas em `.dark` onde faz sentido).
+
+| Variable | Intent |
+|----------|--------|
+| `--shadow-elevation-1` | Resting sutil — 2 camadas (ambient + key) |
+| `--shadow-elevation-2` | Card padrão |
+| `--shadow-elevation-3` | Hover / elemento elevado |
+| `--shadow-elevation-4` | Modal / floating de alta elevação |
+| `--shadow-glass` | Sombra externa suave + inner highlight para glass |
+| `--glow-gold-sm` | Glow brand gold leve |
+| `--glow-gold-md` | Glow brand gold médio (card premium) |
+| `--glow-gold-lg` | Glow brand gold forte (CTA primário) |
+| `--glow-gold-strong` | Glow brand gold máximo (halo de CTA) |
+| `--glow-focus` | Focus ring com glow (contraste AA preservado) |
+| `--perspective-card` | Perspective base para tilt 3D |
+| `--tilt-max-deg` | Ângulo máximo de tilt |
+| `--gradient-mesh-shift-duration` | Duração do drift do mesh animado |
+| `--float-distance` | Distância do float contínuo |
+| `--float-duration` | Duração do float contínuo |
+
+> A faixa tonal navy carrega gold glow como assinatura, com a opacidade de glow ajustada para preservar contraste AA em indicadores de focus.
+
+---
+
 ## HSL Format
 
 All colors use HSL format without the `hsl()` wrapper:

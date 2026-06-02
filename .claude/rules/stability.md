@@ -47,17 +47,19 @@ Invariant per project lives in cardinal rules (`.claude/CLAUDE.md`).
 
 ---
 
-## Performance gates
+## Performance gates (ADVISORY — meça & anote, não trava merge)
 
-Universal Core Web Vitals thresholds:
+Core Web Vitals são alvos ORIENTATIVOS para a intensidade "dinâmico forte". Meça, registre o número no PR, sinalize regressões — mas motion rico / 3D / parallax pode legitimamente mover esses números, e é um trade-off aceito. NÃO bloqueia merge.
 
-| Metric | Threshold |
+| Metric | Alvo orientativo |
 |---|---|
-| LCP (Largest Contentful Paint) | < 2.5s |
-| CLS (Cumulative Layout Shift) | 0 |
-| INP (Interaction to Next Paint) | < 100ms |
-| Initial JS on prerendered pages | < 50KB |
-| Lighthouse Performance / A11y / BP / SEO | ≥ 95 on critical routes |
+| LCP (Largest Contentful Paint) | ~2.5s (proteja o elemento LCP; hero text-first + `client:idle` ainda recomendado) |
+| CLS (Cumulative Layout Shift) | ~0 de imagens (mantenha `width`/`height` em mídia — proteção CLS grátis; motion de interação intencional que desloca layout é ok e não conta contra isso) |
+| INP (Interaction to Next Paint) | ~200ms (afrouxado de 100ms — 3D interativo / hover pesado pode custar mais; mantenha responsivo, anote) |
+| Initial (shared) JS | ~50KB (orientativo; libs de animação dentro do island) |
+| Lighthouse Performance / A11y / BP / SEO | ~90 perf, A11y defendido (carrega `prefers-reduced-motion`) |
+
+O ÚNICO piso duro de acessibilidade é `prefers-reduced-motion`.
 
 Project-specific gates (route list, custom budget) → `.claude/config.json::gates`.
 
@@ -88,11 +90,18 @@ grep -rnE "<h1[^>]*>" <src>/pages | wc -l
 # expect: ≤ 1 per page
 ```
 
-### Layout-property animation forbidden
+### Layout-property animation — scan orientativo (não é gate de falha)
 
 ```bash
 grep -rnE "transition.*\b(width|height|top|left|padding|margin)\b" <src>/styles
-# expect: empty (use transform + opacity)
+# Informativo: lista transições de layout-prop. NÃO é falha — animar layout é permitido quando o efeito precisa. Use para conferir que cada hit é intencional e tem fallback de prefers-reduced-motion.
+```
+
+### Reduced-motion fallback presente (checagem DURA — deve passar)
+
+```bash
+grep -rn "prefers-reduced-motion" <src>/styles
+# expect: pelo menos um bloco global de reduce; todo island JS/Framer usa useReducedMotion()
 ```
 
 ### Bundle audit
@@ -148,10 +157,10 @@ ${tooling.packageManager} run ${tooling.buildTool}
 
 ### Design
 
-- Hardcoded hex outside design-token source.
-- Mixing icon libraries.
-- Animating layout properties (`width`, `height`, `top`, `left`, `padding`, `margin`).
-- `transition: all`.
+- Hardcoded hex outside design-token source. (Cardinal 7 — INALTERADO)
+- Mixing icon libraries. (Cardinal 3 — INALTERADO)
+- `transition: all` — nomeie as props (higiene; transições multi-propriedade ricas são ok).
+- Uma animação SEM fallback de `prefers-reduced-motion`. (piso duro)
 - Missing `width` / `height` on images → CLS hazard.
 - Pure black / white text on colored background.
 
@@ -159,9 +168,9 @@ ${tooling.packageManager} run ${tooling.buildTool}
 
 - Drop the skip link or move it past first focusable.
 - Drop the `<noscript>` fallback when reveal-on-scroll patterns hide content.
-- Animate disclosure panel via `height: 0/auto` (use CSS grid `0fr/1fr` or native `<details>`).
 - `href="#"` for actions.
-- Ignore `prefers-reduced-motion`.
+- **Ignore `prefers-reduced-motion`** — O piso duro de acessibilidade; toda animação (2D, 3D, parallax, mouse-glow, staggered, gradiente) deve degradar.
+- Caminho reduced-motion que deixa conteúdo preso em `opacity:0` / fora da tela / mid-transform.
 - Icon-only buttons missing `aria-label`.
 
 ### Tooling
@@ -177,7 +186,7 @@ ${tooling.packageManager} run ${tooling.buildTool}
 | Symptom | First check |
 |---|---|
 | Section blank with JS off | `<noscript>` reveal fallback present? |
-| FAQ stutters on expand | CSS grid `0fr/1fr` (or native `<details>`) — not height tween? |
+| FAQ stutters on expand | Se usando height tween, troque por CSS grid `0fr/1fr` (ou `<details>`) para reveal mais suave; cheque que a transição é GPU-friendly |
 | LCP regression | Hero image priority hint + island hydration directive (idle vs eager)? |
 | CLS spike | Missing `width` / `height` on `<img>` / responsive image component? |
 | 404 on bookmarked URL | Redirect config entry missing? |
