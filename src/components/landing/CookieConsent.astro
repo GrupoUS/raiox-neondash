@@ -1,0 +1,102 @@
+---
+// Cookie consent (marketing) — opt-in gate for the Meta Pixel (LGPD).
+// Plausible + Vercel Analytics are cookieless (legitimate interest) and run
+// regardless; this banner governs ONLY marketing cookies (Meta Pixel).
+//
+// Microcopy lives inline as compliance chrome (same precedent as the skip-link
+// and <noscript> fallback in Layout.astro), not product copy.
+//
+// Contract with the Meta Pixel bootstrap in Layout.astro:
+//   localStorage "marketing-consent" = "granted" | "denied"
+//   localStorage "marketing-consent-ts" = ISO timestamp
+//   on grant → window.dispatchEvent(new Event("consent:marketing-granted"))
+//
+// Hidden by default (hidden attr); the inline script reveals it only when no
+// prior decision exists, so JS-off users never see a dead banner.
+---
+
+<div
+	id="cookie-consent"
+	class="consent-enter fixed inset-x-0 bottom-0 z-[60] px-4 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] pt-3"
+	role="region"
+	aria-label="Consentimento de cookies"
+	hidden
+>
+	<div
+		class="glass-card mx-auto flex max-w-3xl flex-col gap-3 rounded-2xl p-4 sm:flex-row sm:items-center sm:gap-4 sm:p-5"
+	>
+		<p class="text-sm leading-relaxed text-muted sm:flex-1">
+			Usamos cookies de marketing (Meta Pixel) para medir e melhorar nossas
+			campanhas de tráfego. As métricas de navegação seguem anônimas. Você
+			decide.{" "}
+			<a
+				href="/politica-de-privacidade"
+				class="text-gold underline underline-offset-2 hover:text-gold-light"
+				>Política de Privacidade</a
+			>.
+		</p>
+		<div class="flex shrink-0 gap-2">
+			<button
+				type="button"
+				data-consent-reject
+				class="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-transparent px-5 py-2.5 text-sm font-semibold text-foreground transition-colors duration-200 hover:bg-gold-soft"
+			>
+				Recusar
+			</button>
+			<button
+				type="button"
+				data-consent-accept
+				class="inline-flex min-h-[44px] items-center justify-center rounded-lg border border-transparent bg-gold px-5 py-2.5 text-sm font-semibold text-navy transition-colors duration-200 hover:bg-gold-light hover:shadow-glow-gold"
+			>
+				Aceitar
+			</button>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* References the global `slide-up-bar` keyframe (src/styles/global.css).
+	   prefers-reduced-motion is neutralized globally → banner appears instantly. */
+	.consent-enter {
+		animation: slide-up-bar 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+	}
+</style>
+
+<script is:inline>
+	(() => {
+		try {
+			const KEY = "marketing-consent";
+			const TS = "marketing-consent-ts";
+			const banner = document.getElementById("cookie-consent");
+			if (!banner) return;
+
+			// Already decided in a prior visit → keep banner hidden.
+			const prior = localStorage.getItem(KEY);
+			if (prior === "granted" || prior === "denied") return;
+
+			banner.hidden = false;
+
+			const decide = (status) => {
+				try {
+					localStorage.setItem(KEY, status);
+					localStorage.setItem(TS, new Date().toISOString());
+				} catch (_e) {
+					/* storage blocked — still honor the click for this page */
+				}
+				banner.hidden = true;
+				if (status === "granted") {
+					window.dispatchEvent(new Event("consent:marketing-granted"));
+				}
+			};
+
+			banner
+				.querySelector("[data-consent-accept]")
+				?.addEventListener("click", () => decide("granted"));
+			banner
+				.querySelector("[data-consent-reject]")
+				?.addEventListener("click", () => decide("denied"));
+		} catch (_err) {
+			/* noop — never block the page on consent UI */
+		}
+	})();
+</script>

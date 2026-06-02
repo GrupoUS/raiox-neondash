@@ -1,6 +1,7 @@
 ---
 import { Font } from "astro:assets";
 import Analytics from "@vercel/analytics/astro";
+import CookieConsent from "../components/landing/CookieConsent.astro";
 import {
 	type BreadcrumbItem,
 	buildBreadcrumbSchema,
@@ -47,6 +48,11 @@ const plausibleDomain = import.meta.env.PUBLIC_PLAUSIBLE_DOMAIN;
 const enableAnalytics =
 	withAnalytics && import.meta.env.PROD && Boolean(plausibleDomain);
 const enableVercelAnalytics = withAnalytics && import.meta.env.PROD;
+
+// Meta Pixel — enabled by env presence (so local builds can verify via Test
+// Events). Pixel is consent-gated client-side; see the bootstrap + CookieConsent.
+const fbPixelId = import.meta.env.PUBLIC_FB_PIXEL_ID;
+const fbDomainVerification = import.meta.env.PUBLIC_FB_DOMAIN_VERIFICATION;
 ---
 
 <!doctype html>
@@ -64,6 +70,14 @@ const enableVercelAnalytics = withAnalytics && import.meta.env.PROD;
 		{
 			noIndex && (
 				<meta name="robots" content="noindex,nofollow" />
+			)
+		}
+		{
+			fbDomainVerification && (
+				<meta
+					name="facebook-domain-verification"
+					content={fbDomainVerification}
+				/>
 			)
 		}
 
@@ -121,6 +135,43 @@ const enableVercelAnalytics = withAnalytics && import.meta.env.PROD;
 
 		{enableVercelAnalytics && <Analytics />}
 
+		{
+			fbPixelId && (
+				<script is:inline define:vars={{ fbPixelId }}>
+					{`(function () {
+						window.__FB_PIXEL_ID = fbPixelId;
+						if (!window.fbq) {
+							var n = function () {
+								if (n.callMethod) { n.callMethod.apply(n, arguments); }
+								else { n.queue.push(arguments); }
+							};
+							window.fbq = n;
+							if (!window._fbq) { window._fbq = n; }
+							n.push = n; n.loaded = true; n.version = "2.0"; n.queue = [];
+						}
+						function loadPixel() {
+							try {
+								if (window.__fbLoaded) { return; }
+								window.__fbLoaded = true;
+								var t = document.createElement("script");
+								t.async = true;
+								t.src = "https://connect.facebook.net/en_US/fbevents.js";
+								var s = document.getElementsByTagName("script")[0];
+								s.parentNode.insertBefore(t, s);
+								window.fbq("init", window.__FB_PIXEL_ID);
+								window.fbq("track", "PageView");
+								window.__fbReady = true;
+							} catch (e) { /* noop */ }
+						}
+						try {
+							if (localStorage.getItem("marketing-consent") === "granted") { loadPixel(); }
+						} catch (e) { /* noop */ }
+						window.addEventListener("consent:marketing-granted", loadPixel);
+					})();`}
+				</script>
+			)
+		}
+
 		<noscript>
 			<style>
 				[data-reveal] {
@@ -139,6 +190,8 @@ const enableVercelAnalytics = withAnalytics && import.meta.env.PROD;
 		<main id="conteudo-principal" tabindex="-1">
 			<slot />
 		</main>
+
+		{fbPixelId && <CookieConsent />}
 
 		<script is:inline>
 			(() => {

@@ -23,11 +23,52 @@ type PlausibleFn = (
 
 type DataLayerEntry = { event: string } & TrackProps;
 
+type FbqFn = (...args: unknown[]) => void;
+
 declare global {
 	interface Window {
 		plausible?: PlausibleFn;
 		dataLayer?: DataLayerEntry[];
+		fbq?: FbqFn;
+		/** Set true by the Meta Pixel bootstrap only after consent + fbevents.js load. */
+		__fbReady?: boolean;
 	}
+}
+
+/**
+ * Maps internal event names to Meta Standard Events. Unmapped events fall back
+ * to `trackCustom` with the original name. `click_whatsapp_*` is matched by
+ * prefix (dynamic location suffix). No PII reaches Meta — see toMetaProps.
+ */
+const META_EVENT_MAP: Record<string, string> = {
+	quiz_started: "ViewContent",
+	lead_partial_captured: "Lead",
+	quiz_completed: "CompleteRegistration",
+};
+
+function metaStandardEvent(eventName: string): string | undefined {
+	if (eventName.startsWith("click_whatsapp")) return "Contact";
+	return META_EVENT_MAP[eventName];
+}
+
+// Only opaque enums / numerics ever forwarded to Meta (no sessionId, no PII).
+const META_SAFE_KEYS = new Set([
+	"value",
+	"currency",
+	"intent",
+	"segment",
+	"score",
+	"location",
+	"label",
+]);
+
+function toMetaProps(props?: TrackProps): TrackProps | undefined {
+	if (!props) return undefined;
+	const out: TrackProps = {};
+	for (const [k, v] of Object.entries(props)) {
+		if (META_SAFE_KEYS.has(k) && v !== undefined) out[k] = v;
+	}
+	return Object.keys(out).length ? out : undefined;
 }
 
 const seen = new Set<string>();
@@ -52,6 +93,19 @@ export function track(eventName: string, props?: TrackProps): void {
 	try {
 		if (!window.dataLayer) window.dataLayer = [];
 		window.dataLayer.push({ event: eventName, ...props });
+	} catch {
+		/* noop */
+	}
+
+	try {
+		// Meta Pixel — gated: __fbReady is only true after marketing consent +
+		// fbevents.js load (Layout.astro bootstrap). No-op until then.
+		if (window.__fbReady && typeof window.fbq === "function") {
+			const std = metaStandardEvent(eventName);
+			const fbProps = toMetaProps(props);
+			if (std) window.fbq("track", std, fbProps);
+			else window.fbq("trackCustom", eventName, fbProps);
+		}
 	} catch {
 		/* noop */
 	}

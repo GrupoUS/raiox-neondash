@@ -36,7 +36,8 @@
   },
   "tracking": {
     "ga4Env": "PUBLIC_GA4_ID",
-    "pixelEnv": "PUBLIC_FB_PIXEL_ID"
+    "pixelEnv": "PUBLIC_FB_PIXEL_ID",
+    "pixelDomainVerificationEnv": "PUBLIC_FB_DOMAIN_VERIFICATION"
   },
   "paths": {
     "backendRoot": "",
