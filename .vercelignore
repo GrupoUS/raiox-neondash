@@ -1,0 +1,22 @@
+# Não enviar no upload de deploy (Vercel reinstala deps e rebuilda do zero)
+node_modules
+.git
+dist
+.astro
+.vercel
+.output
+
+# Segredos locais — Vercel usa env vars do dashboard
+.env
+.env.*
+
+# Logs e artefatos locais
+*.log
+npm-debug.log*
+
+# Camada de IA + docs (não fazem parte do build)
+.claude
+.codex
+.agents
+docs
+evals
