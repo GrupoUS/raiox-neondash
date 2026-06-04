@@ -50,7 +50,7 @@
 			"id": "gestao_precificacao",
 			"type": "multiple-choice",
 			"title": "Como você precifica seus procedimentos?",
-			"helperText": "Pilar 1 — Gestão",
+			"helperText": "Pilar 1: Gestão",
 			"scoreField": "gestao",
 			"options": [
 				{
@@ -79,7 +79,7 @@
 			"id": "gestao_ferias",
 			"type": "multiple-choice",
 			"title": "O que acontece com a clínica quando você tira uma semana de férias?",
-			"helperText": "Pilar 1 — Gestão",
+			"helperText": "Pilar 1: Gestão",
 			"scoreField": "gestao",
 			"options": [
 				{
@@ -108,7 +108,7 @@
 			"id": "marketing_origem_clientes",
 			"type": "multiple-choice",
 			"title": "Como a maioria dos seus novos clientes chega até a clínica hoje?",
-			"helperText": "Pilar 2 — Marketing",
+			"helperText": "Pilar 2: Marketing",
 			"scoreField": "marketing",
 			"options": [
 				{
@@ -137,7 +137,7 @@
 			"id": "marketing_cliente_ideal",
 			"type": "multiple-choice",
 			"title": "Você tem clareza sobre quem é o seu cliente ideal e comunica isso no seu conteúdo?",
-			"helperText": "Pilar 2 — Marketing",
+			"helperText": "Pilar 2: Marketing",
 			"scoreField": "marketing",
 			"options": [
 				{
@@ -166,7 +166,7 @@
 			"id": "marketing_previsibilidade",
 			"type": "multiple-choice",
 			"title": "Você consegue prever quantos clientes novos vai ter no próximo mês?",
-			"helperText": "Pilar 2 — Marketing",
+			"helperText": "Pilar 2: Marketing",
 			"scoreField": "marketing",
 			"options": [
 				{
@@ -195,7 +195,7 @@
 			"id": "vendas_followup",
 			"type": "multiple-choice",
 			"title": "Como você lida com clientes que somem após o orçamento ou a primeira consulta?",
-			"helperText": "Pilar 3 — Vendas",
+			"helperText": "Pilar 3: Vendas",
 			"scoreField": "vendas",
 			"options": [
 				{
@@ -224,7 +224,7 @@
 			"id": "vendas_base",
 			"type": "multiple-choice",
 			"title": "Você tem estratégia para aumentar o ticket ou a frequência dos clientes que já estão na sua base?",
-			"helperText": "Pilar 3 — Vendas",
+			"helperText": "Pilar 3: Vendas",
 			"scoreField": "vendas",
 			"options": [
 				{
@@ -269,7 +269,7 @@
 		}
 	},
 	"errorScreen": {
-		"headline": "Quase lá — vamos finalizar pelo WhatsApp",
+		"headline": "Quase lá, vamos finalizar pelo WhatsApp",
 		"body": "Tivemos um problema técnico ao registrar suas respostas. Clique abaixo para pedir seu agendamento pelo WhatsApp.",
 		"retryLabel": "Tentar novamente",
 		"fallbackLabel": "Agendar pelo WhatsApp",
